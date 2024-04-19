@@ -46,10 +46,10 @@ class Color {
 	}
 
 	static fromObject(colorObj: {
-		r: string | number | undefined;
-		g: number | undefined;
-		b: number | undefined;
-		a: number | undefined;
+		r?: string | number;
+		g?: number;
+		b?: number;
+		a?: number;
 	}) {
 		return new Color(colorObj.r, colorObj.g, colorObj.b, colorObj.a);
 	}
@@ -59,9 +59,9 @@ class Color {
 	}
 
 	static rgb(
-		r: string | number | undefined,
-		g: number | undefined,
-		b: number | undefined,
+		r?: string | number,
+		g?: number,
+		b?: number,
 		a = 1,
 	) {
 		return new Color(r, g, b, a);

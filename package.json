@@ -21,19 +21,15 @@
     "css"
   ],
   "supports": {
-    "node": ">=18.0.0"
+    "node": ">=20.0.0"
   },
   "scripts": {
-    "test": "node --experimental-vm-modules --test --experimental-specifier-resolution=node --experimental-vm-modules",
-    "test:watch": "node --test --watch ",
+    "test": "node --experimental-vm-modules --experimental-specifier-resolution=node --test",
+    "test:watch": "node --experimental-vm-modules --experimental-specifier-resolution=node  --test --watch ",
     "lint": "npx @biomejs/biome check --apply src tests",
-    "start": "npx esbuild src/index.ts esbuild app.ts --bundle --outdir=dist  --outdir=lib/esm --format=esm --global-name=Color --watch",
+    "start": "npx esbuild src/index.ts esbuild app.ts --bundle --outdir=lib/esm --format=esm --global-name=Color --watch",
     "prebuild": "rimraf lib",
-    "build": "npm run build:esm && npm run build:iife",
-    "build:esm": "npx esbuild src/index.ts --bundle --minify --sourcemap --outdir=lib/esm --format=esm --global-name=Color",
-    "build:iife": "npm run build:iife- && npm run build:iife-min",
-    "build:iife-": "npx esbuild src/index.ts --bundle --outfile=lib/iife/color.js --format=iife --global-name=Color",
-    "build:iife-min": "npx esbuild src/index.ts --bundle --minify --sourcemap --outfile=lib/iife/color.min.js --format=iife --global-name=Color",
+    "build": "deno run -A -r build.mjs",
     "prepublish": "npm run lint && npm run test"
   }
 }
