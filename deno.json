@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "dom.asynciterable",
+      "deno.ns",
+      "deno.unstable"
+    ]
+  },
+  "imports": {
+    "esbuild": "https://deno.land/x/esbuild@v0.20.1/mod.js"
+  },
+  "tasks": {
+    "dev": "deno run -A --watch='./src/*.ts' build.mjs",
+    "build": "deno run -A -r build.mjs"
+  }
+}

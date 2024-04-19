@@ -15,6 +15,7 @@
   },
   "type": "module",
   "module": "lib/esm/index.js",
+  "types": "lib/@types/index.d.ts",
   "sideEffects": false,
   "keywords": [
     "color",
@@ -25,11 +26,13 @@
   },
   "scripts": {
     "test": "node --experimental-vm-modules --experimental-specifier-resolution=node --test",
-    "test:watch": "node --experimental-vm-modules --experimental-specifier-resolution=node  --test --watch ",
+    "test:watch": "node --experimental-vm-modules --experimental-specifier-resolution=node  --test --watch",
     "lint": "npx @biomejs/biome check --apply src tests",
-    "start": "npx esbuild src/index.ts esbuild app.ts --bundle --outdir=lib/esm --format=esm --global-name=Color --watch",
+    "start": "npx esbuild src/index.ts --bundle --outdir=lib/esm --format=esm --global-name=Color --watch",
+    "deno-watch": "deno task dev",
+    "types": "npx tsc --emitDeclarationOnly",
     "prebuild": "rimraf lib",
-    "build": "deno run -A -r build.mjs",
+    "build": "npm run types && deno task build",
     "prepublish": "npm run lint && npm run test"
   }
 }
