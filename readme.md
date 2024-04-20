@@ -1,9 +1,9 @@
 Chainable color module using modern js 
 
 // Example usage:
-const color1 = Color.fromString('rgb(255, 255, 255)');
+const color1 = Color.fromString('rgbString(255, 255, 255)');
 const color2 = Color.fromObject({ r: 255, g: 255, b: 255 });
-const color3 = Color.rgb(255, 255, 255);
+const color3 = Color.rgbString(255, 255, 255);
 const color4 = Color.rgbArray([255, 255, 255]);
 
 console.log(color1); // Outputs: Color { color: { r: 255, g: 255, b: 255, a: 1 } }

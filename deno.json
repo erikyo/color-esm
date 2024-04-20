@@ -8,6 +8,42 @@
       "deno.unstable"
     ]
   },
+  "lint": {
+    "include": [
+      "src/"
+    ],
+    "rules": {
+      "tags": [
+        "recommended"
+      ],
+      "include": [
+        "ban-untagged-todo"
+      ],
+      "exclude": [
+        "no-unused-vars"
+      ]
+    }
+  },
+  "fmt": {
+    "useTabs": true,
+    "lineWidth": 80,
+    "indentWidth": 4,
+    "semiColons": false,
+    "singleQuote": true,
+    "proseWrap": "preserve",
+    "include": [
+      "src/"
+    ],
+    "exclude": [
+      "tests/fixtures/**/*.ts"
+    ]
+  },
+  "lock": false,
+  "nodeModulesDir": true,
+  "unstable": [
+    "webgpu"
+  ],
+  "npmRegistry": "https://mycompany.net/artifactory/api/npm/virtual-npm",
   "imports": {
     "esbuild": "https://deno.land/x/esbuild@v0.20.1/mod.js"
   },
