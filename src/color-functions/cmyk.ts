@@ -12,7 +12,7 @@ export function cmykToRgb(cmyk: string[]): RGBA {
 		g: 1 - Math.min(1, m * (1 - k) + k) * 255,
 		b: 1 - Math.min(1, y * (1 - k) + k) * 255,
 	};
-	return { ...rgb, alpha: 1 };
+	return { ...rgb, A: 1 };
 }
 
 export function rgbToCmyk(rgb: RGBA): CMYK {

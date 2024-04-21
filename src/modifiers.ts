@@ -32,11 +32,6 @@ export function negate() {
 	this.invert();
 }
 
-export function alpha(alphaValue: number) {
-	this.a = typeof alphaValue === "number" ? alphaValue : 1;
-	return this;
-}
-
 /**
  * Lightens the color by a given amount.
  *

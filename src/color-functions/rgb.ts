@@ -14,6 +14,6 @@ export function fromRgb([r, g, b, alpha]: (string | number)[]): RGBA {
 		r: Int(r, { min: 0, max: 255 }) || 0,
 		g: Int(g, { min: 0, max: 255 }) || 0,
 		b: Int(b, { min: 0, max: 255 }) || 0,
-		alpha: range(safeInt(alpha), 0, 1) || 100,
+		A: range(safeInt(alpha), 0, 1) || 100,
 	};
 }

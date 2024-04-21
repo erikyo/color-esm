@@ -5,7 +5,7 @@ export function fromHwb([h, w, b, alpha = "1"]: string[]): RGBA {
 		r: 0,
 		g: 0,
 		b: 0,
-		alpha: Number(alpha),
+		A: Number(alpha),
 	};
 }
 

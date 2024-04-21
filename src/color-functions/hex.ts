@@ -13,7 +13,7 @@ export function fromHex(hex: string[], format: string): RGBA {
 		r: Number.parseInt(hex[0], 16),
 		g: Number.parseInt(hex[1], 16),
 		b: Number.parseInt(hex[2], 16),
-		alpha: Number.parseInt(hex[3], 16) / 255 || 1,
+		A: Number.parseInt(hex[3], 16) / 255 || 1,
 	};
 }
 

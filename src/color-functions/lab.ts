@@ -18,9 +18,9 @@ export function labToXyz(L: number, a: number, b: number, alpha = 1): XYZ {
 	const y = fy ** 3 > 0.008856 ? fy ** 3 : (116 * fy - 16) / 903.3;
 	const z = fz ** 3 > 0.008856 ? fz ** 3 : (116 * fz - 16) / 903.3;
 
-	return { x: x * 95.047, y: y * 100.0, z: z * 108.883, alpha: 1 };
+	return { x: x * 95.047, y: y * 100.0, z: z * 108.883, A: 1 };
 }
 
 export function fromOklab([l, a, b, alpha = "1"]: string[]): LAB {
-	return { l: Number(l), a: Number(a), b: Number(b), alpha: Number(alpha) };
+	return { l: Number(l), a: Number(a), b: Number(b), A: Number(alpha) };
 }

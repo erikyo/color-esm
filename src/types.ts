@@ -48,7 +48,7 @@ export type LAB = {
 	l: number;
 	a: number;
 	b: number;
-	alpha: number;
+	A: number;
 };
 
 /* XYZ */
@@ -56,7 +56,7 @@ export type XYZ = {
 	x: number;
 	y: number;
 	z: number;
-	alpha: number;
+	A: number;
 };
 
 /* LCH */
@@ -64,7 +64,7 @@ export type LCH = {
 	l: number;
 	c: number;
 	h: number;
-	alpha: number;
+	A: number;
 };
 
 /* HWB */
@@ -72,7 +72,7 @@ export type HWB = {
 	h: number;
 	w: number;
 	b: number;
-	alpha: number;
+	A: number;
 };
 
 export const Channels:string[]= ["r" , "g" , "b" , "a" , "h" , "s" , "l" , "x" , "y" , "z" , "c" , "m" , "k", "alpha"];
@@ -103,7 +103,7 @@ export interface COLOR_INFO {
 }
 
 // With Alpha Channel Support
-export type WithAlpha<O> = O & { alpha: number };
+export type WithAlpha<O> = O & { A: number };
 
 /** color parsers interface */
 export interface COLOR_PARSERS {

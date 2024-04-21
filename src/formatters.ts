@@ -42,19 +42,19 @@ const formatOptions: FormatOptions = {
 function formatValue(value: number, format: string | undefined): string {
 	if (typeof format === "string") {
 		return format;
-	} else {
-		const {
-			min = 0,
-			max = 255,
-			radix = 10,
-			suffix = "",
-		} = formatOptions[format];
-		const normalizedValue = (value - min) / (max - min);
-		const formattedValue = (
-			normalizedValue * (radix === 16 ? 255 : 1)
-		).toString(radix);
-		return formattedValue + suffix;
 	}
+    // otherwise, assume it's a number
+    const {
+        min = 0,
+        max = 255,
+        radix = 10,
+        suffix = "",
+    } = formatOptions[format];
+    const normalizedValue = (value - min) / (max - min);
+    const formattedValue = (
+        normalizedValue * (radix === 16 ? 255 : 1)
+    ).toString(radix);
+    return formattedValue + suffix;
 }
 
 /**
@@ -83,7 +83,7 @@ function formatColor(
 			)}${separator}${formatValue(color.g, format)}${separator}${formatValue(
 				color.b,
 				format,
-			)}${separator}${formatValue(color.alpha, format)})`;
+			)}${separator}${formatValue(color.A, format)})`;
 		default:
 			return `${format}(${formatValue(
 				color.r,

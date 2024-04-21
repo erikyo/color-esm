@@ -15,7 +15,7 @@ type COLOR = {
     x?: number;
     y?: number;
     z?: number;
-    alpha: number;
+    A: number;
     format: string;
 }
 
@@ -23,7 +23,7 @@ class Color implements COLOR {
     r= 0;
     g= 0;
     b= 0;
-    alpha= 1;
+    A= 1;
 	format = "rgb";
 
 	/**
@@ -47,7 +47,7 @@ class Color implements COLOR {
 					h?: number;
 					s?: number;
 					l?: number;
-					alpha?: number;
+					a?: number;
 			  },
 		y?: number | string,
 		z?: number | string,
@@ -66,12 +66,12 @@ class Color implements COLOR {
                 this.r = safeInt(x.r);
                 this.g = safeInt(x.g);
                 this.b = safeInt(x.b);
-                this.alpha = safeInt(x.alpha, 1) ?? 1;
+                this.A = safeInt(x.a, 1) ?? 1;
 			} else {
                 this.r = safeInt(x);
                 this.g = safeInt(y);
                 this.b = safeInt(z);
-                this.alpha = safeInt(a, 1) ?? 1;
+                this.A = safeInt(a, 1) ?? 1;
 			}
 		}
 	}
@@ -155,7 +155,7 @@ class Color implements COLOR {
 	}
 
 	toString(format = "rgba") {
-		return `rgba(${this.r}, ${this.g}, ${this.b}, ${this.alpha})`;
+		return `rgba(${this.r}, ${this.g}, ${this.b}, ${this.A})`;
 	}
 
 	toValue() {

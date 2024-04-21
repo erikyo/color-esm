@@ -1,6 +1,6 @@
 import type {RGBA, XYZ} from "../types.ts";
 
-export function rgbToXyz({ r, g, b, alpha = 1 }): XYZ {
+export function rgbToXyz({ r, g, b, A = 1 }): XYZ {
 	r /= 255;
 	g /= 255;
 	b /= 255;
@@ -19,10 +19,10 @@ export function rgbToXyz({ r, g, b, alpha = 1 }): XYZ {
 	const y = r * 0.2126729 + g * 0.7151522 + b * 0.072175;
 	const z = r * 0.0193339 + g * 0.119192 + b * 0.9503041;
 
-	return { x, y, z, alpha };
+	return { x, y, z, A };
 }
 
-export function xyzToLab(x: number, y: number, z: number, alpha = 1) {
+export function xyzToLab(x: number, y: number, z: number, A = 1) {
 	// Reference white D65
 	const Xn = 95.047;
 	const Yn = 100.0;
@@ -40,10 +40,10 @@ export function xyzToLab(x: number, y: number, z: number, alpha = 1) {
 	const a = 500 * (fx - fy);
 	const b = 200 * (fy - fz);
 
-	return { L, a, b, alpha };
+	return { L, a, b, A };
 }
 
-export function fromXyz([x, y, z, alpha = "1"]: string[]): RGBA {
+export function fromXyz([x, y, z, A = "1"]: string[]): RGBA {
 	const [xn, yn, zn] = [x, y, z].map((v) => Number(v));
 
 	// Observer. = 2°, Illuminant = D65
@@ -64,5 +64,5 @@ export function fromXyz([x, y, z, alpha = "1"]: string[]): RGBA {
 	G = Math.min(Math.max(0, G), 1);
 	B = Math.min(Math.max(0, B), 1);
 
-	return { r: R * 255, g: G * 255, b: B * 255, alpha: Number(alpha) };
+	return { r: R * 255, g: G * 255, b: B * 255, A: Number(A) };
 }

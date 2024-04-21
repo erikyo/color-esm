@@ -14,7 +14,7 @@ const angleError = (value: string): string =>
  * @param {string[]} hsl - the hslString values to parse from string to int8 values
  *
  */
-export function getHslValues([h, s, l, alpha]: string[]): HSLA {
+export function getHslValues([h, s, l, A]: string[]): HSLA {
 	return {
 		h:
 			colorValueFallbacks(h, angleError(h)) ||
@@ -22,7 +22,7 @@ export function getHslValues([h, s, l, alpha]: string[]): HSLA {
 			0,
 		s: colorValueFallbacks(s) || safeInt(s, 100) || 0,
 		l: colorValueFallbacks(l) || safeInt(l, 100) || 0,
-		alpha: colorValueFallbacks(alpha) || 1,
+		A: colorValueFallbacks(A) || 1,
 	};
 }
 
@@ -51,7 +51,7 @@ function getHue(c: number, x: number, h: number): [number, number, number] {
  *
  * @return {Object} hslString value
  */
-export function valuesToHsl({ r, g, b, alpha }: RGBA): HSLA {
+export function valuesToHsl({ r, g, b, A }: RGBA): HSLA {
 	// Make r, g, and b fractions of 1
 	r /= 255;
 	g /= 255;
@@ -96,7 +96,7 @@ export function valuesToHsl({ r, g, b, alpha }: RGBA): HSLA {
 	s = +(s * 100).toFixed(1);
 	l = +(l * 100).toFixed(1);
 
-	return { h, s, l, alpha };
+	return { h, s, l, A };
 }
 
 /**
@@ -121,5 +121,5 @@ export function fromHsl(colorSet: string[]): RGBA {
 	g = Math.round((g + m) * 255);
 	b = Math.round((b + m) * 255);
 
-	return { r, g, b, alpha: safeInt(alpha) };
+	return { r, g, b, A: safeInt(alpha) };
 }

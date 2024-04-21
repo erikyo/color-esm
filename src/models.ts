@@ -17,6 +17,11 @@ export function blue(b = 255) {
     return this;
 }
 
+export function alpha(A = 1) {
+    this.A = A;
+    return this;
+}
+
 export function hex(colorString: string | undefined) {
     return new Color(colorString, "hex");
 }
