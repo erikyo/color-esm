@@ -40,11 +40,13 @@ async function run() {
     entryPoints: ['src/**/*.ts', "src/named-colors.json"],
     outdir: 'lib/esm',
     treeShaking: true,
-    splitting: true,
+    splitting: false,
     minify: false,
     keepNames: true,
     globalName: 'Color',
+    sourcemap: true,
     bundle: true,
+    external: ["*.json"],
     chunkNames: 'c_[name]-[hash]',
   })
 
