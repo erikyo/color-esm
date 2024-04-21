@@ -1,5 +1,27 @@
-// Regular expressions to match different color formats
-import { isNumeric, stripComments } from "./constants.ts";
+export const isNumeric: RegExp = /^-?\d*\.?\d+$/i;
+export const HexFormat: RegExp = /^[0-9a-f]+$/i;
+/** Remove comments from string */
+export const stripComments: RegExp = /(\/\*[^*]*\*\/)|(\/\/[^*]*)/g;
+/**
+ * It returns an object with the hex values of the 3 digit hex color
+ *
+ * @param {string} value 3 digit hex
+ * @return {string[]} 6 digit hex
+ */
+export function shortHexToLongHex(value: string): string[] {
+	// split the string in to an array of digits then return an array that contains that digit doubled for each item
+	return Array.from(value).map((v: string) => (v + v).toUpperCase());
+}
+
+/**
+ * Checks if a given string represents a hexadecimal number.
+ *
+ * @param {string} num - The string to be checked.
+ * @return {boolean} Returns true if the string is a valid hexadecimal number, false otherwise.
+ */
+export function isHex(num: string): boolean {
+	return Boolean(num.match(HexFormat));
+}
 
 /**
  * split the content of rgbString and hslString colors depending on the parsed value of the css property
@@ -56,8 +78,11 @@ export function normalizeDegrees(angle: string): number {
  * @param {number} max - The maximum allowed value (default is 0).
  * @return {number} The limited value.
  */
-export function range(value: number, min = 0, max = 0): number {
-	return Math.min(Math.max(Math.round(value), min), max);
+export function range(value: number, min = undefined, max = undefined): number {
+	let newValue = value;
+	if (max) newValue = Math.max(value, min);
+	if (min) newValue = Math.min(value, max);
+	return newValue;
 }
 
 /**
@@ -77,7 +102,7 @@ export function calculateValue(
 	// Match the calc() function in the CSS string
 	const match = valueString.match(regex);
 
-	return convertToInt8(match ? match[1] : valueString, multiplier);
+	return safeInt(match ? match[1] : valueString, multiplier);
 }
 
 /**
@@ -144,29 +169,36 @@ export function colorValueFallbacks(value: string, err?: string): number {
 	return 0;
 }
 
+export function Int(
+	value: string | number,
+	options?: { min: number; max: number },
+): number {
+	if (options) {
+		return range(Number(value), options.min, options.max);
+	}
+	return Number(value);
+}
+
 /**
  * Takes a string with a css value that could be a number or percentage or an angle in degrees and returns the corresponding 8bit value
  *
  * @param value - a valid value for the css color definition (like 255, "100%", "324deg", etc.) *
- * @param multiplier - the number that represent the maximum - default is 255 decimal - 100 hex
+ * @param max - the number that represent the maximum - default is 255 decimal - 100 hex
  *
- * @example convertToInt8('100%'); // 255
+ * @example safeInt('100%'); // 255
  *
  * @return {string} the corresponding value in 8-bit format
  */
-export function convertToInt8(
-	value: string | unknown,
-	multiplier = 255,
-): number {
+export function safeInt(value: string | unknown, max = 255): number {
 	const newValue = typeof value === "string" ? value?.trim() : "0";
 	if (isNumeric.test(newValue)) {
 		// limit the min and the max newValue
-		return range(Number.parseFloat(newValue) || 0, 0, multiplier);
+		return range(Number.parseFloat(newValue) || 0, 0, max);
 	}
 	if (newValue.endsWith("%")) {
 		// If the newValue is a percentage, divide it by 100 to get a newValue from 0 to 1
 		// and then multiply it by 255 to get a newValue from 0 to 255
-		return normalizePercentage(newValue, multiplier) || 0;
+		return normalizePercentage(newValue, max) || 0;
 	}
 	if (
 		newValue.endsWith("deg") ||
@@ -177,7 +209,7 @@ export function convertToInt8(
 	}
 	if (newValue.startsWith("calc")) {
 		// get the newValue from the calc function
-		return range(calculateValue(newValue, multiplier), 0, multiplier);
+		return range(calculateValue(newValue, max), 0, max);
 	}
 
 	// If the value is not a percentage or an angle in degrees, it is invalid
