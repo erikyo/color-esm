@@ -1,40 +1,43 @@
-import * as models from "./models.js";
-import * as modifiers from "./modifiers.js";
-import Parsers from "./parsers.js";
-import {Channels, COLORS} from "./types.js";
+import * as models from "./models.ts";
+import * as modifiers from "./modifiers.ts";
+import Parsers from "./parsers.ts";
+import {Channels} from "./types.ts";
+import type {COLORS} from "./types.ts";
+import {safeInt} from "./common.ts";
 
-class Color {
-	current: {
-		r: number;
-		g: number;
-		b: number;
-		h?: number;
-		s?: number;
-		l?: number;
-		x?: number;
-		y?: number;
-		z?: number;
-		alpha: number;
-	} = {
-        r: 0,
-        g: 0,
-        b: 0,
-        alpha: 1
-    };
+type COLOR = {
+    r: number;
+    g: number;
+    b: number;
+    h?: number;
+    s?: number;
+    l?: number;
+    x?: number;
+    y?: number;
+    z?: number;
+    alpha: number;
+    format: string;
+}
+
+class Color implements COLOR {
+    r= 0;
+    g= 0;
+    b= 0;
+    alpha= 1;
 	format = "rgb";
 
 	/**
-	 * alpha constructor function for the Color class that initializes the color object based on the provided arguments.
+	 * Color constructor function for the Color class that initializes the color object based on the provided arguments.
 	 *
 	 * @param {number | string | {r?: number, g?: number, b?: number, a?: number, h?: number, s?: number, l?: number} | number[]| string[]} x - The first color argument for the color
 	 * @param {number=} y - The second color argument for the color
 	 * @param {number=} z - The third color argument for the color
 	 * @param {number=} a - The alpha color argument for the color
-	 * @returns {Color} The color object
 	 */
 	constructor(
 		x?:
 			| number
+            | null
 			| string
 			| (string | number)[]
 			| {
@@ -60,9 +63,15 @@ class Color {
 			} else if (Array.isArray(x)) {
 				this.fromArray(x);
 			} else if (typeof x === "object") {
-				this.current = Object.assign( {}, this.current, { r: x.r, g: x.g, b: x.b, alpha: x.alpha ?? 1 });
+                this.r = safeInt(x.r);
+                this.g = safeInt(x.g);
+                this.b = safeInt(x.b);
+                this.alpha = safeInt(x.alpha, 1) ?? 1;
 			} else {
-				this.current = Object.assign({}, this.current, { r:x, g:y, b:z, alpha: a ?? 1 });
+                this.r = safeInt(x);
+                this.g = safeInt(y);
+                this.b = safeInt(z);
+                this.alpha = safeInt(a, 1) ?? 1;
 			}
 		}
 	}
@@ -82,7 +91,7 @@ class Color {
 		for (const i in format.split("")) {
 			const channel = format[i];
             if (Channels.includes(channel)) {
-				this.current[channel] = rgbArray[i];
+				this[channel] = rgbArray[i];
 			} else {
 				throw new Error("Invalid color array format");
 			}
@@ -120,40 +129,40 @@ class Color {
 	}
 
 	info() {
-		return this.current;
+		return this;
 	}
 
 	toObject(format = "rgb") {
 		const current = {};
 		for (const i in format.split("")) {
 			const char = format[i];
-			if (char in this.current) {
-				current[char] = this[char];
+			if (char in this) {
+				current[char] = this[char as keyof this];
 			}
 		}
-		return current;
+		return current as Color;
 	}
 
 	toArray(format = "rgb") {
 		const current = [];
 		for (const i in format.split("")) {
 			const char = format[i];
-			if (char in this.current) {
-				current.push(this.current[char]);
+			if (char in this) {
+				current.push(this[char as keyof this]);
 			}
 		}
 		return current;
 	}
 
 	toString(format = "rgba") {
-		return `rgba(${this.current.r}, ${this.current.g}, ${this.current.b}, ${this.current.alpha})`;
+		return `rgba(${this.r}, ${this.g}, ${this.b}, ${this.alpha})`;
 	}
 
 	toValue() {
-		return (this.current.r << 16) + (this.current.g << 8) + this.current.b;
+		return (this.r << 16) + (this.g << 8) + this.b;
 	}
 }
 
-Object.setPrototypeOf(Color.prototype, {...modifiers, ...models});
+Object.assign(Color.prototype, models, modifiers);
 
 export default Color;

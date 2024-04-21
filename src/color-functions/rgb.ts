@@ -1,5 +1,5 @@
-import {Int, range, safeInt} from "../common.js";
-import type {RGBA} from "../types.js";
+import {Int, range, safeInt} from "../common.ts";
+import type {RGBA} from "../types.ts";
 
 /**
  * This function takes an array of strings and returns and object with the rgbString values converted into INT8 (0-255)

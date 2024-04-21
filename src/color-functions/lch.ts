@@ -1,5 +1,5 @@
-import Color from "../index.js";
-import type {LCH, RGBA} from "../types.js";
+import Color from "../index.ts";
+import type {LCH, RGBA} from "../types.ts";
 
 export function toLch() {
 	return new Color();

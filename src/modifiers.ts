@@ -1,7 +1,7 @@
-import type Color from "./index.js";
+import type Color from "./index.ts";
 
 export function reddish(value: number) {
-	this.red = this.red + value;
+	this.r = this.r + value;
 	return this;
 }
 /**
@@ -11,18 +11,18 @@ export function reddish(value: number) {
  * @return {this} The modified color object
  */
 export function bluish(value: number) {
-	this.blue = this.blue + value;
+	this.b = this.b + value;
 	return this;
 }
 
 export function greenish(value: number) {
-	this.green = this.green + value;
+	this.g = this.g + value;
 	return this;
 }
 
 export function invert() {
-	for (const i in [this.current.r, this.current.g, this.current.b]) {
-		const key = i;
+	for (const i in this) {
+		const key = i as keyof Color;
 		this[key] = 255 - this[key];
 	}
 }
@@ -83,4 +83,4 @@ export function isDark() {}
 
 export function isLight() {}
 
-export function closer(colorset) {}
+export function closer(color: Color,colorSet: Color[]) {}

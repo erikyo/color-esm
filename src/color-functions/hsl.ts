@@ -1,5 +1,5 @@
-import {colorValueFallbacks, normalizeDegrees, safeInt} from "../common.js";
-import type {HSLA, RGBA} from "../types.js";
+import {colorValueFallbacks, normalizeDegrees, safeInt} from "../common.ts";
+import type {HSLA, RGBA} from "../types.ts";
 
 /**
  * The error message for invalid angle

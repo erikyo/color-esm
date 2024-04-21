@@ -1,4 +1,4 @@
-import type {COLOR_FORMATS, RGBA} from "./types.js";
+import type {COLOR_FORMATS, RGBA} from "./types.ts";
 
 type FormatOptions = Record<
 	string,

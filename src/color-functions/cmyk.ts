@@ -1,4 +1,4 @@
-import type {CMYK, RGBA} from "../types.js";
+import type {CMYK, RGBA} from "../types.ts";
 
 /**
  * Converts rgb to cmyk

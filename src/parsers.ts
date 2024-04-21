@@ -1,14 +1,14 @@
-import {fromColor} from "./color-functions/color.js";
-import {fromHex} from "./color-functions/hex.js";
-import {fromHsl} from "./color-functions/hsl.js";
-import {fromHwb} from "./color-functions/hwb.js";
-import {fromLab, fromOklab} from "./color-functions/lab.js";
-import {fromLch, fromOklch} from "./color-functions/lch.js";
-import {fromRgb} from "./color-functions/rgb.js";
-import {fromXyz} from "./color-functions/xyz.js";
-import {extract, parseHex} from "./parsers-utils.js";
-import type {COLOR_PARSERS} from "./types.js";
-import validators from "./validators.js";
+import {fromColor} from "./color-functions/color.ts";
+import {fromHex} from "./color-functions/hex.ts";
+import {fromHsl} from "./color-functions/hsl.ts";
+import {fromHwb} from "./color-functions/hwb.ts";
+import {fromLab, fromOklab} from "./color-functions/lab.ts";
+import {fromLch, fromOklch} from "./color-functions/lch.ts";
+import {fromRgb} from "./color-functions/rgb.ts";
+import {fromXyz} from "./color-functions/xyz.ts";
+import {extract, parseHex} from "./parsers-utils.ts";
+import type {COLOR_PARSERS} from "./types.ts";
+import validators from "./validators.ts";
 
 /**
  * array of color parsers to be used

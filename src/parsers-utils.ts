@@ -1,5 +1,5 @@
-import {cleanDefinition, isHex, shortHexToLongHex, splitValues,} from "./common.js";
-import type {COLORSTRING} from "./types.js";
+import {cleanDefinition, isHex, shortHexToLongHex, splitValues,} from "./common.ts";
+import type {COLORSTRING} from "./types.ts";
 
 /**
  * Get the hex value of the color and convert it to an Object of R G And B values (still in hex format)

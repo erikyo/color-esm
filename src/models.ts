@@ -1,22 +1,20 @@
-import Color from "./index.js";
-// https://www.w3.org/TR/css-color-5/#typedef-color
-// color spaces <hex-color>
-//               <rgb()> | <rgba()> |
-//               <hsl()> | <hsla()> | <hwb()>  |
-//               <lab()> | <lch()>  | <oklab()> | <oklch()> |
-//               <color()>
-import {fromRgb} from "./color-functions/rgb.js";
+import Color from "./index.ts";
+
+import {fromRgb} from "./color-functions/rgb.ts";
 
 export function red(r = 255) {
-    return new Color({ r });
+    this.r = r;
+    return this;
 }
 
 export function green(g = 255) {
-    return new Color({ g });
+    this.g = g;
+    return this;
 }
 
 export function blue(b = 255) {
-    return new Color({ b });
+    this.b = b;
+    return this;
 }
 
 export function hex(colorString: string | undefined) {

@@ -7,6 +7,7 @@ const validators: Record<string, RegExp> = {
 	lch: /^lch\(([^)]+)\)/i,
 	oklab: /^oklab\(([^)]+)\)/i,
 	oklch: /^oklch\(([^)]+)\)/i,
+    xyz: /^xyz\(([^)]+)\)/i,
 	color: /^color\(([^)]+)\)/i,
 };
 
