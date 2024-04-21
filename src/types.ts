@@ -1,23 +1,33 @@
+import type namedColors from "./named-colors.json";
+
 /**
  * Types definition for common colors formats
  * supported format are: rgbString, rgba, hslString, hsla, hex, hex+alpha
  */
 export type RGBSTRING = `rgb(${string},${string},${string})`;
 export type HSLSTRING = `hsl(${string},${string},${string})`;
+export type LABSTRING = `lab(${string},${string},${string})`;
+
+/* HEX */
 export type HEXSTRING = `#${string}` | string;
-export type COLORSTRING = RGBSTRING | HSLSTRING | HEXSTRING;
 
-export type WithAlpha<O> = O & { a: number };
+export type COLORSTRING = RGBSTRING | HSLSTRING | LABSTRING | HEXSTRING;
 
-/* HSLSTRING */
-export interface HSL {
-	h: number;
-	s: number;
-	l: number;
+export type COLORS = RGBA | HSLA | LAB | XYZ | LCH | HEXSTRING;
+
+export type COLOR_NAME = keyof typeof namedColors;
+
+export type NAMED_COLOR = [COLOR_NAME, [number, number, number]];
+
+/* CMYK */
+export interface CMYK {
+	c: number;
+	m: number;
+	y: number;
+	k: number;
 }
-export type HSLA = WithAlpha<HSL>;
 
-/* RGBSTRING */
+/* RGB */
 export interface RGB {
 	r: number;
 	g: number;
@@ -25,24 +35,80 @@ export interface RGB {
 }
 export type RGBA = WithAlpha<RGB>;
 
-export type RGBDEF = [number, number, number];
-export type NAMEDCOLOR = Record<string, RGBDEF>;
+/* HSL */
+export interface HSL {
+	h: number;
+	s: number;
+	l: number;
+}
+export type HSLA = WithAlpha<HSL>;
 
-/* HEXSTRING */
-export type colorName = string;
+/* LAB */
+export type LAB = {
+	l: number;
+	a: number;
+	b: number;
+	alpha: number;
+};
 
-export interface COLORDEF {
-	name: colorName;
+/* XYZ */
+export type XYZ = {
+	x: number;
+	y: number;
+	z: number;
+	alpha: number;
+};
+
+/* LCH */
+export type LCH = {
+	l: number;
+	c: number;
+	h: number;
+	alpha: number;
+};
+
+/* HWB */
+export type HWB = {
+	h: number;
+	w: number;
+	b: number;
+	alpha: number;
+};
+
+export const Channels:string[]= ["r" , "g" , "b" , "a" , "h" , "s" , "l" , "x" , "y" , "z" , "c" , "m" , "k", "alpha"];
+
+export type COLOR_FORMATS =
+	| "hex"
+	| "rgb"
+	| "rgba"
+	| "hsl"
+	| "hsla"
+	| "lab"
+	| "lch"
+	| "hwb"
+	| "oklab"
+	| "oklch"
+	| "xyz"
+	| "cmyk"
+    | "color";
+
+/* COLOR INFO */
+export interface COLOR_INFO {
+	name: COLOR_NAME;
 	color: COLORSTRING;
 	hex?: string;
 	hsl?: string;
+	lab?: string;
 	gap?: number;
 }
 
-export interface ColorParsers {
+// With Alpha Channel Support
+export type WithAlpha<O> = O & { alpha: number };
+
+/** color parsers interface */
+export interface COLOR_PARSERS {
+	format: COLOR_FORMATS;
 	regex: RegExp;
 	parser: (color: string) => string[];
-	converter: (colorSet: string[]) => RGBA;
+	converter: (color: string[], source?: COLOR_FORMATS) => COLORS;
 }
-
-export type colorListHEX = Array<{ name: string; color: string }>;
