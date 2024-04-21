@@ -43,7 +43,9 @@ async function run() {
     splitting: true,
     minify: false,
     keepNames: true,
-    globalName: 'Color'
+    globalName: 'Color',
+    bundle: true,
+    chunkNames: 'c_[name]-[hash]',
   })
 
   await Promise.all([iife, iifeMin, esm])

@@ -9,7 +9,7 @@
       "Decorators",
       "ES2022"
     ],
-    "moduleResolution": "Node",
+    "moduleResolution": "node",
     "resolveJsonModule": true,
     "allowJs": true,
     "skipLibCheck": true,
@@ -19,14 +19,12 @@
     "declarationDir": "lib/@types",
     "declaration": true,
     "emitDeclarationOnly": true,
+    "allowImportingTsExtensions": true,
     "strict": false
   },
   "include": [
     "./src/**/*",
     "./tsconfig.json",
     "node_modules/**/*"
-  ],
-  "exclude": [
-    "lib/**/*"
   ]
 }

@@ -4,6 +4,8 @@
     "lib": [
       "dom",
       "dom.iterable",
+      "Decorators",
+      "ES2022",
       "dom.asynciterable",
       "deno.ns",
       "deno.unstable"
@@ -43,13 +45,12 @@
       "tests/fixtures/**/*.ts"
     ]
   },
-  "lock": false,
   "nodeModulesDir": true,
   "imports": {
     "esbuild": "https://deno.land/x/esbuild@v0.20.1/mod.js"
   },
   "tasks": {
-    "dev": "deno run -A --watch=/src build.mjs",
+    "dev": "deno run -A --watch=src build.mjs",
     "build": "deno run -A -r build.mjs"
   }
 }

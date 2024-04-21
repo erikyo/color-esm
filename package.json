@@ -35,5 +35,9 @@
     "types": "npx tsc --emitDeclarationOnly",
     "prebuild": "rimraf lib",
     "prepublish": "npm run lint && npm run test"
+  },
+  "directories": {
+    "lib": "lib",
+    "test": "tests"
   }
 }
