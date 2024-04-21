@@ -10,15 +10,15 @@ async function run() {
   /**
    * Immediately Invoked Function Expression (IIFE)
    */
-	const iife = es.build({
-		format: 'iife',
-		platform: 'node',
-		entryPoints: ['src/index.ts'],
-		outfile: 'lib/iife/index.js',
-		bundle: true,
-		tsconfig: 'tsconfig.json',
-		globalName: 'Color',
-	})
+  const iife = es.build({
+    format: 'iife',
+    platform: 'node',
+    entryPoints: ['src/index.ts'],
+    outfile: 'lib/iife/index.js',
+    bundle: true,
+    tsconfig: 'tsconfig.json',
+    globalName: 'Color',
+  })
   const iifeMin = es.build({
     format: 'iife',
     platform: 'node',
@@ -34,23 +34,22 @@ async function run() {
   /**
    * ES Module (ESM)
    */
-	const esm = es.build({
-		format: 'esm',
-		platform: 'node',
-    entryPoints: ['src/index.ts'],
-		outdir: 'lib/esm',
-		treeShaking: true,
-		splitting: true,
-		minify: true,
-		keepNames: true,
-    globalName: 'Color',
-	})
+  const esm = es.build({
+    format: 'esm',
+    platform: 'browser',
+    entryPoints: ['src/**/*.ts', "src/named-colors.json"],
+    outdir: 'lib/esm',
+    treeShaking: true,
+    splitting: true,
+    minify: false,
+    keepNames: true,
+    globalName: 'Color'
+  })
 
-	await Promise.all([iife, iifeMin, esm])
+  await Promise.all([iife, iifeMin, esm])
 }
 
 /** Run the build */
-run().catch((err) => {
-	console.error(err)
-	process.exit(1)
+await run().catch((err) => {
+  console.error(err)
 })

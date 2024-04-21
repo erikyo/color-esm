@@ -19,20 +19,21 @@
   "sideEffects": false,
   "keywords": [
     "color",
-    "css"
+    "css",
+    "esm"
   ],
   "supports": {
     "node": ">=20.0.0"
   },
   "scripts": {
+    "start": "npx esbuild src/index.ts --bundle --outdir=lib/esm --format=esm --global-name=Color --watch",
+    "dev": "deno task dev",
+    "build": "npm run types && deno task build",
     "test": "node --experimental-vm-modules --experimental-specifier-resolution=node --test",
     "test:watch": "node --experimental-vm-modules --experimental-specifier-resolution=node  --test --watch",
     "lint": "npx @biomejs/biome check --apply src tests",
-    "start": "npx esbuild src/index.ts --bundle --outdir=lib/esm --format=esm --global-name=Color --watch",
-    "deno-watch": "deno task dev",
     "types": "npx tsc --emitDeclarationOnly",
     "prebuild": "rimraf lib",
-    "build": "npm run types && deno task build",
     "prepublish": "npm run lint && npm run test"
   }
 }

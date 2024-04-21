@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "extends": "./tsconfig",
     "lib": [
       "dom",
       "dom.iterable",
@@ -11,6 +12,9 @@
   "lint": {
     "include": [
       "src/"
+    ],
+    "exclude": [
+      "lib/"
     ],
     "rules": {
       "tags": [
@@ -35,20 +39,17 @@
       "src/"
     ],
     "exclude": [
+      "lib/",
       "tests/fixtures/**/*.ts"
     ]
   },
   "lock": false,
   "nodeModulesDir": true,
-  "unstable": [
-    "webgpu"
-  ],
-  "npmRegistry": "https://mycompany.net/artifactory/api/npm/virtual-npm",
   "imports": {
     "esbuild": "https://deno.land/x/esbuild@v0.20.1/mod.js"
   },
   "tasks": {
-    "dev": "deno run -A --watch='./src/*.ts' build.mjs",
+    "dev": "deno run -A --watch=/src build.mjs",
     "build": "deno run -A -r build.mjs"
   }
 }
