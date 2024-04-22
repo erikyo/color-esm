@@ -1,19 +1,20 @@
-import {fromColor} from "./color-functions/color.ts";
-import {fromHex} from "./color-functions/hex.ts";
-import {fromHsl} from "./color-functions/hsl.ts";
-import {fromHwb} from "./color-functions/hwb.ts";
-import {fromLab, fromOklab} from "./color-functions/lab.ts";
-import {fromLch, fromOklch} from "./color-functions/lch.ts";
-import {fromRgb} from "./color-functions/rgb.ts";
-import {fromXyz} from "./color-functions/xyz.ts";
-import {extract, parseHex} from "./parsers-utils.ts";
-import type {COLOR_PARSERS} from "./types.ts";
-import validators from "./validators.ts";
+import { fromCmyk } from "./color-utils/cmyk";
+import { fromColor } from "./color-utils/color";
+import { fromHex } from "./color-utils/hex";
+import { fromHsl } from "./color-utils/hsl";
+import { fromHwb } from "./color-utils/hwb";
+import { fromLab, fromOklab } from "./color-utils/lab";
+import { fromLch, fromOklch } from "./color-utils/lch";
+import { fromRgb } from "./color-utils/rgb";
+import { fromXyz } from "./color-utils/xyz";
+import { extract, parseHex } from "./parsers-utils";
+import type { COLOR_PARSERS } from "./types";
+import validators from "./validators";
 
 /**
  * array of color parsers to be used
  */
-const Parsers: COLOR_PARSERS[] = [
+const parsers: COLOR_PARSERS[] = [
 	{
 		format: "hex",
 		regex: validators.hex,
@@ -39,10 +40,17 @@ const Parsers: COLOR_PARSERS[] = [
 		converter: fromOklch,
 	},
 	{
+		format: "oklch",
+		regex: validators.cmyk,
+		parser: extract,
+		converter: fromCmyk,
+	},
+	{
 		format: "color",
 		regex: validators.color,
 		parser: extract,
 		converter: fromColor,
 	},
 ];
-export default Parsers;
+
+export default parsers;
