@@ -1,19 +1,22 @@
+import type { CHANNELS, COLOR_MODEL } from "./constants";
 import type namedColors from "./named-colors.json";
 
-/**
- * Types definition for common colors formats
- * supported format are: rgbString, rgba, hslString, hsla, hex, hex+alpha
- */
-export type RGBSTRING = `rgb(${string},${string},${string})`;
-export type HSLSTRING = `hsl(${string},${string},${string})`;
-export type LABSTRING = `lab(${string},${string},${string})`;
+// https://developer.mozilla.org/en-US/docs/Web/CSS/color_value#formal_syntax
 
-/* HEX */
+/* RGB Hexadecimal */
 export type HEXSTRING = `#${string}` | string;
 
-export type COLORSTRING = RGBSTRING | HSLSTRING | LABSTRING | HEXSTRING;
-
-export type COLORS = RGBA | HSLA | LAB | XYZ | LCH | HEXSTRING;
+export type COLORS =
+	| RGBA
+	| HSLA
+	| LAB
+	| XYZ
+	| LCH
+	| HEXSTRING
+	| CMYK
+	| HWB
+	| OKLAB
+	| OKLCH;
 
 export type COLOR_NAME = keyof typeof namedColors;
 
@@ -27,7 +30,7 @@ export interface CMYK {
 	k: number;
 }
 
-/* RGB */
+/* RGB (Red, Green, Blue) */
 export interface RGB {
 	r: number;
 	g: number;
@@ -35,7 +38,7 @@ export interface RGB {
 }
 export type RGBA = WithAlpha<RGB>;
 
-/* HSL */
+/* HSL (Hue, Saturation, Lightness) */
 export interface HSL {
 	h: number;
 	s: number;
@@ -43,11 +46,43 @@ export interface HSL {
 }
 export type HSLA = WithAlpha<HSL>;
 
-/* LAB */
+/* HWB (Hue, Whiteness, Blackness) */
+export type HWB = {
+	h: number;
+	w: number;
+	b: number;
+	A: number;
+};
+
+/* LAB (Lightness, A-axis, B-axis) */
 export type LAB = {
 	l: number;
 	a: number;
 	b: number;
+	A: number;
+};
+
+/* LCH (Lightness, Chroma, Hue) */
+export type LCH = {
+	l: number;
+	c: number;
+	h: number;
+	A: number;
+};
+
+/* Oklab (Lightness, A-axis, B-axis) */
+export type OKLAB = {
+	l: number;
+	a: number;
+	b: number;
+	A: number;
+};
+
+/* Oklch (Lightness, Chroma, Hue) */
+export type OKLCH = {
+	l: number;
+	c: number;
+	h: number;
 	A: number;
 };
 
@@ -59,46 +94,28 @@ export type XYZ = {
 	A: number;
 };
 
-/* LCH */
-export type LCH = {
-	l: number;
-	c: number;
-	h: number;
-	A: number;
-};
+/** Channels type (e.g. "r", "g", "b"...) */
+export type CHANNEL = (typeof CHANNELS)[number];
 
-/* HWB */
-export type HWB = {
-	h: number;
-	w: number;
-	b: number;
-	A: number;
-};
+/** Color model type (e.g. "rgb", "hsl", "lab"...) */
+export type MODEL = (typeof COLOR_MODEL)[number];
 
-export const Channels:string[]= ["r" , "g" , "b" , "a" , "h" , "s" , "l" , "x" , "y" , "z" , "c" , "m" , "k", "alpha"];
-
-export type COLOR_FORMATS =
-	| "hex"
-	| "rgb"
-	| "rgba"
-	| "hsl"
-	| "hsla"
-	| "lab"
-	| "lch"
-	| "hwb"
-	| "oklab"
-	| "oklch"
-	| "xyz"
-	| "cmyk"
-    | "color";
+/** the unit used as a color type (e.g. "number", "percent", "degrees"...) */
+export type FormatOptions = Record<
+	string,
+	{
+		radix?: number;
+		min?: number;
+		max?: number;
+		suffix?: string;
+	}
+>;
+export type FORMAT = keyof FormatOptions;
 
 /* COLOR INFO */
 export interface COLOR_INFO {
 	name: COLOR_NAME;
-	color: COLORSTRING;
-	hex?: string;
-	hsl?: string;
-	lab?: string;
+	color: number[];
 	gap?: number;
 }
 
@@ -107,8 +124,8 @@ export type WithAlpha<O> = O & { A: number };
 
 /** color parsers interface */
 export interface COLOR_PARSERS {
-	format: COLOR_FORMATS;
+	format: MODEL;
 	regex: RegExp;
 	parser: (color: string) => string[];
-	converter: (color: string[], source?: COLOR_FORMATS) => COLORS;
+	converter: (color: string[], source?: MODEL) => COLORS;
 }
