@@ -16,8 +16,8 @@ async function run() {
     entryPoints: ['src/index.ts'],
     outfile: 'lib/iife/index.js',
     bundle: true,
+    globalName: 'ColorEsm',
     tsconfig: 'tsconfig.json',
-    globalName: 'Color',
   })
   const iifeMin = es.build({
     format: 'iife',
@@ -27,8 +27,8 @@ async function run() {
     bundle: true,
     minify: true,
     sourcemap: true,
-    tsconfig: 'tsconfig.json',
-    globalName: 'Color',
+    globalName: 'ColorEsm',
+    tsconfig: 'tsconfig.json'
   })
 
   /**
@@ -41,12 +41,10 @@ async function run() {
     outdir: 'lib/esm',
     treeShaking: true,
     splitting: false,
-    minify: false,
+    minify: true,
     keepNames: true,
-    globalName: 'Color',
     sourcemap: true,
     bundle: true,
-    external: ["*.json"],
     chunkNames: 'c_[name]-[hash]',
   })
 

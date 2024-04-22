@@ -27,17 +27,18 @@
   },
   "scripts": {
     "start": "npx esbuild src/index.ts --bundle --outdir=lib/esm --format=esm --global-name=Color --watch",
-    "dev": "deno task dev",
-    "build": "npm run types && deno task build",
+    "poststart": "npm run tsc:types",
+    "tsc:watch": "npx tsc --watch",
+    "tsc:types": "npx tsc --emitDeclarationOnly",
+    "deno:watch": "deno task start",
+    "postdeno:watch": "npm run tsc:types",
+    "prebuild": "npm run tsc:types",
+    "build": "deno task build",
+    "lint": "npx @biomejs/biome check --apply src",
     "test": "node --experimental-vm-modules --experimental-specifier-resolution=node --test",
+    "test:coverage": "node --experimental-vm-modules --experimental-specifier-resolution=node --test --experimental-test-coverage",
     "test:watch": "node --experimental-vm-modules --experimental-specifier-resolution=node  --test --watch",
-    "lint": "npx @biomejs/biome check --apply src tests",
-    "types": "npx tsc --emitDeclarationOnly",
-    "prebuild": "rimraf lib",
-    "prepublish": "npm run lint && npm run test"
-  },
-  "directories": {
-    "lib": "lib",
-    "test": "tests"
+    "lint-node": "npx @biomejs/biome check --apply src tests",
+    "preeepublish": "npm run test"
   }
 }
