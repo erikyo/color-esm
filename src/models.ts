@@ -1,63 +1,88 @@
-import Color from "./index.ts";
+import Color from "./index";
 
-import {fromRgb} from "./color-functions/rgb.ts";
-
-export function red(r = 255) {
-    this.r = r;
-    return this;
+function red(r = 255) {
+	this.r = r;
+	return this;
 }
 
-export function green(g = 255) {
-    this.g = g;
-    return this;
+function green(g = 255) {
+	this.g = g;
+	return this;
 }
 
-export function blue(b = 255) {
-    this.b = b;
-    return this;
+function blue(b = 255) {
+	this.b = b;
+	return this;
 }
 
-export function alpha(A = 1) {
-    this.A = A;
-    return this;
+/**
+ * Overrides the alpha value of the color
+ * this the color
+ * @param A the alpha value
+ */
+function alpha(A = 1) {
+	this.A = A;
+	return this;
 }
 
-export function hex(colorString: string | undefined) {
-    return new Color(colorString, "hex");
+function hex(colorString: string | undefined) {
+	return new Color().fromString(colorString, "hex");
 }
 
-export function hexa(colorString: string | undefined) {
-    return new Color(colorString, "hexa");
+function hexa(colorString: string | undefined) {
+	return new Color(colorString, "hexa");
 }
 
-export function rgb(r?: string | number, g?: string | number, b?: string | number, a = 1) {
-    return fromRgb([r, g, b, a]);
+function rgb(
+	r?: string | number,
+	g?: string | number,
+	b?: string | number,
+	a = 1,
+) {
+	return new Color(r, g, b, a);
 }
 
-export function hsl(string: string | undefined) {
-    return new Color(string, "hsl");
+function hsl(string: string | undefined) {
+	return new Color(string, "hsl");
 }
 
-export function lab(string: string | undefined) {
-    return new Color(string, "lab");
+function lab(string: string | undefined) {
+	return new Color(string, "lab");
 }
 
-export function lch(string: string | undefined) {
-    return new Color(string, "lch");
+function lch(string: string | undefined) {
+	return new Color(string, "lch");
 }
 
-export function oklab(string: string | undefined) {
-    return new Color(string, "oklab");
+function oklab(string: string | undefined) {
+	return new Color(string, "oklab");
 }
 
-export function hwb(string: string | undefined) {
-    return new Color(string, "hwb");
+function hwb(string: string | undefined) {
+	return new Color(string, "hwb");
 }
 
-export function oklch(string: string | undefined) {
-    return new Color(string, "oklch");
+function oklch(string: string | undefined) {
+	return new Color(string, "oklch");
 }
 
-export function models(string: string | undefined) {
-    return new Color(string, "color");
+function color(string: string | undefined) {
+	return new Color(string, "color");
 }
+
+export default {
+	red,
+	green,
+	blue,
+	alpha,
+	hex,
+	hexa,
+	rgb,
+	hsl,
+	lab,
+	lch,
+	oklab,
+	hwb,
+	oklch,
+	color,
+};
