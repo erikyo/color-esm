@@ -1,97 +1,56 @@
-import type {COLOR_FORMATS, RGBA} from "./types.ts";
+import { isFormat } from "./common";
+import { formatOptions } from "./constants";
+import type { FORMAT, RGBA } from "./types";
 
-type FormatOptions = Record<
-	string,
-	{
-		radix?: number;
-		min?: number;
-		max?: number;
-		suffix?: string;
+function formatValue(value: number, format: FORMAT = "number"): string {
+	if (format === "number") {
+		return value.toString();
 	}
->;
-
-const formatOptions: FormatOptions = {
-	string: {},
-	number: {
-		radix: 10,
-	},
-	int8: {
-		radix: 10,
+	const { min, max, radix, suffix } = {
 		min: 0,
 		max: 255,
-	},
-	normalized: {
 		radix: 10,
-		min: 0,
-		max: 1,
-	},
-	percentage: {
-		radix: 10,
-		min: 0,
-		max: 100,
-		suffix: "%",
-	},
-	radius: {
-		radix: 10,
-		min: 0,
-		max: 360,
-		suffix: "rad",
-	},
-};
-
-function formatValue(value: number, format: string | undefined): string {
-	if (typeof format === "string") {
-		return format;
-	}
-    // otherwise, assume it's a number
-    const {
-        min = 0,
-        max = 255,
-        radix = 10,
-        suffix = "",
-    } = formatOptions[format];
-    const normalizedValue = (value - min) / (max - min);
-    const formattedValue = (
-        normalizedValue * (radix === 16 ? 255 : 1)
-    ).toString(radix);
-    return formattedValue + suffix;
+		suffix: "",
+		...formatOptions[format],
+	};
+	const normalizedValue = (value - min) / (max - min);
+	const formattedValue = (normalizedValue * (radix === 16 ? 255 : 1)).toString(
+		radix,
+	);
+	return formattedValue + suffix;
 }
 
 /**
- * Formats a color into a string based on the specified format.
- * TODO: extendable to other user defined color formats
+ * FORMAT a color into a string based on the specified format.
+ * TODO: extendable to other user defined color FORMAT
  *
  * @param color
- * @param separator
  * @param format
+ * @param separator
  */
-function formatColor(
-	color: RGBA,
-	separator: string,
-	format: COLOR_FORMATS,
-): string {
-	switch (format) {
+function formatColor(color: RGBA, model: string, separator = ", "): string {
+	const format = "number";
+	const f: FORMAT = isFormat(format) ? format : "number";
+	const m = isFormat(model) ? model : "rgba";
+	switch (m) {
 		case "hex":
-			return `#${formatValue(color.r, format)}${formatValue(
+			return `#${formatValue(color.r, f)}${formatValue(
+				color.g,
+				f,
+			)}${formatValue(color.b, f)}`;
+		case "rgba":
+			return `${m}(${formatValue(color.r, f)}${separator}${formatValue(
 				color.g,
 				format,
-			)}${formatValue(color.b, format)}`;
-		case "rgba":
-			return `${format}(${formatValue(
-				color.r,
-				format,
-			)}${separator}${formatValue(color.g, format)}${separator}${formatValue(
-				color.b,
-				format,
-			)}${separator}${formatValue(color.A, format)})`;
-		default:
-			return `${format}(${formatValue(
-				color.r,
-				format,
-			)}${separator}${formatValue(color.g, format)}${separator}${formatValue(
-				color.b,
+			)}${separator}${formatValue(color.b, f)}${separator}${formatValue(
+				color.A,
 				format,
 			)})`;
+		default:
+			return `${m}(${formatValue(color.r, f)}${separator}${formatValue(
+				color.g,
+				format,
+			)}${separator}${formatValue(color.b, f)})`;
 	}
 }
 
