@@ -1,4 +1,4 @@
-import type {RGBA} from "../types.ts";
+import type { RGBA } from "../types";
 
 export function fromHwb([h, w, b, alpha = "1"]: string[]): RGBA {
 	return {

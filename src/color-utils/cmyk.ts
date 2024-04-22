@@ -1,4 +1,14 @@
-import type {CMYK, RGBA} from "../types.ts";
+import { Int } from "../common";
+import type { CMYK, RGBA } from "../types";
+
+export function fromCmyk([c, m, y, k]: (string | number)[]): CMYK {
+	return {
+		c: Int(c),
+		m: Int(m),
+		y: Int(y),
+		k: Int(k),
+	};
+}
 
 /**
  * Converts rgb to cmyk

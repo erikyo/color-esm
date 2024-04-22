@@ -1,4 +1,4 @@
-import type {LAB, XYZ} from "../types.ts";
+import type { LAB, XYZ } from "../types";
 
 /**
  * Given a color in XYZ color space, return the corresponding color in the CIELAB color space.

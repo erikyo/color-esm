@@ -1,4 +1,4 @@
-import type {RGBA} from "../types.ts";
+import type { RGBA } from "../types";
 
 /**
  * Converts a Hex color to rgbString
@@ -7,7 +7,7 @@ import type {RGBA} from "../types.ts";
  *
  * @return {string} the rgbString color values for the given hex color
  */
-export function fromHex(hex: string[], format: string): RGBA {
+export function fromHex(hex: string[]): RGBA {
 	// Extract the RGBA values from the hex values
 	return {
 		r: Number.parseInt(hex[0], 16),
