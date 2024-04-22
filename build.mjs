@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 import * as es from 'esbuild'
 
+const isDev = process?.env?.NODE_ENV === 'development' ?? false
+
 /**
  * This function builds the package.
  *
@@ -19,6 +21,7 @@ async function run() {
     globalName: 'ColorEsm',
     tsconfig: 'tsconfig.json',
   })
+
   const iifeMin = es.build({
     format: 'iife',
     platform: 'node',
@@ -41,10 +44,10 @@ async function run() {
     outdir: 'lib/esm',
     treeShaking: true,
     splitting: false,
-    minify: true,
+    tsconfig: 'tsconfig.json',
+    minify: isDev,
     keepNames: true,
-    sourcemap: true,
-    bundle: true,
+    sourcemap: isDev,
     chunkNames: 'c_[name]-[hash]',
   })
 

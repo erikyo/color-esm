@@ -1,4 +1,4 @@
-import type { LAB, XYZ } from "../types";
+import type { LAB, XYZ } from "../types.js";
 
 /**
  * Given a color in XYZ color space, return the corresponding color in the CIELAB color space.

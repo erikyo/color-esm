@@ -3,8 +3,8 @@ import {
 	isHex,
 	shortHexToLongHex,
 	splitValues,
-} from "./common";
-import type { HEXSTRING } from "./types";
+} from "./common.js";
+import type { HEXSTRING } from "./types.js";
 
 /**
  * Get the hex value of the color and convert it to an Object of R G And B values (still in hex format)

@@ -1,4 +1,4 @@
-import type { RGBA } from "../types";
+import type { RGBA } from "../types.js";
 
 export function fromHwb([h, w, b, alpha = "1"]: string[]): RGBA {
 	return {

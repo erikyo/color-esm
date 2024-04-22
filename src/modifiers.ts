@@ -1,6 +1,6 @@
-import type Color from "./index";
+import type Color from "./index.js";
 
-import { INT8 } from "./constants";
+import { INT8 } from "./constants.js";
 
 function reddish(value: number) {
 	this.r += value;

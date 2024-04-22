@@ -1,4 +1,4 @@
-import type { RGBA, XYZ } from "../types";
+import type { RGBA, XYZ } from "../types.js";
 
 export function rgbToXyz({ r, g, b, A = 1 }): XYZ {
 	r /= 255;

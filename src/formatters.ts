@@ -1,6 +1,6 @@
-import { isFormat } from "./common";
-import { formatOptions } from "./constants";
-import type { FORMAT, RGBA } from "./types";
+import { isFormat } from "./common.js";
+import { formatOptions } from "./constants.js";
+import type { FORMAT, RGBA } from "./types.js";
 
 function formatValue(value: number, format: FORMAT = "number"): string {
 	if (format === "number") {
@@ -25,7 +25,7 @@ function formatValue(value: number, format: FORMAT = "number"): string {
  * TODO: extendable to other user defined color FORMAT
  *
  * @param color
- * @param format
+ * @param model
  * @param separator
  */
 function formatColor(color: RGBA, model: string, separator = ", "): string {

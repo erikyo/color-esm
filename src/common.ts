@@ -1,5 +1,5 @@
-import { COLOR_MODEL, HexFormat, formatOptions, isNumeric } from "./constants";
-import type { FORMAT, MODEL } from "./types";
+import { COLOR_MODEL, HexFormat, formatOptions, isNumeric } from "./constants.js";
+import type { FORMAT, MODEL } from "./types.js";
 
 /**
  * It returns an object with the hex values of the 3 digit hex color

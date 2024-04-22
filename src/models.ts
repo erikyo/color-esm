@@ -1,4 +1,4 @@
-import Color from "./index";
+import Color from "./index.js";
 
 function red(r = 255) {
 	this.r = r;

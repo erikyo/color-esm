@@ -1,4 +1,4 @@
-import type { COLORS } from "../types";
+import type { COLORS } from "../types.js";
 
 /**
  * This function takes an array of strings and returns and object with the rgbString values converted into INT8 (0-255)

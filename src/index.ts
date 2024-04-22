@@ -1,10 +1,10 @@
-import { Int, isModel, safeInt } from "./common";
-import { COLOR_MODEL } from "./constants";
-import formatColor from "./formatters";
-import models from "./models";
-import modifiers from "./modifiers";
-import parsers from "./parsers";
-import type { CHANNEL, COLORS, MODEL } from "./types";
+import { Int, isModel, safeInt } from "./common.js";
+import { COLOR_MODEL } from "./constants.js";
+import formatColor from "./formatters.js";
+import models from "./models.js";
+import modifiers from "./modifiers.js";
+import parsers from "./parsers.js";
+import type { CHANNEL, COLORS, MODEL } from "./types.js";
 
 type COLOR = {
 	r: number;

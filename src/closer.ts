@@ -1,5 +1,5 @@
 import * as namedColors from "./named-colors.json";
-import type { COLOR_INFO, COLOR_NAME, RGB, RGBA } from "./types";
+import type { COLOR_INFO, COLOR_NAME, RGB, RGBA } from "./types.js";
 
 /**
  * Given a color string, it returns the closest corresponding name of the color.

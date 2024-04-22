@@ -1,4 +1,4 @@
-import type { CHANNELS, COLOR_MODEL } from "./constants";
+import type { CHANNELS, COLOR_MODEL } from "./constants.js";
 import type namedColors from "./named-colors.json";
 
 // https://developer.mozilla.org/en-US/docs/Web/CSS/color_value#formal_syntax
@@ -108,6 +108,7 @@ export type FormatOptions = Record<
 		min?: number;
 		max?: number;
 		suffix?: string;
+        decimalPlaces?: number
 	}
 >;
 export type FORMAT = keyof FormatOptions;

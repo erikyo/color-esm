@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<script type="module">
+  import Color from "../lib/esm/index.js"
+
+  console.assert(false, "test start")
+  const black = new Color()
+  console.assert(black.toString() === 'rgba(0, 0, 0, 1)', "white should be white")
+  const white = new Color().rgb(255, 255, 255)
+  console.assert(white.toString() === 'rgba(255, 255, 255, 1)', "white should be white")
+  const red = new Color().red(200)
+  console.assert(red.toString() === 'rgba(200, 0, 0, 1)', "red should be red")
+  const green = new Color().green(200)
+  console.assert(green.toString() === 'rgba(0, 200, 0, 1)', "green should be green")
+  const blue = new Color().blue(200)
+  console.assert(blue.toString() === 'rgba(0, 0, 200, 1)', "blue should be blue" )
+</script>
+</body>
+</html>

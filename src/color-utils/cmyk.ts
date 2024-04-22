@@ -1,5 +1,5 @@
-import { Int } from "../common";
-import type { CMYK, RGBA } from "../types";
+import { Int } from "../common.js";
+import type { CMYK, RGBA } from "../types.js";
 
 export function fromCmyk([c, m, y, k]: (string | number)[]): CMYK {
 	return {

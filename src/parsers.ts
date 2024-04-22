@@ -1,15 +1,15 @@
-import { fromCmyk } from "./color-utils/cmyk";
-import { fromColor } from "./color-utils/color";
-import { fromHex } from "./color-utils/hex";
-import { fromHsl } from "./color-utils/hsl";
-import { fromHwb } from "./color-utils/hwb";
-import { fromLab, fromOklab } from "./color-utils/lab";
-import { fromLch, fromOklch } from "./color-utils/lch";
-import { fromRgb } from "./color-utils/rgb";
-import { fromXyz } from "./color-utils/xyz";
-import { extract, parseHex } from "./parsers-utils";
-import type { COLOR_PARSERS } from "./types";
-import validators from "./validators";
+import { fromCmyk } from "./color-utils/cmyk.js";
+import { fromColor } from "./color-utils/color.js";
+import { fromHex } from "./color-utils/hex.js";
+import { fromHsl } from "./color-utils/hsl.js";
+import { fromHwb } from "./color-utils/hwb.js";
+import { fromLab, fromOklab } from "./color-utils/lab.js";
+import { fromLch, fromOklch } from "./color-utils/lch.js";
+import { fromRgb } from "./color-utils/rgb.js";
+import { fromXyz } from "./color-utils/xyz.js";
+import { extract, parseHex } from "./parsers-utils.js";
+import type { COLOR_PARSERS } from "./types.js";
+import validators from "./validators.js";
 
 /**
  * array of color parsers to be used

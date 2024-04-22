@@ -1,4 +1,4 @@
-import type { RGBA } from "../types";
+import type { RGBA } from "../types.js";
 
 /**
  * Converts a Hex color to rgbString
