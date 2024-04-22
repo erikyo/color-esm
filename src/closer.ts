@@ -1,5 +1,5 @@
 import * as namedColors from "./named-colors.json";
-import type {COLOR_INFO, COLOR_NAME, NAMED_COLOR, RGB, RGBA,} from "./types.ts";
+import type { COLOR_INFO, COLOR_NAME, RGB, RGBA } from "./types";
 
 /**
  * Given a color string, it returns the closest corresponding name of the color.
@@ -17,7 +17,7 @@ import type {COLOR_INFO, COLOR_NAME, NAMED_COLOR, RGB, RGBA,} from "./types.ts";
  */
 export function closest(color: RGBA, set = namedColors): COLOR_INFO {
 	let closestGap = Number.MAX_SAFE_INTEGER;
-	const closestColor: COLOR_INFO = undefined;
+	const closestColor: Partial<COLOR_INFO> = {};
 
 	const rgbColorValues = Object.values(color);
 
@@ -27,7 +27,7 @@ export function closest(color: RGBA, set = namedColors): COLOR_INFO {
 		if (gap < closestGap) {
 			closestGap = gap;
 			closestColor.name = i as COLOR_NAME;
-			closestColor.color = `rgb(${set[i][0]},${set[i][1]},${set[i][2]})`;
+			closestColor.color = [set[i][0], set[i][1], set[i][2]];
 		}
 
 		// Break if exact match found
@@ -36,7 +36,7 @@ export function closest(color: RGBA, set = namedColors): COLOR_INFO {
 		}
 	}
 
-	return closestColor;
+	return closestColor as COLOR_INFO;
 }
 
 /**

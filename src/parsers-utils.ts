@@ -1,5 +1,10 @@
-import {cleanDefinition, isHex, shortHexToLongHex, splitValues,} from "./common.ts";
-import type {COLORSTRING} from "./types.ts";
+import {
+	cleanDefinition,
+	isHex,
+	shortHexToLongHex,
+	splitValues,
+} from "./common";
+import type { HEXSTRING } from "./types";
 
 /**
  * Get the hex value of the color and convert it to an Object of R G And B values (still in hex format)
@@ -8,7 +13,7 @@ import type {COLORSTRING} from "./types.ts";
  *
  * @return {string[]} an array of six digit hex values in a triplet of R G and B (HEXSTRING format)
  */
-export function parseHex(value: COLORSTRING): string[] {
+export function parseHex(value: HEXSTRING): string[] {
 	// remove # at the beginning of the hex color
 	const hexColor: string = value.substring(1);
 
@@ -43,7 +48,7 @@ export function parseHex(value: COLORSTRING): string[] {
 }
 
 /**
- * Get the values of the hslString string
+ * Get the values of the color string
  *
  * @param colorString - the color string
  * @return {string[]} the values of the hslString string

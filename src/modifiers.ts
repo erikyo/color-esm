@@ -1,7 +1,9 @@
-import type Color from "./index.ts";
+import type Color from "./index";
 
-export function reddish(value: number) {
-	this.r = this.r + value;
+import { INT8 } from "./constants";
+
+function reddish(value: number) {
+	this.r += value;
 	return this;
 }
 /**
@@ -10,17 +12,17 @@ export function reddish(value: number) {
  * @param {number} value - The amount to increment the blue value by, ranging from 0 to 1. Default
  * @return {this} The modified color object
  */
-export function bluish(value: number) {
-	this.b = this.b + value;
+function bluish(value: number) {
+	this.b += value;
 	return this;
 }
 
-export function greenish(value: number) {
-	this.g = this.g + value;
+function greenish(value: number) {
+	this.g += value;
 	return this;
 }
 
-export function invert() {
+function invert() {
 	for (const i in this) {
 		const key = i as keyof Color;
 		this[key] = 255 - this[key];
@@ -28,7 +30,7 @@ export function invert() {
 }
 
 /** @deprecated Please use invert() */
-export function negate() {
+function negate() {
 	this.invert();
 }
 
@@ -36,46 +38,70 @@ export function negate() {
  * Lightens the color by a given amount.
  *
  * @param {number} amount - The amount to lighten the color by, ranging from 0 to 1.
+ * @param {number} [precision=INT8] - The precision of the amount to lighten the color by.
  * @return {this} - Returns the modified color object.
  */
-export function lighten(amount: number) {
-	const factor = 255 - amount * 255;
-	this.r -= factor;
-	this.b -= factor;
-	this.g -= factor;
-	return this;
-}
-
-export function darken(amount: number) {
-	const factor = amount * 255;
+function lighten(amount: number, precision = INT8) {
+	const factor = amount * precision;
 	this.r += factor;
 	this.b += factor;
 	this.g += factor;
 	return this;
 }
 
-export function lightness(amount: number) {}
+function darken(amount: number, precision = INT8) {
+	const factor = amount * precision;
+	this.r -= factor;
+	this.b -= factor;
+	this.g -= factor;
+	return this;
+}
 
-export function saturate(amount: number) {}
+function lightness(amount: number) {}
 
-export function desaturate(amount: number) {}
+function saturate(amount: number) {}
 
-export function grayscale() {}
+function desaturate(amount: number) {}
 
-export function whiten(amount: number) {}
+function grayscale() {}
 
-export function blacken(amount: number) {}
+function whiten(amount: number) {}
 
-export function fade(amount: number) {}
+function blacken(amount: number) {}
 
-export function opaquer(amount: number) {}
+function fade(amount: number) {}
 
-export function rotate(amount: number) {}
+function opaquer(amount: number) {}
 
-export function mix(color: Color) {}
+function rotate(amount: number) {}
 
-export function isDark() {}
+function mix(color: Color) {}
 
-export function isLight() {}
+function isDark() {}
 
-export function closer(color: Color,colorSet: Color[]) {}
+function isLight() {}
+
+function closer(color: Color, colorSet: Color[]) {}
+
+export default {
+	reddish,
+	bluish,
+	greenish,
+	invert,
+	negate,
+	lighten,
+	darken,
+	lightness,
+	saturate,
+	desaturate,
+	grayscale,
+	whiten,
+	blacken,
+	fade,
+	opaquer,
+	rotate,
+	mix,
+	isDark,
+	isLight,
+	closer,
+};

@@ -1,7 +1,6 @@
-export const isNumeric: RegExp = /^-?\d*\.?\d+$/i;
-export const HexFormat: RegExp = /^[0-9a-f]+$/i;
-/** Remove comments from string */
-export const stripComments: RegExp = /(\/\*[^*]*\*\/)|(\/\/[^*]*)/g;
+import { COLOR_MODEL, HexFormat, formatOptions, isNumeric } from "./constants";
+import type { FORMAT, MODEL } from "./types";
+
 /**
  * It returns an object with the hex values of the 3 digit hex color
  *
@@ -78,10 +77,10 @@ export function normalizeDegrees(angle: string): number {
  * @param {number} max - The maximum allowed value (default is 0).
  * @return {number} The limited value.
  */
-export function range(value: number, min = undefined, max = undefined): number {
+export function range(value: number, min?: number, max?: number): number {
 	let newValue = value;
-	if (max) newValue = Math.max(value, min);
-	if (min) newValue = Math.min(value, max);
+	if (min) newValue = Math.min(value, min);
+	if (max) newValue = Math.max(value, max);
 	return newValue;
 }
 
@@ -105,6 +104,18 @@ export function calculateValue(
 	return safeInt(match ? match[1] : valueString, multiplier);
 }
 
+/** Remove comments from string */
+export const stripComments: RegExp = /(\/\*[^*]*\*\/)|(\/\/[^*]*)/g;
+
+/**
+ * Strip comments from string
+ * @param string - The input string.
+ * @returns The string without the comments.
+ */
+export function stripComment(string: string): string {
+	return string.replace(stripComments, "");
+}
+
 /**
  * Removes comments from the input string and extracts the content between the first opening parenthesis
  * and the last closing parenthesis.
@@ -114,7 +125,7 @@ export function calculateValue(
  */
 export function cleanDefinition(string: string): string {
 	// Remove comments from the string
-	const cleanString = string.replace(stripComments, "");
+	const cleanString = stripComment(string);
 
 	// Find the positions of the first opening and the last closing parentheses
 	const firstParenthesisIndex = cleanString.indexOf("(");
@@ -145,30 +156,50 @@ export function normalizePercentage(value: string, multiplier: number): number {
  * @return {number} - The calculated color value fallbacks.
  */
 export function colorValueFallbacks(value: string, err?: string): number {
-	if (value === "infinity") {
-		console.warn(
-			err || `Positive infinity value has been set to 255: ${value}`,
-		);
-		return 255;
+	switch (value) {
+		case "infinity":
+			console.warn(
+				err || `Positive infinity value has been set to 255: ${value}`,
+			);
+			return 255;
+		case "currentColor":
+			console.warn(
+				err || `The "currentColor" value has been set to 0: ${value}`,
+			);
+			break;
+		case "transparent":
+			console.warn(
+				err || `The "transparent" value has been set to 0: ${value}`,
+			);
+			break;
+		case "NaN":
+			console.warn(err || `"NaN" value has been set to 0: ${value}`);
+			break;
+		case "-infinity":
+			console.warn(
+				err || `"Negative" infinity value has been set to 0: ${value}`,
+			);
+			break;
+		case "none":
+			console.warn(
+				err || `The none keyword is invalid in legacy color syntax: ${value}`,
+			);
+			break;
+		default:
+			console.warn(err || `Invalid color value: ${value}`);
+			break;
 	}
-
-	if (value === "currentColor")
-		console.warn(err || `The "currentColor" value has been set to 0: ${value}`);
-	if (value === "transparent")
-		console.warn(err || `The "transparent" value has been set to 0: ${value}`);
-	if (value === "NaN")
-		console.warn(err || `"NaN" value has been set to 0: ${value}`);
-	if (value === "-infinity")
-		console.warn(
-			err || `"Negative" infinity value has been set to 0: ${value}`,
-		);
-	if (value === "none")
-		console.warn(
-			err || `The none keyword is invalid in legacy color syntax: ${value}`,
-		);
 	return 0;
 }
 
+/**
+ * Converts a number or string to a number.
+ * If options are provided, it will return a value limited between options. Min and options.max. Otherwise, it will return a number.
+ *
+ * @param value
+ * @param options
+ * @constructor
+ */
 export function Int(
 	value: string | number,
 	options?: { min: number; max: number },
@@ -190,6 +221,7 @@ export function Int(
  * @return {string} the corresponding value in 8-bit format
  */
 export function safeInt(value: string | unknown, max = 255): number {
+	if (typeof value === "number") return range(value, 0, max);
 	const newValue = typeof value === "string" ? value?.trim() : "0";
 	if (isNumeric.test(newValue)) {
 		// limit the min and the max newValue
@@ -214,4 +246,21 @@ export function safeInt(value: string | unknown, max = 255): number {
 
 	// If the value is not a percentage or an angle in degrees, it is invalid
 	return colorValueFallbacks(newValue, `Invalid value: ${value}`);
+}
+
+export function normalizeAlpha(value: string | number | unknown): number {
+	if (typeof value === "number") {
+		return range(value, 0, 1);
+	}
+	return safeInt(value, 1);
+}
+
+/** typeguard for model */
+export function isModel(model: string): model is MODEL {
+	return COLOR_MODEL.includes(model);
+}
+
+/** typeguard for format */
+export function isFormat(format: string): format is FORMAT {
+	return Object.keys(formatOptions).includes(format);
 }
