@@ -49,6 +49,7 @@ class Test {
     _l = 0;
     _A = 1;
 	_model = "rgb";
+    _alphaEnabled = true;
 
 	constructor([r, g, b, a]: [number, number, number, number]) {
 		this._r = r;
@@ -58,11 +59,20 @@ class Test {
 	}
 
 	toString() {
-        if (this._model.endsWith('a')) {
+        if (this._alphaEnabled) {
             return `rgba(${this._r}, ${this._g}, ${this._b}, ${this._A})`;
         }
         return `rgb(${this._r}, ${this._g}, ${this._b})`;
 	}
+}
+
+
+function detectModel(channel: string) {
+    for (const model in converters) {
+        if (converters[model].channels.includes(channel)) {
+            return model;
+        }
+    }
 }
 
 for (const channel of channels) {
@@ -70,21 +80,24 @@ for (const channel of channels) {
 
     // set the color value for each channel
 	Test.prototype[`${channel}`] = function (this: Test, value?: number) {
-        /** @type {string} colorMode - the color mode is the same as the model without alpha */
         // convert the color to the new model not in the current model
-        const currentColorMode = this._model.endsWith('a') ? this._model.slice(0, -1) : this._model;
-        if (channel !== "A" && !currentColorMode.split("").includes(channel)) {
-
-            const colorMode = models.find( m => m.split("").includes(channel) );
+        /** @type {string} colorMode - the color mode is the same as the model without alpha */
+        // check if the channel is in the current color mode
+        if (channel !== "A" && !this._model.split("").includes(channel)) {
+            // get the color mode for the channel from the model
+            const colorMode = detectModel( channel );
+            if (!colorMode) {
+                throw new Error( `Channel ${channel} not found in models` );
+            }
             // set the color value for each channel
             // convert the color to the new model
-            const newColor = converters[currentColorMode].mod[colorMode](this);
+            const newColor = converters[this._model].mod[colorMode](this);
             // set the new color
             for (let i = 0; i < colorMode.length; i++) {
                 this[`_${colorMode[i]}`] = newColor[colorMode[i]];
             }
             // set the new color model (i.e. "hsl")
-            this._model = `${colorMode}a`;
+            this._model = colorMode;
         }
         // set the color value for each channel
 		if (value !== undefined) {
@@ -95,30 +108,35 @@ for (const channel of channels) {
 	};
 }
 
+function detectAlpha(model: string) {
+    return model.endsWith('a')
+}
+
+function removeAlpha(model: string) {
+    return model.slice(0, -1)
+}
+
 for (const model of modelsWithAlpha) {
 	Test.prototype[`${model}`] = setGet;
+
+    /** @type {string} colorMode - the color mode is the same as the model without alpha */
+    let colorMode: string = model;
+
+    // check if the alpha is enabled and store it
+    const alphaEnabled = detectAlpha(model);
+    if (alphaEnabled) {
+        // remove the alpha channel from the model
+        colorMode = removeAlpha(model)
+    }
 
     /**
      * set and get the color in the new model
      * @param value
      */
 	function setGet(this: Test, value?: number[]) {
-        /** @type {string} colorMode - the color mode is the same as the model without alpha */
-        let colorMode: string = model;
 
         // check if the current model has alpha and remove it
-        let currentColorMode = this._model;
-        if (currentColorMode.endsWith('a')) {
-            currentColorMode = currentColorMode.slice(0, -1)
-        };
-
-        // check if the alpha is enabled and store it
-        const hasAlpha = model.endsWith('a');
-        if (hasAlpha) {
-            // remove the alpha channel from the model
-            colorMode = model.slice(0, -1);
-        }
-
+        let currentColorMode = this._alphaEnabled ? this._model : `${this._model}a`;
 
         // Handle model change
 		if (colorMode !== currentColorMode) {
@@ -129,7 +147,7 @@ for (const model of modelsWithAlpha) {
                 this[`_${colorMode[i]}`] = newColor[colorMode[i]];
             }
             // set the new color model (i.e. "hsl")
-            this._model = model;
+            this._model = colorMode;
 		}
 
         // setter
@@ -138,7 +156,7 @@ for (const model of modelsWithAlpha) {
 			for (let i = 0; i < colorMode.length; i++) {
 				this[`_${colorMode[i]}`] = value[i];
 			}
-            if (hasAlpha) {
+            if (alphaEnabled) {
                 this._A = value[3];
             }
 			return this;
@@ -150,7 +168,7 @@ for (const model of modelsWithAlpha) {
 		for (let i = 0; i < colorMode.length; i++) {
 			v.push(this[`_${colorMode[i]}`]);
 		}
-        if (hasAlpha) {
+        if (alphaEnabled) {
             v.push(this._A);
         }
 		return v;
@@ -169,6 +187,16 @@ Object.assign(Test.prototype, {
 		}
 		return this;
 	},
+    darken: function (this: Test, value: number) {
+        if (this._model === "hsl") {
+            this._l -= value;
+        } else {
+            this._r -= value;
+            this._g -= value;
+            this._b -= value;
+        }
+        return this;
+    }
 });
 
 export default Test;

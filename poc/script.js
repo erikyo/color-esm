@@ -84,25 +84,35 @@ var TestEsm = (() => {
   __name(hslToRgb, "hslToRgb");
 
   // poc/index.ts
+  var formats = {
+    default: "[MODEL]([INT8], [INT8], [INT8])",
+    defaultAlpha: "[MODEL]([INT8], [INT8], [INT8], [NORM_FLOAT])",
+    cylinder: "[MODEL]([RAD], [PERCENT], [PERCENT])",
+    cylinderAlpha: "[MODEL]([RAD], [PERCENT], [PERCENT], [NORM_FLOAT])"
+  };
   var converters = {
     rgb: {
       channels: ["r", "g", "b"],
       mod: {
         hsl: (current) => rgbToHsl({ r: current._r, g: current._g, b: current._b })
-      }
+      },
+      format: formats.default,
+      formatAlpha: formats.defaultAlpha
     },
     hsl: {
       channels: ["h", "s", "l"],
       mod: {
         rgb: (current) => hslToRgb({ h: current._h, s: current._s, l: current._l })
-      }
+      },
+      format: formats.cylinder,
+      formatAlpha: formats.cylinderAlpha
     }
   };
   var channels = /* @__PURE__ */ new Set();
   channels.add("A");
   for (const model in converters) {
-    for (const chan of converters[model].channels) {
-      channels.add(chan);
+    for (const currentChannel of converters[model].channels) {
+      channels.add(currentChannel);
     }
   }
   var models = Object.keys(converters);
@@ -119,6 +129,7 @@ var TestEsm = (() => {
     _l = 0;
     _A = 1;
     _model = "rgb";
+    _alphaEnabled = true;
     constructor([r, g, b, a]) {
       this._r = r;
       this._g = g;
@@ -126,23 +137,33 @@ var TestEsm = (() => {
       this._A = a;
     }
     toString() {
-      if (this._model.endsWith("a")) {
+      if (this._alphaEnabled) {
         return `rgba(${this._r}, ${this._g}, ${this._b}, ${this._A})`;
       }
       return `rgb(${this._r}, ${this._g}, ${this._b})`;
     }
   };
+  function detectModel(channel) {
+    for (const model in converters) {
+      if (converters[model].channels.includes(channel)) {
+        return model;
+      }
+    }
+  }
+  __name(detectModel, "detectModel");
   for (const channel of channels) {
     const propertyName = `_${channel}`;
     Test.prototype[`${channel}`] = function(value) {
-      const currentColorMode = this._model.endsWith("a") ? this._model.slice(0, -1) : this._model;
-      if (channel !== "A" && !currentColorMode.split("").includes(channel)) {
-        const colorMode = models.find((m) => m.split("").includes(channel));
-        const newColor = converters[currentColorMode].mod[colorMode](this);
+      if (channel !== "A" && !this._model.split("").includes(channel)) {
+        const colorMode = detectModel(channel);
+        if (!colorMode) {
+          throw new Error(`Channel ${channel} not found in models`);
+        }
+        const newColor = converters[this._model].mod[colorMode](this);
         for (let i = 0; i < colorMode.length; i++) {
           this[`_${colorMode[i]}`] = newColor[colorMode[i]];
         }
-        this._model = `${colorMode}a`;
+        this._model = colorMode;
       }
       if (value !== void 0) {
         this[propertyName] = value;
@@ -151,30 +172,29 @@ var TestEsm = (() => {
       return this[propertyName];
     };
   }
+  function detectAlpha(model) {
+    return model.endsWith("a");
+  }
+  __name(detectAlpha, "detectAlpha");
+  function removeAlpha(model) {
+    return model.slice(0, -1);
+  }
+  __name(removeAlpha, "removeAlpha");
   for (const model of modelsWithAlpha) {
     let setGet = function(value) {
-      let colorMode = model;
-      let currentColorMode = this._model;
-      if (currentColorMode.endsWith("a")) {
-        currentColorMode = currentColorMode.slice(0, -1);
-      }
-      ;
-      const hasAlpha = model.endsWith("a");
-      if (hasAlpha) {
-        colorMode = model.slice(0, -1);
-      }
+      let currentColorMode = this._alphaEnabled ? this._model : `${this._model}a`;
       if (colorMode !== currentColorMode) {
         const newColor = converters[currentColorMode].mod[colorMode](this);
         for (let i = 0; i < colorMode.length; i++) {
           this[`_${colorMode[i]}`] = newColor[colorMode[i]];
         }
-        this._model = model;
+        this._model = colorMode;
       }
       if (value !== void 0) {
         for (let i = 0; i < colorMode.length; i++) {
           this[`_${colorMode[i]}`] = value[i];
         }
-        if (hasAlpha) {
+        if (alphaEnabled) {
           this._A = value[3];
         }
         return this;
@@ -183,13 +203,18 @@ var TestEsm = (() => {
       for (let i = 0; i < colorMode.length; i++) {
         v.push(this[`_${colorMode[i]}`]);
       }
-      if (hasAlpha) {
+      if (alphaEnabled) {
         v.push(this._A);
       }
       return v;
     };
     __name(setGet, "setGet");
     Test.prototype[`${model}`] = setGet;
+    let colorMode = model;
+    const alphaEnabled = detectAlpha(model);
+    if (alphaEnabled) {
+      colorMode = removeAlpha(model);
+    }
   }
   Object.assign(Test.prototype, {
     lighten: function(value) {
@@ -199,6 +224,16 @@ var TestEsm = (() => {
         this._r += value;
         this._g += value;
         this._b += value;
+      }
+      return this;
+    },
+    darken: function(value) {
+      if (this._model === "hsl") {
+        this._l -= value;
+      } else {
+        this._r -= value;
+        this._g -= value;
+        this._b -= value;
       }
       return this;
     }
