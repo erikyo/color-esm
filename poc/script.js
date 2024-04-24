@@ -85,10 +85,10 @@ var TestEsm = (() => {
 
   // poc/index.ts
   var formats = {
-    default: "[MODEL]([INT8], [INT8], [INT8])",
-    defaultAlpha: "[MODEL]([INT8], [INT8], [INT8], [NORM_FLOAT])",
-    cylinder: "[MODEL]([RAD], [PERCENT], [PERCENT])",
-    cylinderAlpha: "[MODEL]([RAD], [PERCENT], [PERCENT], [NORM_FLOAT])"
+    default: "[MODEL]([CH1:INT8], [CH2:INT8], [CH3:INT8])",
+    defaultAlpha: "[MODEL]([CH1:INT8], [CH2:INT8], [CH3:INT8], [A:NORM_FLOAT])",
+    cylinder: "[MODEL]([CH1:RAD], [CH2:PERCENT], [CH3:PERCENT])",
+    cylinderAlpha: "[MODEL]([CH1:RAD], [CH2:PERCENT], [CH3:PERCENT], [A:NORM_FLOAT])"
   };
   var converters = {
     rgb: {
@@ -137,10 +137,13 @@ var TestEsm = (() => {
       this._A = a;
     }
     toString() {
+      const channels2 = converters[this._model].channels.map((channel, i) => {
+        return this[`_${channel}`] + (this._model.startsWith("hsl") ? i === 0 ? "deg" : "%" : "");
+      });
       if (this._alphaEnabled) {
-        return `rgba(${this._r}, ${this._g}, ${this._b}, ${this._A})`;
+        return `${this._model}(${channels2[0]}, ${channels2[1]}, ${channels2[2]}, ${this._A})`;
       }
-      return `rgb(${this._r}, ${this._g}, ${this._b})`;
+      return `${this._model}(${channels2[0]}, ${channels2[1]}, ${channels2[2]})`;
     }
   };
   function detectModel(channel) {
@@ -156,9 +159,8 @@ var TestEsm = (() => {
     Test.prototype[`${channel}`] = function(value) {
       if (channel !== "A" && !this._model.split("").includes(channel)) {
         const colorMode = detectModel(channel);
-        if (!colorMode) {
+        if (!colorMode)
           throw new Error(`Channel ${channel} not found in models`);
-        }
         const newColor = converters[this._model].mod[colorMode](this);
         for (let i = 0; i < colorMode.length; i++) {
           this[`_${colorMode[i]}`] = newColor[colorMode[i]];
@@ -182,8 +184,8 @@ var TestEsm = (() => {
   __name(removeAlpha, "removeAlpha");
   for (const model of modelsWithAlpha) {
     let setGet = function(value) {
-      let currentColorMode = this._alphaEnabled ? this._model : `${this._model}a`;
-      if (colorMode !== currentColorMode) {
+      const currentColorMode = this._alphaEnabled ? this._model : `${this._model}a`;
+      if (colorMode !== this._model) {
         const newColor = converters[currentColorMode].mod[colorMode](this);
         for (let i = 0; i < colorMode.length; i++) {
           this[`_${colorMode[i]}`] = newColor[colorMode[i]];

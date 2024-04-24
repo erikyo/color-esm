@@ -1,10 +1,10 @@
 import { hslToRgb, rgbToHsl } from "../src/color-utils/hsl";
 
 const formats = {
-    default: "[MODEL]([INT8], [INT8], [INT8])",
-    defaultAlpha: "[MODEL]([INT8], [INT8], [INT8], [NORM_FLOAT])",
-    cylinder: "[MODEL]([RAD], [PERCENT], [PERCENT])",
-    cylinderAlpha: "[MODEL]([RAD], [PERCENT], [PERCENT], [NORM_FLOAT])"
+    default: "[MODEL]([CH1:INT8], [CH2:INT8], [CH3:INT8])",
+    defaultAlpha: "[MODEL]([CH1:INT8], [CH2:INT8], [CH3:INT8], [A:NORM_FLOAT])",
+    cylinder: "[MODEL]([CH1:RAD], [CH2:PERCENT], [CH3:PERCENT])",
+    cylinderAlpha: "[MODEL]([CH1:RAD], [CH2:PERCENT], [CH3:PERCENT], [A:NORM_FLOAT])"
 }
 
 const converters ={
@@ -59,10 +59,14 @@ class Test {
 	}
 
 	toString() {
+        //TODO follow the model format in converters.[model].format
+        const channels = converters[this._model].channels.map((channel, i) => {
+            return this[`_${channel}`] + (this._model.startsWith('hsl') ? (i === 0 ? "deg" : "%") : "");
+        })
         if (this._alphaEnabled) {
-            return `rgba(${this._r}, ${this._g}, ${this._b}, ${this._A})`;
+            return `${this._model}(${channels[0]}, ${channels[1]}, ${channels[2]}, ${this._A})`;
         }
-        return `rgb(${this._r}, ${this._g}, ${this._b})`;
+        return `${this._model}(${channels[0]}, ${channels[1]}, ${channels[2]})`;
 	}
 }
 
@@ -82,17 +86,15 @@ for (const channel of channels) {
 	Test.prototype[`${channel}`] = function (this: Test, value?: number) {
         // convert the color to the new model not in the current model
         /** @type {string} colorMode - the color mode is the same as the model without alpha */
-        // check if the channel is in the current color mode
+        // check if the channel is in the current color mode otherwise convert the color to the new model
         if (channel !== "A" && !this._model.split("").includes(channel)) {
             // get the color mode for the channel from the model
             const colorMode = detectModel( channel );
-            if (!colorMode) {
-                throw new Error( `Channel ${channel} not found in models` );
-            }
-            // set the color value for each channel
-            // convert the color to the new model
+            // if the color mode is not found, throw an error
+            if (!colorMode) throw new Error( `Channel ${channel} not found in models` );
+            // set the color value for each channel and convert the color to the new model
             const newColor = converters[this._model].mod[colorMode](this);
-            // set the new color
+            // set the new value for each channel
             for (let i = 0; i < colorMode.length; i++) {
                 this[`_${colorMode[i]}`] = newColor[colorMode[i]];
             }
@@ -136,10 +138,10 @@ for (const model of modelsWithAlpha) {
 	function setGet(this: Test, value?: number[]) {
 
         // check if the current model has alpha and remove it
-        let currentColorMode = this._alphaEnabled ? this._model : `${this._model}a`;
+        const currentColorMode = this._alphaEnabled ? this._model : `${this._model}a`;
 
         // Handle model change
-		if (colorMode !== currentColorMode) {
+		if (colorMode !== this._model) {
             // convert the color to the new model
 			const newColor = converters[currentColorMode].mod[colorMode](this);
             // set the new color
