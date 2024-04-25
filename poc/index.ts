@@ -1,4 +1,5 @@
 import {hslToRgb, rgbToHsl} from "../src/color-utils/hsl";
+import {toHex} from "../src/color-utils/hex";
 
 /** the unit used as a color type (e.g. "number", "percent", "degrees"...) */
 export type FormatOptions = Record<
@@ -22,15 +23,15 @@ function removeAlpha(model: string) {
 }
 
 function formatValue(value: string, channelsValuesArray: number[]): string {
-    const [channel, formaName ] = value.split(":")
+    const [channel, targetModel ] = value.split(":")
     if (channel === "A") {
         // the alpha channel is always normalized to 1, we just need to return it
-        return channelsValuesArray[3].toString()
+        return targetModel !== "HEX" ? channelsValuesArray[3].toString() : toHex(Math.round(channelsValuesArray[3] * 255));
     }
 
     const channelID = Number(channel)
     let newValue: number | string = channelsValuesArray[channelID - 1];
-    const formatter = formatOptions[formaName];
+    const formatter = formatOptions[targetModel];
     if (formatter?.min && newValue < formatter.min) {
         newValue = formatter.min;
     }
@@ -64,13 +65,12 @@ function extractOptions(input: string, channelValues: number[]):string {
 
 export type FORMAT = keyof FormatOptions;
 export const formatOptions: FormatOptions = {
-    string: {},
     INT8: {
         min: 0,
         max: 255,
         decimalPlaces: 0,
     },
-    hex: {
+    HEX: {
         radix: 16,
         min: 0,
         max: 255,
@@ -111,7 +111,14 @@ const formats = {
     modernAlpha: "[1:DEGREE] [2:PERCENT] [3:PERCENT] / [A:NORMALIZED]"
 }
 
-const converters ={
+const converters = {
+    hex: {
+        channels: ["r", "g", "b"],
+        format: {
+            default: formats.hex,
+            alpha: formats.hexAlpha
+        }
+    },
     rgb: {
         channels: ["r", "g", "b"],
         mod: {
@@ -166,7 +173,6 @@ class Test {
 		this._A = a;
 	}
 
-
     getModelByChannel(channel: string) {
         for (const model of Object.keys(converters)) {
             if (converters[model].channels.includes(channel)) {
@@ -202,6 +208,9 @@ class Test {
         // [100,20,30]
         const channelValues = this.getChannelValues()
 
+        if (this._model === 'hex') {
+            return extractOptions(format, channelValues)
+        }
 
         return `${colorMode}(${extractOptions(format, channelValues)})`;
 	}
@@ -237,7 +246,6 @@ for (const channel of channels) {
 }
 
 for (const model of modelsWithAlpha) {
-	Test.prototype[`${model}`] = setGet;
 
     /** @type {string} colorMode - the color mode is the same as the model without alpha */
     let currentModel: string = model;
@@ -248,32 +256,38 @@ for (const model of modelsWithAlpha) {
         // remove the alpha channel from the model
         currentModel = removeAlpha(model)
     }
+    Test.prototype[`${model}`] = setGet;
 
     /**
      * set and get the color in the new model
      * @param value
      */
 	function setGet(this: Test, value?: number[]) {
+        const mod = {
+            from: this._model === "hex" ? "rgb" : this._model,
+            to: currentModel === "hex" ? "rgb" : currentModel
+        }
+
+        // set the alpha status
+        this._alphaEnabled = alphaEnabled;
 
         // Handle model change
-		if (currentModel !== this._model) {
+		if (mod.to !== mod.from) {
             // convert the color to the new model
-			const newColor = converters[this._model].mod[currentModel](this);
+			const newColor = converters[mod.from].mod[mod.to](this);
             // set the new color
             for (let i = 0; i < currentModel.length; i++) {
-                this[`_${currentModel[i]}`] = newColor[currentModel[i]];
+                this[`_${mod.to[i]}`] = newColor[mod.to[i]];
             }
             // set the new color model (i.e. "hsl")
             this._model = currentModel;
-            // set the alpha status
-            this._alphaEnabled = alphaEnabled;
 		}
 
         // setter
 		if (value !== undefined) {
             // for each channel set the value
-			for (let i = 0; i < currentModel.length; i++) {
-				this[`_${currentModel[i]}`] = value[i];
+			for (let i = 0; i < mod.to.length; i++) {
+				this[`_${mod.to[i]}`] = value[i];
 			}
             if (alphaEnabled) {
                 this._A = value[3];
@@ -284,8 +298,8 @@ for (const model of modelsWithAlpha) {
 		// getter
 		const v = [];
         // for each channel get the value
-		for (let i = 0; i < currentModel.length; i++) {
-			v.push(this[`_${currentModel[i]}`]);
+		for (let i = 0; i < mod.to.length; i++) {
+			v.push(this[`_${mod.to[i]}`]);
 		}
         if (alphaEnabled) {
             v.push(this._A);

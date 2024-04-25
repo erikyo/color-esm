@@ -84,6 +84,12 @@ var TestEsm = (() => {
   }
   __name(hslToRgb, "hslToRgb");
 
+  // src/color-utils/hex.ts
+  function toHex(int8, alpha = false) {
+    return int8.toString(16).padStart(2, "0");
+  }
+  __name(toHex, "toHex");
+
   // poc/index.ts
   function detectAlpha(model) {
     return model.endsWith("a");
@@ -94,13 +100,13 @@ var TestEsm = (() => {
   }
   __name(removeAlpha, "removeAlpha");
   function formatValue(value, channelsValuesArray) {
-    const [channel, formaName] = value.split(":");
+    const [channel, targetModel] = value.split(":");
     if (channel === "A") {
-      return channelsValuesArray[3].toString();
+      return targetModel !== "HEX" ? channelsValuesArray[3].toString() : toHex(Math.round(channelsValuesArray[3] * 255));
     }
     const channelID = Number(channel);
     let newValue = channelsValuesArray[channelID - 1];
-    const formatter = formatOptions[formaName];
+    const formatter = formatOptions[targetModel];
     if (formatter?.min && newValue < formatter.min) {
       newValue = formatter.min;
     }
@@ -127,13 +133,12 @@ var TestEsm = (() => {
   }
   __name(extractOptions, "extractOptions");
   var formatOptions = {
-    string: {},
     INT8: {
       min: 0,
       max: 255,
       decimalPlaces: 0
     },
-    hex: {
+    HEX: {
       radix: 16,
       min: 0,
       max: 255,
@@ -173,6 +178,13 @@ var TestEsm = (() => {
     modernAlpha: "[1:DEGREE] [2:PERCENT] [3:PERCENT] / [A:NORMALIZED]"
   };
   var converters = {
+    hex: {
+      channels: ["r", "g", "b"],
+      format: {
+        default: formats.hex,
+        alpha: formats.hexAlpha
+      }
+    },
     rgb: {
       channels: ["r", "g", "b"],
       mod: {
@@ -246,6 +258,9 @@ var TestEsm = (() => {
       const format = converters[this._model].format[this._alphaEnabled ? "alpha" : "default"];
       const colorMode = this.getFullModel();
       const channelValues = this.getChannelValues();
+      if (this._model === "hex") {
+        return extractOptions(format, channelValues);
+      }
       return `${colorMode}(${extractOptions(format, channelValues)})`;
     }
   };
@@ -269,17 +284,21 @@ var TestEsm = (() => {
   }
   for (const model of modelsWithAlpha) {
     let setGet = function(value) {
-      if (currentModel !== this._model) {
-        const newColor = converters[this._model].mod[currentModel](this);
+      const mod = {
+        from: this._model === "hex" ? "rgb" : this._model,
+        to: currentModel === "hex" ? "rgb" : currentModel
+      };
+      this._alphaEnabled = alphaEnabled;
+      if (mod.to !== mod.from) {
+        const newColor = converters[mod.from].mod[mod.to](this);
         for (let i = 0; i < currentModel.length; i++) {
-          this[`_${currentModel[i]}`] = newColor[currentModel[i]];
+          this[`_${mod.to[i]}`] = newColor[mod.to[i]];
         }
         this._model = currentModel;
-        this._alphaEnabled = alphaEnabled;
       }
       if (value !== void 0) {
-        for (let i = 0; i < currentModel.length; i++) {
-          this[`_${currentModel[i]}`] = value[i];
+        for (let i = 0; i < mod.to.length; i++) {
+          this[`_${mod.to[i]}`] = value[i];
         }
         if (alphaEnabled) {
           this._A = value[3];
@@ -287,8 +306,8 @@ var TestEsm = (() => {
         return this;
       }
       const v = [];
-      for (let i = 0; i < currentModel.length; i++) {
-        v.push(this[`_${currentModel[i]}`]);
+      for (let i = 0; i < mod.to.length; i++) {
+        v.push(this[`_${mod.to[i]}`]);
       }
       if (alphaEnabled) {
         v.push(this._A);
@@ -296,12 +315,12 @@ var TestEsm = (() => {
       return v;
     };
     __name(setGet, "setGet");
-    Test.prototype[`${model}`] = setGet;
     let currentModel = model;
     const alphaEnabled = detectAlpha(model);
     if (alphaEnabled) {
       currentModel = removeAlpha(model);
     }
+    Test.prototype[`${model}`] = setGet;
   }
   Object.assign(Test.prototype, {
     lighten: function(value) {
