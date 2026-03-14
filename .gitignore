@@ -1,7 +1,8 @@
 # IntelliJ project files
-.idea/
+.idea
 *.iml
 out
 gen
 
 lib
+node_modules

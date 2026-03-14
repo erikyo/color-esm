@@ -1,6 +1,6 @@
 import assert from "node:assert";
 import test from "node:test";
-import Color from "../lib/esm/index.js";
+import Color from "../lib/index.js";
 
 test("rgb", () => {
   const black = new Color();
