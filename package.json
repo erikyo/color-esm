@@ -1,44 +1,48 @@
 {
-  "name": "color-esm",
-  "version": "0.0.1",
-  "description": "Chainable color library es module (inspired to color)",
-  "main": "index.js",
-  "license": "ISC",
-  "author": "Erik Golinelli <https://github.com/erikyo>",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/erikyo/color-esm.git"
-  },
-  "homepage": "https://erikyo.github.io/color-esm/",
-  "bugs": {
-    "url": "https://github.com/erikyo/color-esm/issues"
-  },
-  "type": "module",
-  "module": "lib/esm/index.js",
-  "types": "lib/@types/index.d.ts",
-  "sideEffects": false,
-  "keywords": [
-    "color",
-    "css",
-    "esm"
-  ],
-  "supports": {
-    "node": ">=20.0.0"
-  },
-  "scripts": {
-    "start": "npx esbuild src/index.ts --bundle --outdir=lib/esm --format=esm --global-name=Color --watch",
-    "poststart": "npm run tsc:types",
-    "tsc:watch": "npx tsc --watch",
-    "tsc:types": "npx tsc --emitDeclarationOnly",
-    "deno:watch": "deno task start",
-    "postdeno:watch": "npm run tsc:types",
-    "prebuild": "npm run tsc:types",
-    "build": "deno task build",
-    "lint": "npx @biomejs/biome check --apply src",
-    "test": "node --experimental-vm-modules --experimental-specifier-resolution=node --test",
-    "test:coverage": "node --experimental-vm-modules --experimental-specifier-resolution=node --test --experimental-test-coverage",
-    "test:watch": "node --experimental-vm-modules --experimental-specifier-resolution=node  --test --watch",
-    "lint-node": "npx @biomejs/biome check --apply src tests",
-    "preeepublish": "npm run test"
-  }
+	"name": "color-esm",
+	"version": "0.0.1",
+	"description": "Chainable color library es module (inspired to color)",
+	"type": "module",
+	"main": "./lib/esm/index.js",
+	"module": "./lib/esm/index.js",
+	"types": "./lib/@types/index.d.ts",
+	"unpkg": "./lib/iife/index.min.js",
+	"jsdelivr": "./lib/iife/index.js",
+	"exports": {
+		".": {
+			"types": "./lib/@types/index.d.ts",
+			"import": "./lib/esm/index.js",
+			"default": "./lib/esm/index.js"
+		}
+	},
+	"files": ["lib/", "README.md", "LICENSE", "package.json"],
+	"license": "ISC",
+	"author": "Erik Golinelli <https://github.com/erikyo>",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/erikyo/color-esm.git"
+	},
+	"homepage": "https://erikyo.github.io/color-esm/",
+	"bugs": {
+		"url": "https://github.com/erikyo/color-esm/issues"
+	},
+	"sideEffects": false,
+	"keywords": ["color", "css", "esm"],
+	"scripts": {
+		"start": "npx esbuild src/index.ts --bundle --outdir=lib/esm --format=esm --global-name=Color --watch",
+		"poststart": "npm run tsc:types",
+		"tsc:watch": "npx tsc --watch",
+		"tsc:types": "npx tsc --emitDeclarationOnly",
+		"deno:watch": "deno task start",
+		"postdeno:watch": "npm run tsc:types",
+		"prebuild": "npm run tsc:types",
+		"build": "deno task build",
+		"lint": "npx @biomejs/biome check --write src",
+		"test": "node --experimental-vm-modules --experimental-specifier-resolution=node --test",
+		"test:coverage": "node --experimental-vm-modules --experimental-specifier-resolution=node --test --experimental-test-coverage",
+		"test:watch": "node --experimental-vm-modules --experimental-specifier-resolution=node  --test --watch",
+		"lint-node": "npx @biomejs/biome lint --write src tests",
+		"preeepublish": "npm run test",
+		"publish-check": "npm run build && npx publint"
+	}
 }

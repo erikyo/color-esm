@@ -9,6 +9,18 @@ const isDev = process?.env?.NODE_ENV === 'development' ?? false
  * @return {Promise<void>}
  */
 async function run() {
+  const test = es.build({
+    format: 'iife',
+    platform: 'node',
+    entryPoints: ['poc/index.ts'],
+    outfile: 'poc/script.js',
+    keepNames: true,
+    bundle: true,
+    minify: false,
+    globalName: 'TestEsm',
+    tsconfig: 'tsconfig.json',
+  })
+
   /**
    * Immediately Invoked Function Expression (IIFE)
    */
@@ -27,8 +39,8 @@ async function run() {
     platform: 'node',
     entryPoints: ['src/index.ts'],
     outfile: 'lib/iife/index.min.js',
-    bundle: true,
-    minify: true,
+    bundle: false,
+    minify: false,
     sourcemap: true,
     globalName: 'ColorEsm',
     tsconfig: 'tsconfig.json'
@@ -40,7 +52,7 @@ async function run() {
   const esm = es.build({
     format: 'esm',
     platform: 'browser',
-    entryPoints: ['src/**/*.ts', "src/named-colors.json"],
+    entryPoints: ['src/**/*.ts'],
     outdir: 'lib/esm',
     treeShaking: true,
     splitting: false,
@@ -51,7 +63,7 @@ async function run() {
     chunkNames: 'c_[name]-[hash]',
   })
 
-  await Promise.all([iife, iifeMin, esm])
+  await Promise.all([test,iife, iifeMin, esm])
 }
 
 /** Run the build */
