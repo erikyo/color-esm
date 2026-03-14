@@ -101,3 +101,76 @@ test("6. Modifiers Math Correctness", () => {
   const semi = new Color("rgba(0, 0, 0, 1)").fade(0.5);
   assert.equal(semi.alpha(), 0.5, "Fade should reduce alpha by 50%");
 });
+
+test("7. Advanced API Parity (Original Color Package)", () => {
+  const c = new Color("#FF0000");
+  
+  // Test string() method alias
+  assert.equal(c.string(), "rgba(255, 0, 0, 1)", "string() should work as alias for toString()");
+  
+  // Test object() method alias  
+  assert.deepEqual(c.object(), { r: 255, g: 0, b: 0 }, "object() should work as alias for toObject()");
+  
+  // Test array() method alias
+  assert.deepEqual(c.array(), [255, 0, 0], "array() should work as alias for toArray() and return RGB only");
+  
+  // Test round() method
+  const rounded = c.round();
+  assert.equal(rounded.toString(), "rgba(255, 0, 0, 1)", "round() should return new Color instance");
+  assert.notEqual(rounded, c, "round() should create new instance (immutability)");
+  
+  // Test clearer() modifier
+  const faded = c.clearer(0.5);
+  assert.equal(faded.alpha(), 0.5, "clearer() should reduce alpha by absolute amount");
+  assert.notEqual(faded, c, "clearer() should create new instance (immutability)");
+  
+  // Test color space method return values with .string() and .object()
+  const hsl = c.hsl();
+  assert.equal(typeof hsl.string, 'function', "hsl() should return object with string() method");
+  assert.equal(typeof hsl.object, 'function', "hsl() should return object with object() method");
+  assert.equal(hsl.string(), "hsl(0, 100%, 50%)", "hsl().string() should return HSL string");
+  assert.deepEqual(hsl.object(), { h: 0, s: 100, l: 50 }, "hsl().object() should return HSL values");
+  
+  // Test direct property access on color space objects
+  assert.equal(hsl.h, 0, "Should be able to access hsl.h directly");
+  assert.equal(hsl.s, 100, "Should be able to access hsl.s directly");
+  assert.equal(hsl.l, 50, "Should be able to access hsl.l directly");
+  
+  // Test HSV and HWB also work
+  const hsv = c.hsv();
+  assert.equal(typeof hsv.string, 'function', "hsv() should return object with string() method");
+  assert.equal(hsv.h, 0, "Should be able to access hsv.h directly");
+  
+  const hwb = c.hwb();
+  assert.equal(typeof hwb.string, 'function', "hwb() should return object with string() method");
+  assert.equal(hwb.h, 0, "Should be able to access hwb.h directly");
+});
+
+test("8. CSS4 Color String Parsing", () => {
+  // Test space-separated with slash alpha
+  const css4rgb = new Color("rgb(255 255 255 / 0.5)");
+  assert.equal(css4rgb.toString(), "rgba(255, 255, 255, 0.5)", "Should parse CSS4 RGB with slash alpha");
+  
+  // Test regular comma-separated still works
+  const regular = new Color("rgba(255, 255, 255, 0.5)");
+  assert.equal(regular.toString(), "rgba(255, 255, 255, 0.5)", "Should still parse comma-separated RGBA");
+  
+  // Test mixed scenarios
+  const mixed1 = new Color("rgb(255 255 255)");
+  assert.equal(mixed1.toString(), "rgba(255, 255, 255, 1)", "Should parse space-separated RGB without alpha");
+  
+  const mixed2 = new Color("hsl(120, 100%, 50%)");
+  assert.equal(mixed2.hsl().h, 120, "Should still parse comma-separated HSL");
+  
+  // Test CSS4 HSL without units (basic support)
+  const css4hsl = new Color("hsl(120 100% 50% / 0.5)");
+  assert.equal(css4hsl.alpha(), 0.5, "Should parse CSS4 HSL with slash alpha");
+  assert.equal(css4hsl.hsl().h, 120, "Should parse CSS4 HSL values");
+});
+
+test("9. Tree Shaking Compatibility", () => {
+  // Test that individual utilities can be imported (if implemented)
+  // This is more of a build-time test, but we can at least verify the exports exist
+  assert.ok(Color, "Color class should be exported");
+  assert.equal(typeof Color, 'function', "Color should be a constructor function");
+});
