@@ -2,6 +2,7 @@ import { toHex } from "./color-utils/hex.js";
 import { hslToRgb, rgbToHsl } from "./color-utils/hsl.js";
 import { toHwb, hwbToRgb } from "./color-utils/hwb.js";
 import { rgbToHsv, hsvToRgb } from "./color-utils/color.js";
+import { ColorSpaceWrapper } from "./color-space-wrapper.js";
 import Color from "./index.js";
 
 function red(r?: number) {
@@ -35,8 +36,9 @@ function alpha(a?: number) {
 
 function hsl(h?: number, s?: number, l?: number) {
 	if (h === undefined) {
-		// Getter: return HSL object from current RGB
-		return rgbToHsl({ r: this._r, g: this._g, b: this._b });
+		// Getter: return HSL object from current RGB with wrapper
+		const hslValues = rgbToHsl({ r: this._r, g: this._g, b: this._b });
+		return ColorSpaceWrapper.create(hslValues, "hsl", this);
 	}
 	// Setter: convert HSL to RGB and update
 	const rgb = hslToRgb({ h, s: s ?? 0, l: l ?? 0 });
@@ -61,8 +63,9 @@ function rgb(r?: number, g?: number, b?: number, a?: number) {
 
 function hwb(h?: number, w?: number, b?: number) {
 	if (h === undefined) {
-		// Getter: return HWB object from current RGB
-		return toHwb({ r: this._r, g: this._g, b: this._b });
+		// Getter: return HWB object from current RGB with wrapper
+		const hwbValues = toHwb({ r: this._r, g: this._g, b: this._b });
+		return ColorSpaceWrapper.create(hwbValues, "hwb", this);
 	}
 	// Setter: convert HWB to RGB and update
 	const rgb = hwbToRgb({ h, w: w ?? 0, b: b ?? 0 });
@@ -74,8 +77,9 @@ function hwb(h?: number, w?: number, b?: number) {
 
 function hsv(h?: number, s?: number, v?: number) {
 	if (h === undefined) {
-		// Getter: return HSV object from current RGB
-		return rgbToHsv({ r: this._r, g: this._g, b: this._b });
+		// Getter: return HSV object from current RGB with wrapper
+		const hsvValues = rgbToHsv({ r: this._r, g: this._g, b: this._b });
+		return ColorSpaceWrapper.create(hsvValues, "hsv", this);
 	}
 	// Setter: convert HSV to RGB and update
 	const rgb = hsvToRgb({ h, s: s ?? 0, v: v ?? 0 });
