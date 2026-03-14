@@ -6,26 +6,47 @@ type ColorWithModifiers = Color & {
 	luminosity(): number;
 };
 
-function reddish(value: number) {
-	this._r += value;
-	return this;
+// Helper function to create a clone of a Color instance
+function cloneColor(color: Color): Color {
+	const cloned = new Color();
+	cloned._r = color._r;
+	cloned._g = color._g;
+	cloned._b = color._b;
+	cloned._A = color._A;
+	if (color._h !== undefined) cloned._h = color._h;
+	if (color._s !== undefined) cloned._s = color._s;
+	if (color._l !== undefined) cloned._l = color._l;
+	if (color._x !== undefined) cloned._x = color._x;
+	if (color._y !== undefined) cloned._y = color._y;
+	if (color._z !== undefined) cloned._z = color._z;
+	cloned.model = color.model;
+	return cloned;
 }
 
-function bluish(value: number) {
-	this._b += value;
-	return this;
+function reddish(value: number): Color {
+	const clone = cloneColor(this);
+	clone._r += value;
+	return clone;
 }
 
-function greenish(value: number) {
-	this._g += value;
-	return this;
+function bluish(value: number): Color {
+	const clone = cloneColor(this);
+	clone._b += value;
+	return clone;
 }
 
-function invert() {
-	this._r = 255 - this._r;
-	this._g = 255 - this._g;
-	this._b = 255 - this._b;
-	return this;
+function greenish(value: number): Color {
+	const clone = cloneColor(this);
+	clone._g += value;
+	return clone;
+}
+
+function invert(): Color {
+	const clone = cloneColor(this);
+	clone._r = 255 - clone._r;
+	clone._g = 255 - clone._g;
+	clone._b = 255 - clone._b;
+	return clone;
 }
 
 /** @deprecated Please use invert() */
@@ -34,23 +55,25 @@ function negate() {
 }
 
 function lighten(amount: number): Color {
-	const hsl = rgbToHsl({ r: this._r, g: this._g, b: this._b });
-	hsl.l = Math.min(100, hsl.l + amount * 100);
+	const clone = cloneColor(this);
+	const hsl = rgbToHsl({ r: clone._r, g: clone._g, b: clone._b });
+	hsl.l = Math.min(100, hsl.l + (hsl.l * amount));
 	const rgb = hslToRgb(hsl);
-	this._r = rgb.r;
-	this._g = rgb.g;
-	this._b = rgb.b;
-	return this;
+	clone._r = rgb.r;
+	clone._g = rgb.g;
+	clone._b = rgb.b;
+	return clone;
 }
 
 function darken(amount: number): Color {
-	const hsl = rgbToHsl({ r: this._r, g: this._g, b: this._b });
+	const clone = cloneColor(this);
+	const hsl = rgbToHsl({ r: clone._r, g: clone._g, b: clone._b });
 	hsl.l = Math.max(0, hsl.l - amount * 100);
 	const rgb = hslToRgb(hsl);
-	this._r = rgb.r;
-	this._g = rgb.g;
-	this._b = rgb.b;
-	return this;
+	clone._r = rgb.r;
+	clone._g = rgb.g;
+	clone._b = rgb.b;
+	return clone;
 }
 
 /** @deprecated Please use darken() */
@@ -103,72 +126,80 @@ function lightness(): number {
 }
 
 function saturate(ratio: number): Color {
-	const hsl = rgbToHsl({ r: this._r, g: this._g, b: this._b });
+	const clone = cloneColor(this);
+	const hsl = rgbToHsl({ r: clone._r, g: clone._g, b: clone._b });
 	hsl.s = Math.min(100, hsl.s + hsl.s * ratio);
 	const rgb = hslToRgb(hsl);
-	this._r = rgb.r;
-	this._g = rgb.g;
-	this._b = rgb.b;
-	return this;
+	clone._r = rgb.r;
+	clone._g = rgb.g;
+	clone._b = rgb.b;
+	return clone;
 }
 
 function desaturate(ratio: number): Color {
-	const hsl = rgbToHsl({ r: this._r, g: this._g, b: this._b });
+	const clone = cloneColor(this);
+	const hsl = rgbToHsl({ r: clone._r, g: clone._g, b: clone._b });
 	hsl.s = Math.max(0, hsl.s - hsl.s * ratio);
 	const rgb = hslToRgb(hsl);
-	this._r = rgb.r;
-	this._g = rgb.g;
-	this._b = rgb.b;
-	return this;
+	clone._r = rgb.r;
+	clone._g = rgb.g;
+	clone._b = rgb.b;
+	return clone;
 }
 
 function grayscale(): Color {
+	const clone = cloneColor(this);
 	// http://en.wikipedia.org/wiki/Grayscale#Converting_color_to_grayscale
-	const value = this._r * 0.3 + this._g * 0.59 + this._b * 0.11;
-	this._r = value;
-	this._g = value;
-	this._b = value;
-	return this;
+	const value = clone._r * 0.3 + clone._g * 0.59 + clone._b * 0.11;
+	clone._r = value;
+	clone._g = value;
+	clone._b = value;
+	return clone;
 }
 
 function whiten(amount: number): Color {
+	const clone = cloneColor(this);
 	// HWB whiten - add whiteness by mixing with white
 	const factor = Math.min(1, amount);
-	this._r = this._r + (255 - this._r) * factor;
-	this._g = this._g + (255 - this._g) * factor;
-	this._b = this._b + (255 - this._b) * factor;
-	return this;
+	clone._r = clone._r + (255 - clone._r) * factor;
+	clone._g = clone._g + (255 - clone._g) * factor;
+	clone._b = clone._b + (255 - clone._b) * factor;
+	return clone;
 }
 
 function blacken(amount: number): Color {
+	const clone = cloneColor(this);
 	// HWB blacken - add blackness by mixing with black
 	const factor = Math.min(1, amount);
-	this._r = this._r * (1 - factor);
-	this._g = this._g * (1 - factor);
-	this._b = this._b * (1 - factor);
-	return this;
+	clone._r = clone._r * (1 - factor);
+	clone._g = clone._g * (1 - factor);
+	clone._b = clone._b * (1 - factor);
+	return clone;
 }
 
 function fade(ratio: number): Color {
-	this._A = Math.max(0, this._A - this._A * ratio);
-	return this;
+	const clone = cloneColor(this);
+	clone._A = Math.max(0, clone._A - clone._A * ratio);
+	return clone;
 }
 
 function opaquer(ratio: number): Color {
-	this._A = Math.min(1, this._A + this._A * ratio);
-	return this;
+	const clone = cloneColor(this);
+	clone._A = Math.min(1, clone._A + clone._A * ratio);
+	return clone;
 }
 
 function rotate(degrees: number): Color {
-	const hsl = rgbToHsl({ r: this._r, g: this._g, b: this._b });
+	const clone = cloneColor(this);
+	const hsl = rgbToHsl({ r: clone._r, g: clone._g, b: clone._b });
 	let hue = (hsl.h + degrees) % 360;
 	if (hue < 0) hue += 360;
 	hsl.h = hue;
 	const rgb = hslToRgb(hsl);
-	this._r = rgb.r;
-	this._g = rgb.g;
-	this._b = rgb.b;
-	return this;
+	clone._r = rgb.r;
+	clone._g = rgb.g;
+	clone._b = rgb.b;
+	return clone;
 }
 
 function mix(mixColor: Color, weight = 0.5): Color {
@@ -179,18 +210,19 @@ function mix(mixColor: Color, weight = 0.5): Color {
 		);
 	}
 
+	const clone = cloneColor(this);
 	const w = 2 * weight - 1;
-	const a = this._A - mixColor._A;
+	const a = clone._A - mixColor._A;
 
 	const w1 = ((w * a === -1 ? w : (w + a) / (1 + w * a)) + 1) / 2;
 	const w2 = 1 - w1;
 
-	this._r = w2 * this._r + w1 * mixColor._r;
-	this._g = w2 * this._g + w1 * mixColor._g;
-	this._b = w2 * this._b + w1 * mixColor._b;
-	this._A = this._A * (1 - weight) + mixColor._A * weight;
+	clone._r = w2 * clone._r + w1 * mixColor._r;
+	clone._g = w2 * clone._g + w1 * mixColor._g;
+	clone._b = w2 * clone._b + w1 * mixColor._b;
+	clone._A = clone._A * (1 - weight) + mixColor._A * weight;
 
-	return this;
+	return clone;
 }
 
 function isDark(): boolean {

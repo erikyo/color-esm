@@ -25,5 +25,5 @@ export function fromHex(hex: string[]): RGBA {
  * @return {string} the hex string
  */
 export function toHex(int8: number, alpha = false): string {
-	return int8.toString(16).padStart(2, "0");
+	return int8.toString(16).padStart(2, "0").toUpperCase();
 }

@@ -1,5 +1,7 @@
 import { toHex } from "./color-utils/hex.js";
 import { hslToRgb, rgbToHsl } from "./color-utils/hsl.js";
+import { toHwb, hwbToRgb } from "./color-utils/hwb.js";
+import { rgbToHsv, hsvToRgb } from "./color-utils/color.js";
 import Color from "./index.js";
 
 function red(r?: number) {
@@ -54,6 +56,32 @@ function rgb(r?: number, g?: number, b?: number, a?: number) {
 	if (g !== undefined) this._g = g;
 	if (b !== undefined) this._b = b;
 	if (a !== undefined) this._A = a;
+	return this;
+}
+
+function hwb(h?: number, w?: number, b?: number) {
+	if (h === undefined) {
+		// Getter: return HWB object from current RGB
+		return toHwb({ r: this._r, g: this._g, b: this._b });
+	}
+	// Setter: convert HWB to RGB and update
+	const rgb = hwbToRgb({ h, w: w ?? 0, b: b ?? 0 });
+	this._r = rgb.r;
+	this._g = rgb.g;
+	this._b = rgb.b;
+	return this;
+}
+
+function hsv(h?: number, s?: number, v?: number) {
+	if (h === undefined) {
+		// Getter: return HSV object from current RGB
+		return rgbToHsv({ r: this._r, g: this._g, b: this._b });
+	}
+	// Setter: convert HSV to RGB and update
+	const rgb = hsvToRgb({ h, s: s ?? 0, v: v ?? 0 });
+	this._r = rgb.r;
+	this._g = rgb.g;
+	this._b = rgb.b;
 	return this;
 }
 
@@ -184,6 +212,14 @@ const channelGetters: Record<string, () => number> = {
 	},
 };
 
+function array() {
+	return [this._r, this._g, this._b];
+}
+
+function rgbNumber() {
+	return (this._r << 16) + (this._g << 8) + this._b;
+}
+
 const setters = {
 	red,
 	green,
@@ -193,6 +229,10 @@ const setters = {
 	hexa,
 	rgb,
 	hsl,
+	hwb,
+	hsv,
+	array,
+	rgbNumber,
 };
 
 const getters = {
@@ -201,6 +241,10 @@ const getters = {
 	hexa,
 	rgb,
 	hsl,
+	hwb,
+	hsv,
+	array,
+	rgbNumber,
 };
 
 export default { getters, setters };

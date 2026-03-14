@@ -15,14 +15,19 @@ const angleError = (value: string): string =>
  *
  */
 export function fromHsl([h, s, l, A]: string[]): HSLA {
+	// Try to parse hue as a number first
+	let hue = 0;
+	if (h && !isNaN(Number(h))) {
+		hue = normalizeDegrees(h);
+	} else {
+		hue = colorValueFallbacks(h, angleError(h)) || 0;
+	}
+	
 	return {
-		h:
-			colorValueFallbacks(h, angleError(h)) ||
-			Math.round(normalizeDegrees(h)) ||
-			0,
-		s: colorValueFallbacks(s) || safeInt(s, 100) || 0,
-		l: colorValueFallbacks(l) || safeInt(l, 100) || 0,
-		A: colorValueFallbacks(A) || 1,
+		h: hue,
+		s: safeInt(s, 100) || 0,
+		l: safeInt(l, 100) || 0,
+		A: A !== undefined ? Number(A) : 1,
 	};
 }
 

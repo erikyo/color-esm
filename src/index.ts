@@ -4,6 +4,7 @@ import formatColor from "./formatters.js";
 import models from "./models.js";
 import modifiers from "./modifiers.js";
 import parsers from "./parsers.js";
+import { hslToRgb } from "./color-utils/hsl.js";
 import type { CHANNEL, COLORS, MODEL } from "./types.js";
 
 class Color {
@@ -69,24 +70,6 @@ class Color {
 	}
 
 	fromObject(color: { [key: CHANNEL]: number | string } | Color) {
-		// Map input keys to internal properties
-		const keyMap: Record<string, string> = {
-			r: "_r",
-			g: "_g",
-			b: "_b",
-			a: "_A",
-			A: "_A",
-			h: "_h",
-			s: "_s",
-			l: "_l",
-			x: "_x",
-			y: "_y",
-			z: "_z",
-			c: "_c",
-			m: "_m",
-			k: "_k",
-		};
-
 		// Handle Color instance - copy internal properties directly
 		if (color instanceof Color) {
 			this._r = color._r;
@@ -99,7 +82,30 @@ class Color {
 			return this;
 		}
 
-		// Handle plain object with color values
+		// Check if this is an HSL object
+		if ('h' in color && 's' in color && 'l' in color) {
+			// Convert HSL to RGB
+			const rgb = hslToRgb({ 
+				h: Number(color.h), 
+				s: Number(color.s), 
+				l: Number(color.l) 
+			});
+			this._r = rgb.r;
+			this._g = rgb.g;
+			this._b = rgb.b;
+			this._A = 'a' in color ? Number(color.a) : 1;
+			return this;
+		}
+
+		// Handle plain object with color values (RGB)
+		const keyMap: Record<string, string> = {
+			r: "_r",
+			g: "_g",
+			b: "_b",
+			a: "_A",
+			A: "_A",
+		};
+
 		for (const key of Object.keys(color)) {
 			const internalKey = keyMap[key];
 			if (internalKey) {
@@ -264,5 +270,29 @@ Object.assign(Color.prototype, models.setters);
 
 // Apply modifiers
 Object.assign(Color.prototype, modifiers);
+
+// Static factory methods
+Color.rgb = function(r: number, g: number, b: number, a?: number): Color {
+	return new Color({ r, g, b, a: a ?? 1 });
+};
+
+Color.hsl = function(h: number, s: number, l: number, a?: number): Color {
+	const color = new Color();
+	color.hsl(h, s, l);
+	if (a !== undefined) color.alpha(a);
+	return color;
+};
+
+Color.hex = function(hex: string): Color {
+	return new Color(hex);
+};
+
+Color.random = function(): Color {
+	return new Color({
+		r: Math.floor(Math.random() * 256),
+		g: Math.floor(Math.random() * 256),
+		b: Math.floor(Math.random() * 256),
+	});
+};
 
 export default Color;

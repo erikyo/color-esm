@@ -11,6 +11,7 @@ export type COLORS =
 	| RGBA
 	| HSL
 	| HSLA
+	| HSV
 	| LAB
 	| XYZ
 	| LCH
@@ -49,6 +50,13 @@ export type HWB = {
 	h: number;
 	w: number;
 	b: number;
+};
+
+/* HSV (Hue, Saturation, Value) */
+export type HSV = {
+	h: number;
+	s: number;
+	v: number;
 };
 
 /* LAB (Lightness, A-axis, B-axis) */
