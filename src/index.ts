@@ -6,26 +6,18 @@ import modifiers from "./modifiers.js";
 import parsers from "./parsers.js";
 import type { CHANNEL, COLORS, MODEL } from "./types.js";
 
-type COLOR = {
-	r: number;
-	g: number;
-	b: number;
-	h?: number;
-	s?: number;
-	l?: number;
-	x?: number;
-	y?: number;
-	z?: number;
-	A: number;
-	format: MODEL;
-};
-
-class Color implements COLOR {
-	r = 0;
-	g = 0;
-	b = 0;
-	A = 1;
-	format = "rgba" as MODEL;
+class Color {
+	_r = 0;
+	_g = 0;
+	_b = 0;
+	_A = 1;
+	_h?: number;
+	_s?: number;
+	_l?: number;
+	_x?: number;
+	_y?: number;
+	_z?: number;
+	model: MODEL = "rgba" as MODEL;
 
 	/**
 	 * Color constructor function for the Color class that initializes the color object based on the provided arguments.
@@ -39,14 +31,17 @@ class Color implements COLOR {
 		x?:
 			| number
 			| string
+			| unknown
 			| (string | number)[]
 			| { [key: CHANNEL]: number | string },
 		y?: number | string,
 		z?: number | string,
 		a: number | string = 1,
 	) {
-		if (x) {
-			if (typeof x !== "object") {
+		if (x !== undefined && x !== null) {
+			if (x instanceof Color) {
+				this.fromObject(x);
+			} else if (typeof x !== "object") {
 				if (z !== undefined) {
 					// Args - Color(x, y, z, a)
 					// We have passed 3 or 4 arguments, each argument is a channel value for the color
@@ -68,22 +63,64 @@ class Color implements COLOR {
 			} else if (typeof x === "object") {
 				// Object - Color({r: 1, g: 2, b: 3, a: 0.5})
 				// We have passed 1 argument in this case, an object where each key is a channel, and the value is the channel value
-				this.fromObject(x);
+				this.fromObject(x as { [key: CHANNEL]: number | string });
 			}
 		}
 	}
 
-	fromObject(color: { [key: CHANNEL]: number | string }) {
-		for (const i in color) {
-			if (i in this) {
-				this[i] = safeInt(color[i]);
+	fromObject(color: { [key: CHANNEL]: number | string } | Color) {
+		// Map input keys to internal properties
+		const keyMap: Record<string, string> = {
+			r: "_r",
+			g: "_g",
+			b: "_b",
+			a: "_A",
+			A: "_A",
+			h: "_h",
+			s: "_s",
+			l: "_l",
+			x: "_x",
+			y: "_y",
+			z: "_z",
+			c: "_c",
+			m: "_m",
+			k: "_k",
+		};
+
+		// Handle Color instance - copy internal properties directly
+		if (color instanceof Color) {
+			this._r = color._r;
+			this._g = color._g;
+			this._b = color._b;
+			this._A = color._A;
+			if (color._h !== undefined) this._h = color._h;
+			if (color._s !== undefined) this._s = color._s;
+			if (color._l !== undefined) this._l = color._l;
+			return this;
+		}
+
+		// Handle plain object with color values
+		for (const key of Object.keys(color)) {
+			const internalKey = keyMap[key];
+			if (internalKey) {
+				const value = (color as unknown as Record<string, string | number>)[
+					key
+				];
+				// Alpha is 0-1, other channels are 0-255
+				if (internalKey === "_A") {
+					(this as unknown as Record<string, number>)[internalKey] =
+						typeof value === "number" ? value : Number(value);
+				} else {
+					(this as unknown as Record<string, number>)[internalKey] =
+						safeInt(value);
+				}
 			}
 		}
 		return this;
 	}
 
 	/**
-	 * Parses a color array in the format [r, g, b, a] and returns an object with r, g, b, and a properties.
+	 * Parses a color array in the model [r, g, b, a] and returns an object with r, g, b, and a properties.
 	 *
 	 * @param rgbArray the color array
 	 * @param model
@@ -92,14 +129,40 @@ class Color implements COLOR {
 	 * @return the color object
 	 */
 	fromArray(rgbArray: (string | number)[], model = "rgba", parse = false) {
+		const keyMap: Record<string, string> = {
+			r: "_r",
+			g: "_g",
+			b: "_b",
+			a: "_A",
+			A: "_A",
+			h: "_h",
+			s: "_s",
+			l: "_l",
+			x: "_x",
+			y: "_y",
+			z: "_z",
+			c: "_c",
+			m: "_m",
+			k: "_k",
+		};
+
 		for (const i in model.split("")) {
 			const channel = model[i];
-			if (i === "3" && channel === "a") {
-				this.A = parse ? safeInt(rgbArray[i]) : Int(rgbArray[i]);
-			} else if (typeof channel === "string" && channel in this) {
-				this[channel] = rgbArray[i] ?? 0;
-			} else {
-				throw new Error(`Invalid color format: ${model}`);
+			const internalKey = keyMap[channel];
+			if (internalKey && internalKey in this) {
+				const value = rgbArray[i];
+				// Alpha is 0-1, other channels are 0-255
+				if (internalKey === "_A") {
+					(this as unknown as Record<string, number>)[internalKey] =
+						value !== undefined
+							? typeof value === "number"
+								? value
+								: Number(value)
+							: 1;
+				} else {
+					(this as unknown as Record<string, number>)[internalKey] =
+						value !== undefined ? (parse ? safeInt(value) : Int(value)) : 0;
+				}
 			}
 		}
 		return this;
@@ -111,23 +174,23 @@ class Color implements COLOR {
 	 * If the color string does not match any of the FORMAT, the function throws an error.
 	 *
 	 * @param {string} colorString - the color string to test and convert to rgbString values
-	 * @param {MODEL} model - the format of the color string (e.g. "rgb", "rgba", "hsl", "hsla"...)
+	 * @param {MODEL} model - the model of the color string (e.g. "rgb", "rgba", "hsl", "hsla"...)
 	 *
 	 * @return {Object|Error} the object with rgbString values of that color
 	 */
 	fromString(colorString: string, model?: string | number): COLORS {
-		// the format of the color string (e.g. "rgb", "rgba", "hsl", "hsla"...) is defined in the model
+		// the model of the color string (e.g. "rgb", "rgba", "hsl", "hsla"...) is defined in the model
 		if (typeof model === "string") {
-			if (!isModel(model)) {
-				// store the format of the color string
-				this.format = model as MODEL;
-				// find the converter function based on the format
-				const mode = parsers.find((p) => p.format === model);
+			if (isModel(model)) {
+				// store the model of the color string
+				this.model = model as MODEL;
+				// find the converter function based on the model
+				const mode = parsers.find((p) => p.model === model);
+				if (!mode) {
+					throw new Error(`Parser not found for model: ${model}`);
+				}
 				// convert the color string to rgbString values
-				return mode.converter(
-					mode.parser(colorString),
-					model as MODEL,
-				) as COLOR;
+				return mode.converter(mode.parser(colorString), model as MODEL);
 			}
 			throw new Error(
 				`Invalid model: ${model} should be one of ${COLOR_MODEL.join(", ")}`,
@@ -135,10 +198,10 @@ class Color implements COLOR {
 		}
 
 		// If the color string matches one of the regular expressions, return an object with the type of color and the value of the color
-		for (const { format, regex, parser, converter } of parsers) {
+		for (const { model, regex, parser, converter } of parsers) {
 			if (regex.test(colorString)) {
 				const result = parser(colorString);
-				return converter(result, format);
+				return converter(result, model);
 			}
 		}
 
@@ -160,21 +223,21 @@ class Color implements COLOR {
 		return this;
 	}
 
-	toObject(format = "rgb") {
+	toObject(model = "rgb") {
 		const current: Record<string, unknown> = {};
-		for (const i in format.split("")) {
-			if (format[i] in this) {
-				const char = format[i];
+		for (const i in model.split("")) {
+			if (model[i] in this) {
+				const char = model[i];
 				current[char] = this[char];
 			}
 		}
 		return current;
 	}
 
-	toArray(format = "rgba") {
+	toArray(model = "rgba") {
 		const current = [];
-		for (const i in format.split("")) {
-			const char = format[i];
+		for (const i in model.split("")) {
+			const char = model[i];
 			if (char in this) {
 				current.push(this[char as keyof this]);
 			}
@@ -186,15 +249,20 @@ class Color implements COLOR {
 		return JSON.stringify(this.toObject(), null, 2);
 	}
 
-	toString(format = "rgba") {
-		return formatColor(this, format ?? this.format);
+	toString(model = "rgba") {
+		return formatColor(this, model ?? this.model);
 	}
 
 	toValue() {
-		return (this.r << 16) + (this.g << 8) + this.b;
+		return (this._r << 16) + (this._g << 8) + this._b;
 	}
 }
 
-Object.assign(Color.prototype, models, modifiers);
+// Apply model methods (red, green, blue, alpha, rgb, hsl, hex, etc.)
+// These work as both getters (when called without args) and setters (when called with args)
+Object.assign(Color.prototype, models.setters);
+
+// Apply modifiers
+Object.assign(Color.prototype, modifiers);
 
 export default Color;
