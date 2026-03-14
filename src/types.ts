@@ -1,5 +1,5 @@
 import type { CHANNELS, COLOR_MODEL } from "./constants.js";
-import type namedColors from "./named-colors.json";
+import type namedColors from "./named-colors";
 
 // https://developer.mozilla.org/en-US/docs/Web/CSS/color_value#formal_syntax
 
@@ -7,7 +7,9 @@ import type namedColors from "./named-colors.json";
 export type HEXSTRING = `#${string}` | string;
 
 export type COLORS =
+	| RGB
 	| RGBA
+	| HSL
 	| HSLA
 	| LAB
 	| XYZ
@@ -17,10 +19,6 @@ export type COLORS =
 	| HWB
 	| OKLAB
 	| OKLCH;
-
-export type COLOR_NAME = keyof typeof namedColors;
-
-export type NAMED_COLOR = [COLOR_NAME, [number, number, number]];
 
 /* CMYK */
 export interface CMYK {
@@ -51,7 +49,6 @@ export type HWB = {
 	h: number;
 	w: number;
 	b: number;
-	A: number;
 };
 
 /* LAB (Lightness, A-axis, B-axis) */
@@ -59,7 +56,6 @@ export type LAB = {
 	l: number;
 	a: number;
 	b: number;
-	A: number;
 };
 
 /* LCH (Lightness, Chroma, Hue) */
@@ -67,7 +63,6 @@ export type LCH = {
 	l: number;
 	c: number;
 	h: number;
-	A: number;
 };
 
 /* Oklab (Lightness, A-axis, B-axis) */
@@ -75,7 +70,6 @@ export type OKLAB = {
 	l: number;
 	a: number;
 	b: number;
-	A: number;
 };
 
 /* Oklch (Lightness, Chroma, Hue) */
@@ -83,7 +77,6 @@ export type OKLCH = {
 	l: number;
 	c: number;
 	h: number;
-	A: number;
 };
 
 /* XYZ */
@@ -91,7 +84,6 @@ export type XYZ = {
 	x: number;
 	y: number;
 	z: number;
-	A: number;
 };
 
 /** Channels type (e.g. "r", "g", "b"...) */
@@ -108,14 +100,14 @@ export type FormatOptions = Record<
 		min?: number;
 		max?: number;
 		suffix?: string;
-        decimalPlaces?: number
+		decimalPlaces?: number;
 	}
 >;
 export type FORMAT = keyof FormatOptions;
 
 /* COLOR INFO */
 export interface COLOR_INFO {
-	name: COLOR_NAME;
+	name: keyof typeof namedColors;
 	color: number[];
 	gap?: number;
 }
@@ -125,7 +117,7 @@ export type WithAlpha<O> = O & { A: number };
 
 /** color parsers interface */
 export interface COLOR_PARSERS {
-	format: MODEL;
+	model: MODEL;
 	regex: RegExp;
 	parser: (color: string) => string[];
 	converter: (color: string[], source?: MODEL) => COLORS;

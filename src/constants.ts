@@ -59,23 +59,23 @@ export const COLOR_INFO = {
 		channels: 3,
 		channelName: ["hue", "whiteness", "blackness"],
 		alphaSupport: true,
-        format: "[model]([degree][sep] [percent][sep] [percent])",
-        formatAlpha: "[model]([degree][sep] [percent][sep] [percent][sep] [alpha])",
+		format: "[model]([degree][sep] [percent][sep] [percent])",
+		formatAlpha: "[model]([degree][sep] [percent][sep] [percent][sep] [alpha])",
 	},
-    lch: {
-        channels: 3,
-        channelName: ["lightness", "chroma", "hue"],
-        alphaSupport: true,
-        format: "[model]([color][sep] [float][sep] [float])",
-        formatAlpha: "[model]([color][sep] [float][sep] [float][sep] [alpha])",
-    },
-    lab: {
-        channels: 3,
-        channelName: ["luminance", "a", "b"],
-        alphaSupport: true,
-        format: "[model]([float][sep] [float][sep] [float])",
-        formatAlpha: "[model]([float][sep] [float][sep] [float][sep] [alpha])",
-    },
+	lch: {
+		channels: 3,
+		channelName: ["lightness", "chroma", "hue"],
+		alphaSupport: true,
+		format: "[model]([color][sep] [float][sep] [float])",
+		formatAlpha: "[model]([color][sep] [float][sep] [float][sep] [alpha])",
+	},
+	lab: {
+		channels: 3,
+		channelName: ["luminance", "a", "b"],
+		alphaSupport: true,
+		format: "[model]([float][sep] [float][sep] [float])",
+		formatAlpha: "[model]([float][sep] [float][sep] [float][sep] [alpha])",
+	},
 	oklab: {
 		channels: 3,
 		channelName: ["lightness", "a", "b"],
@@ -104,13 +104,14 @@ export const COLOR_INFO = {
 		format: "[model]([float][sep] [float][sep] [float][sep] [float])",
 		formatAlpha: "[model]([float][sep] [float][sep] [color][sep] [float])",
 	},
-    color: {
-        channels: 4,
-        channelName: ["red", "green", "blue", "alpha"],
-        alphaSupport: true,
-        format: "color([model] [color][sep] [color][sep] [color][sep] [color])",
-        formatAlpha: "color([model] [color][sep] [color][sep] [color][sep] [color][sep] [alpha])",
-    }
+	color: {
+		channels: 4,
+		channelName: ["red", "green", "blue", "alpha"],
+		alphaSupport: true,
+		format: "color([model] [color][sep] [color][sep] [color][sep] [color])",
+		formatAlpha:
+			"color([model] [color][sep] [color][sep] [color][sep] [color][sep] [alpha])",
+	},
 };
 
 export const formatOptions: FormatOptions = {
@@ -125,12 +126,12 @@ export const formatOptions: FormatOptions = {
 		max: 255,
 		decimalPlaces: 0,
 	},
-    hex: {
-        radix: 16,
-        min: 0,
-        max: 255,
-        decimalPlaces: 0,
-    },
+	hex: {
+		radix: 16,
+		min: 0,
+		max: 255,
+		decimalPlaces: 0,
+	},
 	normalized: {
 		radix: 10,
 		min: 0,

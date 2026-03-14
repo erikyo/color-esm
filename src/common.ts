@@ -1,4 +1,9 @@
-import { COLOR_MODEL, HexFormat, formatOptions, isNumeric } from "./constants.js";
+import {
+	COLOR_MODEL,
+	formatOptions,
+	HexFormat,
+	isNumeric,
+} from "./constants.js";
 import type { FORMAT, MODEL } from "./types.js";
 
 /**
@@ -74,13 +79,13 @@ export function normalizeDegrees(angle: string): number {
  *
  * @param {number} value - The value to be limited.
  * @param {number} min - The minimum allowed value (default is 0).
- * @param {number} max - The maximum allowed value (default is 0).
+ * @param {number} max - The maximum allowed value (default is 255).
  * @return {number} The limited value.
  */
-export function range(value: number, min?: number, max?: number): number {
+export function range(value: number, min = 0, max = 255): number {
 	let newValue = value;
-	if (min) newValue = Math.min(value, min);
-	if (max) newValue = Math.max(value, max);
+	if (max !== undefined) newValue = Math.min(newValue, max);
+	if (min !== undefined) newValue = Math.max(newValue, min);
 	return newValue;
 }
 
@@ -264,3 +269,7 @@ export function isModel(model: string): model is MODEL {
 export function isFormat(format: string): format is FORMAT {
 	return Object.keys(formatOptions).includes(format);
 }
+
+/** Round and clamp each color channel to an integer between 0 and 255 */
+const clamp = (n: number, min = 0, max = 255) =>
+	Math.round(Math.max(0, Math.min(1, n)) * 255);
