@@ -1,5 +1,5 @@
 import { Int } from "../common.js";
-import type { CMYK, RGBA } from "../types.js";
+import type { CMYK, RGB, RGBA } from "../types.js";
 
 export function fromCmyk([c, m, y, k]: (string | number)[]): CMYK {
 	return {
@@ -25,7 +25,7 @@ export function cmykToRgb(cmyk: string[]): RGBA {
 	return { ...rgb, A: 1 };
 }
 
-export function rgbToCmyk(rgb: RGBA): CMYK {
+export function rgbToCmyk(rgb: RGB): CMYK {
 	const { r, g, b } = rgb;
 
 	const red = r / 255;

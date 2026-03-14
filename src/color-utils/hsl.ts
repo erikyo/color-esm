@@ -1,5 +1,5 @@
 import { colorValueFallbacks, normalizeDegrees, safeInt } from "../common.js";
-import type { HSLA, RGBA } from "../types.js";
+import type { HSL, HSLA, RGB } from "../types.js";
 
 /**
  * The error message for invalid angle
@@ -14,7 +14,7 @@ const angleError = (value: string): string =>
  * @param {string[]} hsl - the hslString values to parse from string to int8 values
  *
  */
-export function getHslValues([h, s, l, A]: string[]): HSLA {
+export function fromHsl([h, s, l, A]: string[]): HSLA {
 	return {
 		h:
 			colorValueFallbacks(h, angleError(h)) ||
@@ -44,14 +44,11 @@ function getHue(c: number, x: number, h: number): [number, number, number] {
 /**
  * Given the RGBSTRING color it convert the color into hslString
  *
- * @param {number} r - red
- * @param {number} g - green
- * @param {number} b - blue
- * @param {number} alpha - alpha
  *
  * @return {Object} hslString value
+ * @param rgb
  */
-export function valuesToHsl({ r, g, b, A }: RGBA): HSLA {
+export function rgbToHsl({ r, g, b }: RGB): HSL {
 	// Make r, g, and b fractions of 1
 	r /= 255;
 	g /= 255;
@@ -96,7 +93,7 @@ export function valuesToHsl({ r, g, b, A }: RGBA): HSLA {
 	s = +(s * 100).toFixed(1);
 	l = +(l * 100).toFixed(1);
 
-	return { h, s, l, A };
+	return { h, s, l };
 }
 
 /**
@@ -105,21 +102,19 @@ export function valuesToHsl({ r, g, b, A }: RGBA): HSLA {
  * @param colorSet the hslString value to parse
  * @return The RGBA Object
  */
-export function fromHsl(colorSet: string[]): RGBA {
-	const hsl = getHslValues(colorSet);
-	const s = hsl.s / 100;
-	const l = hsl.l / 100;
-	const alpha = colorSet[3] || 1;
+export function hslToRgb({ h, s, l }: HSL): RGB {
+	s = s / 100;
+	l = l / 100;
 
 	const c = (1 - Math.abs(2 * l - 1)) * s;
-	const x = c * (1 - Math.abs(((hsl.h / 60) % 2) - 1));
+	const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
 	const m = l - c / 2;
 
-	let [r, g, b] = getHue(c, x, hsl.h);
+	let [r, g, b] = getHue(c, x, h);
 
 	r = Math.round((r + m) * 255);
 	g = Math.round((g + m) * 255);
 	b = Math.round((b + m) * 255);
 
-	return { r, g, b, A: safeInt(alpha) };
+	return { r, g, b };
 }

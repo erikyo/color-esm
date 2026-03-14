@@ -1,6 +1,6 @@
-import type { RGBA, XYZ } from "../types.js";
+import type { LAB, RGB, XYZ } from "../types.js";
 
-export function rgbToXyz({ r, g, b, A = 1 }): XYZ {
+export function rgbToXyz({ r, g, b }): XYZ {
 	r /= 255;
 	g /= 255;
 	b /= 255;
@@ -19,10 +19,10 @@ export function rgbToXyz({ r, g, b, A = 1 }): XYZ {
 	const y = r * 0.2126729 + g * 0.7151522 + b * 0.072175;
 	const z = r * 0.0193339 + g * 0.119192 + b * 0.9503041;
 
-	return { x, y, z, A };
+	return { x, y, z };
 }
 
-export function xyzToLab(x: number, y: number, z: number, A = 1) {
+export function xyzToLab({ x, y, z }: XYZ): LAB {
 	// Reference white D65
 	const Xn = 95.047;
 	const Yn = 100.0;
@@ -36,14 +36,14 @@ export function xyzToLab(x: number, y: number, z: number, A = 1) {
 	fy = fy > 0.008856 ? fy ** (1 / 3) : 7.787 * fy + 16 / 116;
 	fz = fz > 0.008856 ? fz ** (1 / 3) : 7.787 * fz + 16 / 116;
 
-	const L = 116 * fy - 16;
+	const l = 116 * fy - 16;
 	const a = 500 * (fx - fy);
 	const b = 200 * (fy - fz);
 
-	return { L, a, b, A };
+	return { l, a, b };
 }
 
-export function fromXyz([x, y, z, A = "1"]: string[]): RGBA {
+export function fromXyz([x, y, z]: number[]): RGB {
 	const [xn, yn, zn] = [x, y, z].map((v) => Number(v));
 
 	// Observer. = 2°, Illuminant = D65
@@ -64,5 +64,10 @@ export function fromXyz([x, y, z, A = "1"]: string[]): RGBA {
 	G = Math.min(Math.max(0, G), 1);
 	B = Math.min(Math.max(0, B), 1);
 
-	return { r: R * 255, g: G * 255, b: B * 255, A: Number(A) };
+	return { r: R * 255, g: G * 255, b: B * 255 };
+}
+
+export function xyzToRgb({ x, y, z }: XYZ): RGB {
+	const lab = xyzToLab({ x, y, z });
+	return fromXyz([lab.l, lab.a, lab.b]);
 }

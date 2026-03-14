@@ -1,4 +1,4 @@
-import type { COLORS } from "../types.js";
+import type { COLORS, RGB } from "../types.js";
 
 /**
  * This function takes an array of strings and returns and object with the rgbString values converted into INT8 (0-255)
@@ -18,4 +18,8 @@ export function fromRgb([r = 0, g = 0, b = 0, alpha = 1]: (
 		b: Number(b),
 		A: Number(alpha),
 	};
+}
+
+export function rgbToHex({ r, g, b }: RGB): string {
+	return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
 }
