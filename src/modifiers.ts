@@ -189,6 +189,12 @@ function opaquer(ratio: number): Color {
 	return clone;
 }
 
+function clearer(ratio: number): Color {
+	const clone = cloneColor(this);
+	clone._A = Math.max(0, clone._A - ratio);
+	return clone;
+}
+
 function rotate(degrees: number): Color {
 	const clone = cloneColor(this);
 	const hsl = rgbToHsl({ r: clone._r, g: clone._g, b: clone._b });
@@ -250,6 +256,7 @@ export default {
 	blacken,
 	fade,
 	opaquer,
+	clearer,
 	rotate,
 	mix,
 	isDark,

@@ -37,6 +37,16 @@ export function isHex(num: string): boolean {
  * @return {Array} the array of rgbString values found inside the passed string
  */
 export function splitValues(rawValues: string): string[] {
+	// Handle CSS4 slash syntax for alpha: "rgb(255 255 255 / 0.5)"
+	const parts = rawValues.split("/");
+	if (parts.length === 2) {
+		// Split the color values and handle alpha separately
+		const colorValues = parts[0].trim().split(parts[0].includes(",") ? "," : " ");
+		const alpha = parts[1].trim();
+		return [...colorValues.map(s => s.trim()), alpha];
+	}
+	
+	// Handle regular comma or space separated values
 	return rawValues
 		.split(rawValues.includes(",") ? "," : " ")
 		.map((s) => s.trim());
