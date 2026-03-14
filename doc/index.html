@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color-ESM Documentation & Interactive Examples</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .install-code {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 2em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: #555;
+            margin: 20px 0 10px 0;
+            font-size: 1.4em;
+        }
+
+        .example-group {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #764ba2;
+        }
+
+        .color-display {
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        .color-box {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            border: 2px solid #333;
+            transition: all 0.3s ease;
+        }
+
+        .color-box:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .color-info {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .interactive-demo {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 2px solid #e0e0e0;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        label {
+            font-weight: 600;
+            color: #555;
+            font-size: 0.9em;
+        }
+
+        input[type="range"], input[type="text"], input[type="number"] {
+            padding: 8px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        input[type="range"] {
+            cursor: pointer;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+
+        .output {
+            background: #f0f8ff;
+            border-left: 4px solid #4CAF50;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .controls {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .method-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .method-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .method-card h4 {
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+
+        .method-card p {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .method-card .code {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Color-ESM</h1>
+            <p class="subtitle">ESM-only, chainable color utility library</p>
+            <div class="install-code">
+                <strong>Install:</strong> npm i color-esm<br>
+                <strong>Import:</strong> import Color from "color-esm";
+            </div>
+        </header>
+
+        <!-- Constructor Examples -->
+        <section class="section">
+            <h2>🎨 Constructor Examples</h2>
+            <p>Create Color instances using various input formats:</p>
+
+            <div class="example-group">
+                <h3>String Inputs</h3>
+                <div id="string-examples"></div>
+            </div>
+
+            <div class="example-group">
+                <h3>Hex & Numeric Inputs</h3>
+                <div id="hex-examples"></div>
+            </div>
+
+            <div class="example-group">
+                <h3>Array & Object Inputs</h3>
+                <div id="array-examples"></div>
+            </div>
+        </section>
+
+        <!-- Model Methods -->
+        <section class="section">
+            <h2>📊 Color Model Methods</h2>
+            <p>Get and set color values in different color spaces:</p>
+
+            <div class="interactive-demo">
+                <div class="controls">
+                    <div class="control-group">
+                        <label for="model-base-color">Base Color:</label>
+                        <input type="text" id="model-base-color" value="#ff6b6b" placeholder="#ff6b6b">
+                    </div>
+                    <div class="control-group">
+                        <label>&nbsp;</label>
+                        <button onclick="updateModelExamples()">Update Examples</button>
+                    </div>
+                </div>
+                <div id="model-examples"></div>
+            </div>
+
+            <div class="method-grid">
+                <div class="method-card">
+                    <h4>rgb()</h4>
+                    <p>Get/set RGB values</p>
+                    <div class="code">color.rgb() → {r, g, b}<br>color.rgb(255, 100, 50)</div>
+                </div>
+                <div class="method-card">
+                    <h4>hsl()</h4>
+                    <p>Get/set HSL values</p>
+                    <div class="code">color.hsl() → {h, s, l}<br>color.hsl(180, 50, 50)</div>
+                </div>
+                <div class="method-card">
+                    <h4>hex()</h4>
+                    <p>Get/set hex string</p>
+                    <div class="code">color.hex() → "#ff6b6b"<br>color.hex("#4287f5")</div>
+                </div>
+                <div class="method-card">
+                    <h4>hexa()</h4>
+                    <p>Get/set hex with alpha</p>
+                    <div class="code">color.hexa() → "#ff6b6bff"<br>color.hexa("#4287f580")</div>
+                </div>
+                <div class="method-card">
+                    <h4>red(), green(), blue()</h4>
+                    <p>Get/set individual channels</p>
+                    <div class="code">color.red() → 255<br>color.red(100)</div>
+                </div>
+                <div class="method-card">
+                    <h4>alpha()</h4>
+                    <p>Get/set alpha value</p>
+                    <div class="code">color.alpha() → 1<br>color.alpha(0.5)</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Channel Getters -->
+        <section class="section">
+            <h2>📈 Channel Getters</h2>
+            <p>Read individual color channel values:</p>
+
+            <div class="interactive-demo">
+                <div id="channel-getters-display"></div>
+            </div>
+
+            <div class="method-grid">
+                <div class="method-card">
+                    <h4>hue(), saturationl(), lightness()</h4>
+                    <p>HSL channel getters</p>
+                    <div class="code">color.hue() → 0-360<br>color.saturationl() → 0-100<br>color.lightness() → 0-100</div>
+                </div>
+                <div class="method-card">
+                    <h4>saturationv(), value()</h4>
+                    <p>HSV channel getters</p>
+                    <div class="code">color.saturationv()<br>color.value()</div>
+                </div>
+                <div class="method-card">
+                    <h4>chroma(), gray(), white()</h4>
+                    <p>HWB and other getters</p>
+                    <div class="code">color.chroma()<br>color.gray()<br>color.white()</div>
+                </div>
+                <div class="method-card">
+                    <h4>cyan(), magenta(), yellow(), black()</h4>
+                    <p>CMYK channel getters</p>
+                    <div class="code">color.cyan()<br>color.magenta()<br>color.yellow()<br>color.black()</div>
+                </div>
+                <div class="method-card">
+                    <h4>x(), y(), z()</h4>
+                    <p>XYZ color space</p>
+                    <div class="code">color.x()<br>color.y()<br>color.z()</div>
+                </div>
+                <div class="method-card">
+                    <h4>l(), a(), b()</h4>
+                    <p>LAB color space</p>
+                    <div class="code">color.l()<br>color.a()<br>color.b()</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chainable Modifiers -->
+        <section class="section">
+            <h2>⛓️ Chainable Modifiers</h2>
+            <p>Transform colors with chainable methods:</p>
+
+            <div class="interactive-demo">
+                <div class="controls">
+                    <div class="control-group">
+                        <label for="chain-base">Base Color:</label>
+                        <input type="text" id="chain-base" value="#4287f5" placeholder="#4287f5">
+                    </div>
+                    <div class="control-group">
+                        <label>&nbsp;</label>
+                        <button onclick="updateChainExamples()">Update Chain</button>
+                    </div>
+                </div>
+                <div id="chain-examples"></div>
+            </div>
+
+            <h3>Lightness & Darkness</h3>
+            <div class="interactive-demo">
+                <div class="controls">
+                    <div class="control-group">
+                        <label for="lighten-amount">Lighten/Darken:</label>
+                        <input type="range" id="lighten-amount" min="0" max="1" step="0.1" value="0.2">
+                        <span id="lighten-value">0.2</span>
+                    </div>
+                </div>
+                <div id="lightness-examples"></div>
+            </div>
+
+            <h3>Saturation</h3>
+            <div class="interactive-demo">
+                <div class="controls">
+                    <div class="control-group">
+                        <label for="saturate-amount">Saturate/Desaturate:</label>
+                        <input type="range" id="saturate-amount" min="0" max="1" step="0.1" value="0.3">
+                        <span id="saturate-value">0.3</span>
+                    </div>
+                </div>
+                <div id="saturation-examples"></div>
+            </div>
+
+            <h3>Hue Rotation</h3>
+            <div class="interactive-demo">
+                <div class="controls">
+                    <div class="control-group">
+                        <label for="rotate-amount">Rotate Hue:</label>
+                        <input type="range" id="rotate-amount" min="-180" max="180" step="15" value="90">
+                        <span id="rotate-value">90°</span>
+                    </div>
+                </div>
+                <div id="rotate-examples"></div>
+            </div>
+
+            <div class="method-grid">
+                <div class="method-card">
+                    <h4>lighten(amount)</h4>
+                    <p>Lighten color by amount (0-1)</p>
+                    <div class="code">color.lighten(0.5)</div>
+                </div>
+                <div class="method-card">
+                    <h4>darken(amount)</h4>
+                    <p>Darken color by amount (0-1)</p>
+                    <div class="code">color.darken(0.3)</div>
+                </div>
+                <div class="method-card">
+                    <h4>saturate(ratio)</h4>
+                    <p>Increase saturation</p>
+                    <div class="code">color.saturate(0.5)</div>
+                </div>
+                <div class="method-card">
+                    <h4>desaturate(ratio)</h4>
+                    <p>Decrease saturation</p>
+                    <div class="code">color.desaturate(0.5)</div>
+                </div>
+                <div class="method-card">
+                    <h4>grayscale()</h4>
+                    <p>Convert to grayscale</p>
+                    <div class="code">color.grayscale()</div>
+                </div>
+                <div class="method-card">
+                    <h4>rotate(degrees)</h4>
+                    <p>Rotate hue by degrees</p>
+                    <div class="code">color.rotate(180)</div>
+                </div>
+                <div class="method-card">
+                    <h4>invert() / negate()</h4>
+                    <p>Invert the color</p>
+                    <div class="code">color.invert()</div>
+                </div>
+                <div class="method-card">
+                    <h4>whiten(amount)</h4>
+                    <p>Add whiteness (HWB)</p>
+                    <div class="code">color.whiten(0.3)</div>
+                </div>
+                <div class="method-card">
+                    <h4>blacken(amount)</h4>
+                    <p>Add blackness (HWB)</p>
+                    <div class="code">color.blacken(0.3)</div>
+                </div>
+                <div class="method-card">
+                    <h4>fade(ratio)</h4>
+                    <p>Decrease alpha</p>
+                    <div class="code">color.fade(0.5)</div>
+                </div>
+                <div class="method-card">
+                    <h4>opaquer(ratio)</h4>
+                    <p>Increase alpha</p>
+                    <div class="code">color.opaquer(0.5)</div>
+                </div>
+                <div class="method-card">
+                    <h4>reddish(), greenish(), bluish()</h4>
+                    <p>Shift color channels</p>
+                    <div class="code">color.reddish(20)<br>color.greenish(10)<br>color.bluish(30)</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mixing -->
+        <section class="section">
+            <h2>🎨 Color Mixing</h2>
+            <p>Mix two colors together:</p>
+
+            <div class="interactive-demo">
+                <div class="controls">
+                    <div class="control-group">
+                        <label for="mix-color1">Color 1:</label>
+                        <input type="text" id="mix-color1" value="#ff6b6b" placeholder="#ff6b6b">
+                    </div>
+                    <div class="control-group">
+                        <label for="mix-color2">Color 2:</label>
+                        <input type="text" id="mix-color2" value="#4CAF50" placeholder="#4CAF50">
+                    </div>
+                    <div class="control-group">
+                        <label for="mix-weight">Weight (0-1):</label>
+                        <input type="range" id="mix-weight" min="0" max="1" step="0.1" value="0.5">
+                        <span id="mix-weight-value">0.5</span>
+                    </div>
+                    <div class="control-group">
+                        <label>&nbsp;</label>
+                        <button onclick="updateMixing()">Mix Colors</button>
+                    </div>
+                </div>
+                <div id="mixing-display"></div>
+            </div>
+
+            <div class="method-card">
+                <h4>mix(color, weight)</h4>
+                <p>Mix with another color at given weight (0-1)</p>
+                <div class="code">const mixed = color1.mix(color2, 0.5)</div>
+            </div>
+        </section>
+
+        <!-- Accessibility Features -->
+        <section class="section">
+            <h2>♿ Accessibility (WCAG)</h2>
+            <p>Calculate contrast ratios and accessibility levels:</p>
+
+            <div class="interactive-demo">
+                <div class="controls">
+                    <div class="control-group">
+                        <label for="wcag-fg">Foreground:</label>
+                        <input type="text" id="wcag-fg" value="#333333" placeholder="#333333">
+                    </div>
+                    <div class="control-group">
+                        <label for="wcag-bg">Background:</label>
+                        <input type="text" id="wcag-bg" value="#ffffff" placeholder="#ffffff">
+                    </div>
+                    <div class="control-group">
+                        <label>&nbsp;</label>
+                        <button onclick="updateAccessibility()">Calculate</button>
+                    </div>
+                </div>
+                <div id="wcag-display"></div>
+            </div>
+
+            <div class="method-grid">
+                <div class="method-card">
+                    <h4>luminosity() / lightness()</h4>
+                    <p>Get relative luminance (0-1)</p>
+                    <div class="code">color.luminosity()</div>
+                </div>
+                <div class="method-card">
+                    <h4>contrast(color)</h4>
+                    <p>Contrast ratio with another color</p>
+                    <div class="code">color1.contrast(color2)</div>
+                </div>
+                <div class="method-card">
+                    <h4>level(color)</h4>
+                    <p>WCAG level: "AAA", "AA", or ""</p>
+                    <div class="code">color1.level(color2)</div>
+                </div>
+                <div class="method-card">
+                    <h4>isDark() / isLight()</h4>
+                    <p>Check if color is dark/light</p>
+                    <div class="code">color.isDark()<br>color.isLight()</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Output Methods -->
+        <section class="section">
+            <h2>📝 Output Methods</h2>
+            <p>Various ways to output color data:</p>
+
+            <div class="interactive-demo">
+                <div class="controls">
+                    <div class="control-group">
+                        <label for="output-color">Color:</label>
+                        <input type="text" id="output-color" value="#4287f5" placeholder="#4287f5">
+                    </div>
+                    <div class="control-group">
+                        <label>&nbsp;</label>
+                        <button onclick="updateOutput()">Show Outputs</button>
+                    </div>
+                </div>
+                <div id="output-display"></div>
+            </div>
+
+            <div class="method-grid">
+                <div class="method-card">
+                    <h4>toString()</h4>
+                    <p>String representation</p>
+                    <div class="code">color.toString()<br>color.toString("rgb")<br>color.toString("hsl")</div>
+                </div>
+                <div class="method-card">
+                    <h4>hex() / hexa()</h4>
+                    <p>Hex string output</p>
+                    <div class="code">color.hex()<br>color.hexa()</div>
+                </div>
+                <div class="method-card">
+                    <h4>rgb() / hsl()</h4>
+                    <p>Object output</p>
+                    <div class="code">color.rgb() → {r, g, b}<br>color.hsl() → {h, s, l}</div>
+                </div>
+                <div class="method-card">
+                    <h4>toObject()</h4>
+                    <p>Plain object</p>
+                    <div class="code">color.toObject()<br>color.toObject("rgb")</div>
+                </div>
+                <div class="method-card">
+                    <h4>toArray()</h4>
+                    <p>Array of values</p>
+                    <div class="code">color.toArray()<br>color.toArray("rgba")</div>
+                </div>
+                <div class="method-card">
+                    <h4>toJson()</h4>
+                    <p>JSON string</p>
+                    <div class="code">color.toJson()</div>
+                </div>
+                <div class="method-card">
+                    <h4>toValue()</h4>
+                    <p>Numeric value (16-bit)</p>
+                    <div class="code">color.toValue() → 0x4287f5</div>
+                </div>
+                <div class="method-card">
+                    <h4>alpha()</h4>
+                    <p>Get alpha value</p>
+                    <div class="code">color.alpha()</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chain Example -->
+        <section class="section">
+            <h2>🔗 Chaining Example</h2>
+            <p>Chain multiple methods together:</p>
+
+            <div class="interactive-demo">
+                <div class="code-block">
+const color = new Color("#4287f5")
+    .lighten(0.2)
+    .saturate(0.3)
+    .rotate(30)
+    .fade(0.2);
+
+console.log(color.hex());  // Output: #5fa8ffcc
+                </div>
+                <div class="output" id="chain-demo-output"></div>
+            </div>
+
+            <div class="interactive-demo">
+                <h3>Build Your Own Chain</h3>
+                <div class="controls">
+                    <div class="control-group">
+                        <label for="chain-input">Start Color:</label>
+                        <input type="text" id="chain-input" value="#4287f5">
+                    </div>
+                </div>
+                <div class="controls">
+                    <div class="control-group">
+                        <button onclick="addToChain('lighten', 0.2)">+ Lighten 20%</button>
+                        <button onclick="addToChain('darken', 0.2)">+ Darken 20%</button>
+                    </div>
+                    <div class="control-group">
+                        <button onclick="addToChain('saturate', 0.3)">+ Saturate 30%</button>
+                        <button onclick="addToChain('desaturate', 0.3)">+ Desaturate 30%</button>
+                    </div>
+                    <div class="control-group">
+                        <button onclick="addToChain('rotate', 45)">+ Rotate 45°</button>
+                        <button onclick="addToChain('grayscale')">+ Grayscale</button>
+                    </div>
+                    <div class="control-group">
+                        <button onclick="addToChain('invert')">+ Invert</button>
+                        <button onclick="addToChain('fade', 0.3)">+ Fade 30%</button>
+                    </div>
+                </div>
+                <div class="output" id="chain-builder-output">Chain: new Color("#4287f5")</div>
+                <div id="chain-builder-preview"></div>
+                <button onclick="resetChain()">Reset Chain</button>
+            </div>
+        </section>
+
+        <!-- Supported Color Models -->
+        <section class="section">
+            <h2>📋 Supported Color Models</h2>
+            <p>Complete list of supported color string formats:</p>
+
+            <div class="grid" id="color-models"></div>
+        </section>
+
+        <!-- Footer -->
+        <footer style="text-align: center; padding: 40px; color: white;">
+            <p>Color-ESM Documentation - Interactive Examples</p>
+            <p style="opacity: 0.8;">Chainable color utility forked from Qix-/color</p>
+        </footer>
+    </div>
+
+    <!-- Load the Color-ESM IIFE bundle -->
+    <script src="../lib/browser/color-esm.js"></script>
+    <script>
+        // The IIFE creates window.Color as { default: ColorClass }
+        // Reassign to the actual class for direct usage
+        window.Color = window.Color.default;
+
+        // Global chain state for the chain builder
+        var chainState = {
+            color: null,
+            steps: []
+        };
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeConstructorExamples();
+            initializeColorModels();
+            initializeChannelGetters();
+            updateModelExamples();
+            updateChainExamples();
+            updateLightnessExamples();
+            updateSaturationExamples();
+            updateRotateExamples();
+            updateMixing();
+            updateAccessibility();
+            updateOutput();
+            updateChainDemo();
+            resetChain();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            // Input changes
+            document.getElementById('model-base-color').addEventListener('input', updateModelExamples);
+            document.getElementById('chain-base').addEventListener('input', updateChainExamples);
+            document.getElementById('output-color').addEventListener('input', updateOutput);
+            document.getElementById('chain-input').addEventListener('input', resetChain);
+
+            // WCAG inputs
+            document.getElementById('wcag-fg').addEventListener('input', updateAccessibility);
+            document.getElementById('wcag-bg').addEventListener('input', updateAccessibility);
+
+            // Mixing inputs
+            document.getElementById('mix-color1').addEventListener('input', updateMixing);
+            document.getElementById('mix-color2').addEventListener('input', updateMixing);
+            document.getElementById('mix-weight').addEventListener('input', function() {
+                document.getElementById('mix-weight-value').textContent = this.value;
+                updateMixing();
+            });
+
+            // Sliders
+            document.getElementById('lighten-amount').addEventListener('input', function() {
+                document.getElementById('lighten-value').textContent = this.value;
+                updateLightnessExamples();
+            });
+
+            document.getElementById('saturate-amount').addEventListener('input', function() {
+                document.getElementById('saturate-value').textContent = this.value;
+                updateSaturationExamples();
+            });
+
+            document.getElementById('rotate-amount').addEventListener('input', function() {
+                document.getElementById('rotate-value').textContent = this.value + '°';
+                updateRotateExamples();
+            });
+        }
+
+        // ==================== CONSTRUCTOR EXAMPLES ====================
+
+        function initializeConstructorExamples() {
+            // String examples
+            const stringExamples = [
+                { input: '"#ff6b6b"', color: new Color("#ff6b6b") },
+                { input: '"#4CAF50"', color: new Color("#4CAF50") },
+                { input: '"rgb(255, 99, 71)"', color: new Color("rgb(255, 99, 71)") },
+                { input: '"rgba(255, 99, 71, 0.8)"', color: new Color("rgba(255, 99, 71, 0.8)") },
+                { input: '"hsl(280, 100%, 50%)"', color: new Color("hsl(280, 100%, 50%)") },
+                { input: '"hsla(280, 100%, 50%, 0.6)"', color: new Color("hsla(280, 100%, 50%, 0.6)") }
+            ];
+
+            const stringContainer = document.getElementById('string-examples');
+            stringExamples.forEach(({ input, color }) => {
+                try {
+                    stringContainer.appendChild(createColorDisplay(input, color.hex()));
+                } catch (e) {
+                    stringContainer.appendChild(createColorDisplay(input, `Error: ${e.message}`));
+                }
+            });
+
+            // Hex examples
+            const hexContainer = document.getElementById('hex-examples');
+            const hexExamples = [
+                { input: '0xFF6B6B', color: new Color(0xFF6B6B) },
+                { input: '0x4CAF50', color: new Color(0x4CAF50) },
+                { input: '"#4287f5"', color: new Color("#4287f5") }
+            ];
+            hexExamples.forEach(({ input, color }) => {
+                try {
+                    hexContainer.appendChild(createColorDisplay(input, color.hex()));
+                } catch (e) {
+                    hexContainer.appendChild(createColorDisplay(input, `Error: ${e.message}`));
+                }
+            });
+
+            // Array examples
+            const arrayContainer = document.getElementById('array-examples');
+            const arrayExamples = [
+                { input: '[255, 107, 107]', color: new Color([255, 107, 107]) },
+                { input: '[255, 107, 107, 0.8]', color: new Color([255, 107, 107, 0.8]) },
+                { input: '{ r: 255, g: 107, b: 107 }', color: new Color({ r: 255, g: 107, b: 107 }) }
+            ];
+            arrayExamples.forEach(({ input, color }) => {
+                try {
+                    arrayContainer.appendChild(createColorDisplay(input, color.hex()));
+                } catch (e) {
+                    arrayContainer.appendChild(createColorDisplay(input, `Error: ${e.message}`));
+                }
+            });
+        }
+
+        // ==================== MODEL EXAMPLES ====================
+
+        function updateModelExamples() {
+            const baseColorInput = document.getElementById('model-base-color').value;
+            const container = document.getElementById('model-examples');
+
+            try {
+                const color = new Color(baseColorInput);
+
+                container.innerHTML = `
+                    <div class="grid">
+                        <div class="card">
+                            <h4>rgb()</h4>
+                            <div class="code-block">${JSON.stringify(color.rgb())}</div>
+                        </div>
+                        <div class="card">
+                            <h4>hsl()</h4>
+                            <div class="code-block">${JSON.stringify(color.hsl())}</div>
+                        </div>
+                        <div class="card">
+                            <h4>hex()</h4>
+                            <div class="code-block">"${color.hex()}"</div>
+                        </div>
+                        <div class="card">
+                            <h4>hexa()</h4>
+                            <div class="code-block">"${color.hexa()}"</div>
+                        </div>
+                        <div class="card">
+                            <h4>Channels</h4>
+                            <div class="code-block">
+                                red: ${color.red()}<br>
+                                green: ${color.green()}<br>
+                                blue: ${color.blue()}<br>
+                                alpha: ${color.alpha()}
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h4>Preview</h4>
+                            <div style="width: 100%; height: 60px; background: ${color.hex()}; border-radius: 8px; border: 2px solid #333;"></div>
+                        </div>
+                    </div>
+                `;
+            } catch (e) {
+                container.innerHTML = `<div class="warning">Error: ${e.message}</div>`;
+            }
+        }
+
+        // ==================== CHANNEL GETTERS ====================
+
+        function initializeChannelGetters() {
+            const container = document.getElementById('channel-getters-display');
+            const color = new Color("#4287f5");
+
+            container.innerHTML = `
+                <div class="grid">
+                    <div class="card">
+                        <h4>RGB Getters</h4>
+                        <div class="code-block">
+                            red(): ${color.red()}<br>
+                            green(): ${color.green()}<br>
+                            blue(): ${color.blue()}<br>
+                            alpha(): ${color.alpha()}
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h4>HSL Getters</h4>
+                        <div class="code-block">
+                            hue(): ${color.hue()}<br>
+                            saturationl(): ${color.saturationl()}<br>
+                            lightness(): ${color.lightness()}
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h4>State Checks</h4>
+                        <div class="code-block">
+                            isDark(): ${color.isDark()}<br>
+                            isLight(): ${color.isLight()}<br>
+                            luminosity(): ${color.luminosity().toFixed(4)}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ==================== CHAIN EXAMPLES ====================
+
+        function updateChainExamples() {
+            const baseColorInput = document.getElementById('chain-base').value;
+            const container = document.getElementById('chain-examples');
+
+            try {
+                const base = new Color(baseColorInput);
+
+                container.innerHTML = `
+                    <div class="grid">
+                        <div class="card">
+                            <h4>Original</h4>
+                            ${createColorCardContent(base.hex())}
+                        </div>
+                        <div class="card">
+                            <h4>.lighten(0.3)</h4>
+                            ${createColorCardContent(base.lighten(0.3).hex())}
+                        </div>
+                        <div class="card">
+                            <h4>.darken(0.3)</h4>
+                            ${createColorCardContent(new Color(baseColorInput).darken(0.3).hex())}
+                        </div>
+                        <div class="card">
+                            <h4>.saturate(0.5)</h4>
+                            ${createColorCardContent(new Color(baseColorInput).saturate(0.5).hex())}
+                        </div>
+                        <div class="card">
+                            <h4>.desaturate(0.5)</h4>
+                            ${createColorCardContent(new Color(baseColorInput).desaturate(0.5).hex())}
+                        </div>
+                        <div class="card">
+                            <h4>.grayscale()</h4>
+                            ${createColorCardContent(new Color(baseColorInput).grayscale().hex())}
+                        </div>
+                        <div class="card">
+                            <h4>.rotate(90)</h4>
+                            ${createColorCardContent(new Color(baseColorInput).rotate(90).hex())}
+                        </div>
+                        <div class="card">
+                            <h4>.invert()</h4>
+                            ${createColorCardContent(new Color(baseColorInput).invert().hex())}
+                        </div>
+                    </div>
+                `;
+            } catch (e) {
+                container.innerHTML = `<div class="warning">Error: ${e.message}</div>`;
+            }
+        }
+
+        function updateLightnessExamples() {
+            const amount = parseFloat(document.getElementById('lighten-amount').value);
+            const container = document.getElementById('lightness-examples');
+            const base = new Color('#4287f5');
+
+            container.innerHTML = `
+                <div class="grid">
+                    <div class="card">
+                        <h4>Original</h4>
+                        ${createColorCardContent(base.hex())}
+                    </div>
+                    <div class="card">
+                        <h4>lighten(${amount})</h4>
+                        ${createColorCardContent(base.lighten(amount).hex())}
+                    </div>
+                    <div class="card">
+                        <h4>darken(${amount})</h4>
+                        ${createColorCardContent(new Color('#4287f5').darken(amount).hex())}
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateSaturationExamples() {
+            const amount = parseFloat(document.getElementById('saturate-amount').value);
+            const container = document.getElementById('saturation-examples');
+            const base = new Color('#4287f5');
+
+            container.innerHTML = `
+                <div class="grid">
+                    <div class="card">
+                        <h4>Original</h4>
+                        ${createColorCardContent(base.hex())}
+                    </div>
+                    <div class="card">
+                        <h4>saturate(${amount})</h4>
+                        ${createColorCardContent(base.saturate(amount).hex())}
+                    </div>
+                    <div class="card">
+                        <h4>desaturate(${amount})</h4>
+                        ${createColorCardContent(new Color('#4287f5').desaturate(amount).hex())}
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateRotateExamples() {
+            const degrees = parseInt(document.getElementById('rotate-amount').value);
+            const container = document.getElementById('rotate-examples');
+            const base = new Color('#ff6b6b');
+
+            container.innerHTML = `
+                <div class="grid">
+                    <div class="card">
+                        <h4>Original</h4>
+                        ${createColorCardContent(base.hex())}
+                    </div>
+                    <div class="card">
+                        <h4>rotate(${degrees})</h4>
+                        ${createColorCardContent(base.rotate(degrees).hex())}
+                    </div>
+                    <div class="card">
+                        <h4>rotate(${degrees * 2})</h4>
+                        ${createColorCardContent(new Color('#ff6b6b').rotate(degrees * 2).hex())}
+                    </div>
+                </div>
+            `;
+        }
+
+        // ==================== MIXING ====================
+
+        function updateMixing() {
+            const color1Input = document.getElementById('mix-color1').value;
+            const color2Input = document.getElementById('mix-color2').value;
+            const weight = parseFloat(document.getElementById('mix-weight').value);
+            const container = document.getElementById('mixing-display');
+
+            try {
+                const color1 = new Color(color1Input);
+                const color2 = new Color(color2Input);
+                const mixed = new Color(color1Input).mix(color2, weight);
+
+                container.innerHTML = `
+                    <div class="grid">
+                        <div class="card">
+                            <h4>Color 1 (100%)</h4>
+                            ${createColorCardContent(color1.hex())}
+                        </div>
+                        <div class="card">
+                            <h4>Mixed (${Math.round((1-weight)*100)}% / ${Math.round(weight*100)}%)</h4>
+                            ${createColorCardContent(mixed.hex())}
+                        </div>
+                        <div class="card">
+                            <h4>Color 2 (100%)</h4>
+                            ${createColorCardContent(color2.hex())}
+                        </div>
+                    </div>
+                    <div class="code-block">
+const color1 = new Color("${color1Input}");
+const color2 = new Color("${color2Input}");
+const mixed = color1.mix(color2, ${weight});
+// Result: ${mixed.hex()}
+                    </div>
+                `;
+            } catch (e) {
+                container.innerHTML = `<div class="warning">Error: ${e.message}</div>`;
+            }
+        }
+
+        // ==================== ACCESSIBILITY ====================
+
+        function updateAccessibility() {
+            const fgInput = document.getElementById('wcag-fg').value;
+            const bgInput = document.getElementById('wcag-bg').value;
+            const container = document.getElementById('wcag-display');
+
+            try {
+                const fg = new Color(fgInput);
+                const bg = new Color(bgInput);
+                const contrast = fg.contrast(bg);
+                const level = fg.level(bg);
+
+                container.innerHTML = `
+                    <div class="grid">
+                        <div class="card">
+                            <h4>Text Preview</h4>
+                            <div style="background: ${bg.hex()}; color: ${fg.hex()}; padding: 20px; border-radius: 8px; font-size: 18px;">
+                                The quick brown fox jumps over the lazy dog.
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h4>WCAG Metrics</h4>
+                            <div class="code-block">
+Contrast Ratio: ${contrast.toFixed(2)}:1<br>
+WCAG Level: ${level || 'Fail'}<br>
+<br>
+Foreground:<br>
+  hex: ${fg.hex()}<br>
+  luminosity: ${fg.luminosity().toFixed(4)}<br>
+  isDark: ${fg.isDark()}<br>
+<br>
+Background:<br>
+  hex: ${bg.hex()}<br>
+  luminosity: ${bg.luminosity().toFixed(4)}<br>
+  isDark: ${bg.isDark()}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } catch (e) {
+                container.innerHTML = `<div class="warning">Error: ${e.message}</div>`;
+            }
+        }
+
+        // ==================== OUTPUT METHODS ====================
+
+        function updateOutput() {
+            const colorInput = document.getElementById('output-color').value;
+            const container = document.getElementById('output-display');
+
+            try {
+                const color = new Color(colorInput);
+
+                container.innerHTML = `
+                    <div class="grid">
+                        <div class="card">
+                            <h4>toString()</h4>
+                            <div class="code-block">${color.toString()}</div>
+                        </div>
+                        <div class="card">
+                            <h4>hex() / hexa()</h4>
+                            <div class="code-block">
+hex(): "${color.hex()}"<br>
+hexa(): "${color.hexa()}"
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h4>rgb() / hsl()</h4>
+                            <div class="code-block">
+rgb(): ${JSON.stringify(color.rgb())}<br>
+hsl(): ${JSON.stringify(color.hsl())}
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h4>toArray() / toObject()</h4>
+                            <div class="code-block">
+toArray(): ${JSON.stringify(color.toArray())}<br>
+toObject(): ${JSON.stringify(color.toObject())}
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h4>toJson() / toValue()</h4>
+                            <div class="code-block">
+toValue(): ${color.toValue()}<br>
+toJson(): ${color.toJson().substring(0, 50)}...
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h4>Preview</h4>
+                            <div style="width: 100%; height: 80px; background: ${color.hex()}; border-radius: 8px; border: 2px solid #333;"></div>
+                        </div>
+                    </div>
+                `;
+            } catch (e) {
+                container.innerHTML = `<div class="warning">Error: ${e.message}</div>`;
+            }
+        }
+
+        // ==================== CHAIN BUILDER ====================
+
+        function updateChainDemo() {
+            const output = document.getElementById('chain-demo-output');
+            const color = new Color("#4287f5")
+                .lighten(0.2)
+                .saturate(0.3)
+                .rotate(30)
+                .fade(0.2);
+
+            output.innerHTML = `
+                Result: <strong>${color.hex()}</strong><br>
+                rgba: ${color.toString()}<br>
+                <div style="width: 100%; height: 40px; background: ${color.hex()}; border-radius: 4px; margin-top: 10px; border: 2px solid #333;"></div>
+            `;
+        }
+
+        function resetChain() {
+            const input = document.getElementById('chain-input').value;
+            chainState = {
+                color: new Color(input),
+                steps: [`new Color("${input}")`]
+            };
+            updateChainBuilder();
+        }
+
+        function addToChain(method, value) {
+            const step = value !== undefined ? `.${method}(${value})` : `.${method}()`;
+            chainState.steps.push(step);
+
+            if (value !== undefined) {
+                chainState.color = chainState.color[method](value);
+            } else {
+                chainState.color = chainState.color[method]();
+            }
+
+            updateChainBuilder();
+        }
+
+        function updateChainBuilder() {
+            const output = document.getElementById('chain-builder-output');
+            const preview = document.getElementById('chain-builder-preview');
+
+            output.textContent = `Chain: ${chainState.steps.join('')}`;
+            preview.innerHTML = `
+                <div class="color-display" style="margin-top: 15px;">
+                    <div class="color-box" style="background-color: ${chainState.color.hex()}"></div>
+                    <div class="color-info">
+                        <strong>Result:</strong> ${chainState.color.hex()}<br>
+                        <strong>String:</strong> ${chainState.color.toString()}
+                    </div>
+                </div>
+            `;
+        }
+
+        // ==================== COLOR MODELS ====================
+
+        function initializeColorModels() {
+            const models = [
+                { name: 'Hex', example: '#ff6b6b', description: '3, 4, 6, or 8 digit hex values' },
+                { name: 'RGB', example: 'rgb(255, 107, 107)', description: 'Red, Green, Blue channels' },
+                { name: 'RGBA', example: 'rgba(255, 107, 107, 0.8)', description: 'RGB with alpha channel' },
+                { name: 'HSL', example: 'hsl(0, 100%, 71%)', description: 'Hue, Saturation, Lightness' },
+                { name: 'HSLA', example: 'hsla(0, 100%, 71%, 0.8)', description: 'HSL with alpha channel' },
+                { name: 'HWB', example: 'hwb(0, 0%, 29%)', description: 'Hue, Whiteness, Blackness' },
+                { name: 'LAB', example: 'lab(50, 80, 60)', description: 'CIELAB color space' },
+                { name: 'LCH', example: 'lch(50, 100, 40)', description: 'CIELCH color space' },
+                { name: 'OKLAB', example: 'oklab(0.7, 0.1, 0.1)', description: 'Oklab color space' },
+                { name: 'OKLCH', example: 'oklch(0.7, 0.1, 40)', description: 'Oklch color space' },
+                { name: 'XYZ', example: 'xyz(41, 21, 2)', description: 'CIE XYZ color space' },
+                { name: 'CMYK', example: 'cmyk(0, 58, 58, 0)', description: 'Cyan, Magenta, Yellow, Key' }
+            ];
+
+            const container = document.getElementById('color-models');
+            models.forEach(model => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <h3>${model.name}</h3>
+                    <div class="code-block">${model.example}</div>
+                    <p>${model.description}</p>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // ==================== UTILITIES ====================
+
+        function createColorDisplay(label, colorString) {
+            const div = document.createElement('div');
+            div.className = 'color-display';
+
+            const colorBox = document.createElement('div');
+            colorBox.className = 'color-box';
+
+            try {
+                colorBox.style.backgroundColor = colorString;
+            } catch (e) {
+                colorBox.style.backgroundColor = '#ccc';
+            }
+
+            const info = document.createElement('div');
+            info.className = 'color-info';
+            info.innerHTML = `<strong>${label}:</strong> ${colorString}`;
+
+            div.appendChild(colorBox);
+            div.appendChild(info);
+            return div;
+        }
+
+        function createColorCardContent(hex) {
+            return `
+                <div style="width: 100%; height: 60px; background: ${hex}; border-radius: 8px; border: 2px solid #333; margin-bottom: 10px;"></div>
+                <div class="code" style="font-family: monospace; font-size: 0.9em;">${hex}</div>
+            `;
+        }
+    </script>
+</body>
+</html>
