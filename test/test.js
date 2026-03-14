@@ -12,12 +12,12 @@ test("rgb", () => {
 });
 
 test("rgbArray", () => {
-  const black = new Color([0,0,0]);
-  assert.equal(black.toString(), "rgba(0, 0, 0, 1)");
+  const red = new Color([0,0,0]).red(152);
+  assert.equal(red.toString(), "rgba(152, 0, 0, 1)");
   const white = new Color([255, 255, 255]);
   assert.equal(white.toString(), "rgba(255, 255, 255, 1)");
   const whiteWithAlpha = new Color([255, 255, 255, 0.5]);
-  assert.equal(whiteWithAlpha.toString(), "rgba(255, 255, 255, 1)");
+  assert.equal(whiteWithAlpha.toString(), "rgba(255, 255, 255, 0.5)");
 });
 
 test("rgbObject", () => {
@@ -36,17 +36,24 @@ test("rgbString", () => {
 
 test("chain", () => {
   const color = new Color("rgb(255, 255, 255)").darken(0.5).alpha(0.5).red(130).darken(0).lighten(0).blue(140);
-  assert.equal(color.toString(), "rgba(130, 127.5, 140, 0.5)");
+  assert.equal(color.toString(), "rgba(130, 128, 140, 0.5)");
   const color2 = new Color("rgb(0, 0, 0)").lighten(0.5);
-  assert.equal(color2.toString(), "rgba(127.5, 127.5, 127.5, 1)");
+  assert.equal(color2.toString(), "rgba(128, 128, 128, 1)");
 });
 
 test("set color methods", () => {
   const color = new Color()
+  console.log(color.red);
+  console.log(color.red());
+  console.log(color.red(255));
   console.log(color.alpha());
   console.log(color.red());
   console.log(color.blue());
   console.log(color.green());
+  // After setting red to 255 on a black color, we get red (255, 0, 0)
+  assert.equal(color.toString(), "rgba(255, 0, 0, 1)");
+  color.green(255);
+  color.blue(255);
   assert.equal(color.toString(), "rgba(255, 255, 255, 1)");
   color.green(0);
   assert.equal(color.toString(), "rgba(255, 0, 255, 1)");
