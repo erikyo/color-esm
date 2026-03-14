@@ -93,7 +93,7 @@ class Color {
 			this._r = rgb.r;
 			this._g = rgb.g;
 			this._b = rgb.b;
-			this._A = 'a' in color ? Number(color.a) : 1;
+			this._A = ('a' in color || 'A' in color) ? Number(color.a || color.A) : 1;
 			return this;
 		}
 
@@ -231,10 +231,20 @@ class Color {
 
 	toObject(model = "rgb") {
 		const current: Record<string, unknown> = {};
-		for (const i in model.split("")) {
-			if (model[i] in this) {
-				const char = model[i];
-				current[char] = this[char];
+		const channelMap: Record<string, string> = {
+			r: "_r",
+			g: "_g", 
+			b: "_b",
+			a: "_A",
+			h: "_h",
+			s: "_s",
+			l: "_l",
+		};
+		
+		for (const char of model.split("")) {
+			const internalKey = channelMap[char];
+			if (internalKey && internalKey in this) {
+				current[char] = (this as any)[internalKey];
 			}
 		}
 		return current;
@@ -242,10 +252,20 @@ class Color {
 
 	toArray(model = "rgba") {
 		const current = [];
-		for (const i in model.split("")) {
-			const char = model[i];
-			if (char in this) {
-				current.push(this[char as keyof this]);
+		const channelMap: Record<string, string> = {
+			r: "_r",
+			g: "_g", 
+			b: "_b",
+			a: "_A",
+			h: "_h",
+			s: "_s",
+			l: "_l",
+		};
+		
+		for (const char of model.split("")) {
+			const internalKey = channelMap[char];
+			if (internalKey && internalKey in this) {
+				current.push((this as any)[internalKey]);
 			}
 		}
 		return current;
@@ -257,6 +277,31 @@ class Color {
 
 	toString(model = "rgba") {
 		return formatColor(this, model ?? this.model);
+	}
+
+	// Alias for toString() to match original color package API
+	string(model = "rgba") {
+		return this.toString(model);
+	}
+
+	// Alias for toObject() to match original color package API
+	object(model = "rgb") {
+		return this.toObject(model);
+	}
+
+	// Alias for toArray() to match original color package API
+	array(model = "rgba") {
+		return this.toArray(model);
+	}
+
+	// Round all channels to integers
+	round() {
+		return new Color({
+			r: Math.round(this._r),
+			g: Math.round(this._g),
+			b: Math.round(this._b),
+			a: Math.round(this._A * 100) / 100
+		});
 	}
 
 	toValue() {
