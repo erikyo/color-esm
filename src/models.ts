@@ -1,76 +1,190 @@
+import { toHex } from "./color-utils/hex.js";
+import { hslToRgb, rgbToHsl } from "./color-utils/hsl.js";
 import Color from "./index.js";
 
-function red(r = 255) {
-	this.r = r;
+function red(r?: number) {
+	if (r === undefined) return this._r;
+	this._r = r;
 	return this;
 }
 
-function green(g = 255) {
-	this.g = g;
+function green(g?: number) {
+	if (g === undefined) return this._g;
+	this._g = g;
 	return this;
 }
 
-function blue(b = 255) {
-	this.b = b;
+function blue(b?: number) {
+	if (b === undefined) return this._b;
+	this._b = b;
 	return this;
 }
 
 /**
- * Overrides the alpha value of the color
- * this the color
- * @param A the alpha value
+ * Get or set the alpha value of the color
+ * @param a - the alpha value to set (optional)
+ * @returns the alpha value when getting, or the Color instance when setting
  */
-function alpha(A = 1) {
-	this.A = A;
+function alpha(a?: number) {
+	if (a === undefined) return this._A;
+	this._A = a;
 	return this;
 }
 
-function hex(colorString: string | undefined) {
-	return new Color().fromString(colorString, "hex");
+function hsl(h?: number, s?: number, l?: number) {
+	if (h === undefined) {
+		// Getter: return HSL object from current RGB
+		return rgbToHsl({ r: this._r, g: this._g, b: this._b });
+	}
+	// Setter: convert HSL to RGB and update
+	const rgb = hslToRgb({ h, s: s ?? 0, l: l ?? 0 });
+	this._r = rgb.r;
+	this._g = rgb.g;
+	this._b = rgb.b;
+	return this;
 }
 
-function hexa(colorString: string | undefined) {
-	return new Color(colorString, "hexa");
+function rgb(r?: number, g?: number, b?: number, a?: number) {
+	if (r === undefined) {
+		// Getter: return RGB object
+		return { r: this._r, g: this._g, b: this._b };
+	}
+	// Setter: update RGB values
+	this._r = r;
+	if (g !== undefined) this._g = g;
+	if (b !== undefined) this._b = b;
+	if (a !== undefined) this._A = a;
+	return this;
 }
 
-function rgb(
-	r?: string | number,
-	g?: string | number,
-	b?: string | number,
-	a = 1,
-) {
-	return new Color(r, g, b, a);
+function hex(value?: string) {
+	if (value === undefined) {
+		// Getter: return hex string
+		return `#${toHex(this._r)}${toHex(this._g)}${toHex(this._b)}`;
+	}
+	// Setter: parse hex and update
+	const color = new Color(value);
+	this._r = color._r;
+	this._g = color._g;
+	this._b = color._b;
+	this._A = color._A;
+	return this;
 }
 
-function hsl(string: string | undefined) {
-	return new Color(string, "hsl");
+function hexa(value?: string) {
+	if (value === undefined) {
+		// Getter: return hexa string
+		const alpha = Math.max(0, Math.min(1, this._A));
+		return `#${toHex(this._r)}${toHex(this._g)}${toHex(this._b)}${toHex(
+			Math.round(alpha * 255),
+		)}`;
+	}
+	// Setter: parse hexa and update
+	const color = new Color(value);
+	this._r = color._r;
+	this._g = color._g;
+	this._b = color._b;
+	this._A = color._A;
+	return this;
 }
 
-function lab(string: string | undefined) {
+function setLab(string: string | undefined) {
 	return new Color(string, "lab");
 }
 
-function lch(string: string | undefined) {
+function setLch(string: string | undefined) {
 	return new Color(string, "lch");
 }
 
-function oklab(string: string | undefined) {
+function setOklab(string: string | undefined) {
 	return new Color(string, "oklab");
 }
 
-function hwb(string: string | undefined) {
+function setHwb(string: string | undefined) {
 	return new Color(string, "hwb");
 }
 
-function oklch(string: string | undefined) {
+function setOklch(string: string | undefined) {
 	return new Color(string, "oklch");
 }
 
-function color(string: string | undefined) {
+function setColor(string: string | undefined) {
 	return new Color(string, "color");
 }
 
-export default {
+const channelGetters: Record<string, () => number> = {
+	red() {
+		return this._r;
+	},
+	green() {
+		return this._g;
+	},
+	blue() {
+		return this._b;
+	},
+	alpha() {
+		return this._A;
+	},
+	hue() {
+		return rgbToHsl({ r: this._r, g: this._g, b: this._b }).h;
+	},
+	saturationl() {
+		return rgbToHsl({ r: this._r, g: this._g, b: this._b }).s;
+	},
+	lightness() {
+		return rgbToHsl({ r: this._r, g: this._g, b: this._b }).l;
+	},
+	saturationv() {
+		return this._s ?? 0;
+	},
+	value() {
+		return this._l ?? 0;
+	},
+	chroma() {
+		return this._z ?? 0;
+	},
+	gray() {
+		return this._y ?? 0;
+	},
+	white() {
+		return this._y ?? 0;
+	},
+	wblack() {
+		return this._z ?? 0;
+	},
+	cyan() {
+		return this._x ?? 0;
+	},
+	magenta() {
+		return this._y ?? 0;
+	},
+	yellow() {
+		return this._z ?? 0;
+	},
+	black() {
+		return this._z ?? 0;
+	},
+	x() {
+		return this._x ?? 0;
+	},
+	y() {
+		return this._y ?? 0;
+	},
+	z() {
+		return this._z ?? 0;
+	},
+	l() {
+		return this._l ?? 0;
+	},
+	a() {
+		return this._x ?? 0;
+	},
+	b() {
+		return this._y ?? 0;
+	},
+};
+
+const setters = {
 	red,
 	green,
 	blue,
@@ -79,10 +193,14 @@ export default {
 	hexa,
 	rgb,
 	hsl,
-	lab,
-	lch,
-	oklab,
-	hwb,
-	oklch,
-	color,
 };
+
+const getters = {
+	...channelGetters,
+	hex,
+	hexa,
+	rgb,
+	hsl,
+};
+
+export default { getters, setters };
