@@ -3,19 +3,32 @@
 	"version": "0.0.1",
 	"description": "Chainable color library es module (inspired to color)",
 	"type": "module",
-	"main": "./lib/esm/index.js",
-	"module": "./lib/esm/index.js",
-	"types": "./lib/@types/index.d.ts",
-	"unpkg": "./lib/iife/index.min.js",
-	"jsdelivr": "./lib/iife/index.js",
+	"main": "./lib/index.cjs",
+	"module": "./lib/index.js",
+	"types": "./lib/index.d.ts",
+	"unpkg": "./lib/browser/color-esm.min.js",
+	"jsdelivr": "./lib/browser/color-esm.js",
 	"exports": {
 		".": {
-			"types": "./lib/@types/index.d.ts",
-			"import": "./lib/esm/index.js",
-			"default": "./lib/esm/index.js"
+			"types": {
+				"import": "./lib/index.d.ts",
+				"require": "./lib/index.d.cts"
+			},
+			"import": "./lib/index.js",
+			"require": "./lib/index.cjs"
+		},
+		"./*": {
+			"types": "./lib/*.d.ts",
+			"import": "./lib/*.js",
+			"require": "./lib/*.cjs"
 		}
 	},
-	"files": ["lib/", "README.md", "LICENSE", "package.json"],
+	"files": [
+		"lib/",
+		"README.md",
+		"LICENSE",
+		"package.json"
+	],
 	"license": "ISC",
 	"author": "Erik Golinelli <https://github.com/erikyo>",
 	"repository": {
@@ -27,22 +40,32 @@
 		"url": "https://github.com/erikyo/color-esm/issues"
 	},
 	"sideEffects": false,
-	"keywords": ["color", "css", "esm"],
+	"keywords": [
+		"color",
+		"css",
+		"esm"
+	],
 	"scripts": {
+		"build": "rimraf lib && npm run build-module && npm run build-browser && npm run build-browser-min",
+		"build-module": "tsdown",
+		"build-browser": "esbuild src/index.ts --outfile=lib/browser/color-esm.js --global-name=Color --allow-overwrite --bundle --sourcemap",
+		"build-browser-min": "esbuild src/index.ts --outfile=lib/browser/color-esm.min.js --global-name=Color --allow-overwrite --bundle --minify",
 		"start": "npx esbuild src/index.ts --bundle --outdir=lib/esm --format=esm --global-name=Color --watch",
-		"poststart": "npm run tsc:types",
 		"tsc:watch": "npx tsc --watch",
 		"tsc:types": "npx tsc --emitDeclarationOnly",
-		"deno:watch": "deno task start",
-		"postdeno:watch": "npm run tsc:types",
-		"prebuild": "npm run tsc:types",
-		"build": "deno task build",
 		"lint": "npx @biomejs/biome check --write src",
 		"test": "node --experimental-vm-modules --experimental-specifier-resolution=node --test",
 		"test:coverage": "node --experimental-vm-modules --experimental-specifier-resolution=node --test --experimental-test-coverage",
-		"test:watch": "node --experimental-vm-modules --experimental-specifier-resolution=node  --test --watch",
+		"test:watch": "node --experimental-vm-modules --experimental-specifier-resolution=node --test --watch",
 		"lint-node": "npx @biomejs/biome lint --write src tests",
-		"preeepublish": "npm run test",
+		"prepublish": "npm run test",
 		"publish-check": "npm run build && npx publint"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.4.7",
+		"esbuild": "^0.27.4",
+		"rimraf": "^6.0.1",
+		"tsdown": "^0.21.2",
+		"typescript": "^5.9.3"
 	}
 }

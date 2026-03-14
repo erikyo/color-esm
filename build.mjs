@@ -9,17 +9,6 @@ const isDev = process?.env?.NODE_ENV === 'development' ?? false
  * @return {Promise<void>}
  */
 async function run() {
-  const test = es.build({
-    format: 'iife',
-    platform: 'node',
-    entryPoints: ['poc/index.ts'],
-    outfile: 'poc/script.js',
-    keepNames: true,
-    bundle: true,
-    minify: false,
-    globalName: 'TestEsm',
-    tsconfig: 'tsconfig.json',
-  })
 
   /**
    * Immediately Invoked Function Expression (IIFE)
@@ -30,7 +19,8 @@ async function run() {
     entryPoints: ['src/index.ts'],
     outfile: 'lib/iife/index.js',
     bundle: true,
-    globalName: 'ColorEsm',
+    minify: false,
+    globalName: 'Color',
     tsconfig: 'tsconfig.json',
   })
 
@@ -39,10 +29,10 @@ async function run() {
     platform: 'node',
     entryPoints: ['src/index.ts'],
     outfile: 'lib/iife/index.min.js',
-    bundle: false,
-    minify: false,
+    bundle: true,
+    minify: true,
     sourcemap: true,
-    globalName: 'ColorEsm',
+    globalName: 'Color',
     tsconfig: 'tsconfig.json'
   })
 
