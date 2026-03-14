@@ -1,6 +1,7 @@
 import { isFormat } from "./common.js";
 import { formatOptions } from "./constants.js";
-import type { FORMAT, RGBA } from "./types.js";
+import type Color from "./index.js";
+import type { FORMAT } from "./types.js";
 
 function formatValue(value: number, format: FORMAT = "number"): string {
 	if (format === "number") {
@@ -28,29 +29,29 @@ function formatValue(value: number, format: FORMAT = "number"): string {
  * @param model
  * @param separator
  */
-function formatColor(color: RGBA, model: string, separator = ", "): string {
+function formatColor(color: Color, model: string, separator = ", "): string {
 	const format = "number";
 	const f: FORMAT = isFormat(format) ? format : "number";
 	const m = isFormat(model) ? model : "rgba";
 	switch (m) {
 		case "hex":
-			return `#${formatValue(color.r, f)}${formatValue(
-				color.g,
+			return `#${formatValue(color._r, f)}${formatValue(
+				color._g,
 				f,
-			)}${formatValue(color.b, f)}`;
+			)}${formatValue(color._b, f)}`;
 		case "rgba":
-			return `${m}(${formatValue(color.r, f)}${separator}${formatValue(
-				color.g,
+			return `${m}(${formatValue(color._r, f)}${separator}${formatValue(
+				color._g,
 				format,
-			)}${separator}${formatValue(color.b, f)}${separator}${formatValue(
-				color.A,
+			)}${separator}${formatValue(color._b, f)}${separator}${formatValue(
+				color._A,
 				format,
 			)})`;
 		default:
-			return `${m}(${formatValue(color.r, f)}${separator}${formatValue(
-				color.g,
+			return `${m}(${formatValue(color._r, f)}${separator}${formatValue(
+				color._g,
 				format,
-			)}${separator}${formatValue(color.b, f)})`;
+			)}${separator}${formatValue(color._b, f)})`;
 	}
 }
 
