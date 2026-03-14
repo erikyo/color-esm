@@ -1,5 +1,6 @@
-import * as namedColors from "./named-colors.json";
-import type { COLOR_INFO, COLOR_NAME, RGB, RGBA } from "./types.js";
+import type Color from "./index";
+import * as namedColors from "./named-colors.js";
+import type { COLOR_INFO, RGB } from "./types.js";
 
 /**
  * Given a color string, it returns the closest corresponding name of the color.
@@ -15,7 +16,7 @@ import type { COLOR_INFO, COLOR_NAME, RGB, RGBA } from "./types.js";
  *
  * closest('#f00', undefined, {info:true}); // { name: 'red', color: 'rgbString(255,0,0)', hex: '#ff0000', hslString: 'hslString(0, 100%, 50%)', distance: 0 ) }
  */
-export function closest(color: RGBA, set = namedColors): COLOR_INFO {
+export function closest(color: Color, set = namedColors): COLOR_INFO {
 	let closestGap = Number.MAX_SAFE_INTEGER;
 	const closestColor: Partial<COLOR_INFO> = {};
 
@@ -26,7 +27,7 @@ export function closest(color: RGBA, set = namedColors): COLOR_INFO {
 		const gap = this.distance(rgbColorValues, set[i], true);
 		if (gap < closestGap) {
 			closestGap = gap;
-			closestColor.name = i as COLOR_NAME;
+			closestColor.name = i;
 			closestColor.color = [set[i][0], set[i][1], set[i][2]];
 		}
 
