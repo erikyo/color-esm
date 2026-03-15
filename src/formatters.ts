@@ -40,18 +40,33 @@ function formatColor(color: Color, model: string, separator = ", "): string {
 				f,
 			)}${formatValue(color._b, f)}`;
 		case "rgba":
-			return `${m}(${formatValue(color._r, f)}${separator}${formatValue(
-				color._g,
+			if (color._A === 1) {
+				return `rgb(${formatValue(Math.round(color._r), f)}${separator}${formatValue(
+					Math.round(color._g),
+					format,
+				)}${separator}${formatValue(Math.round(color._b), f)})`;
+			}
+			return `rgba(${formatValue(Math.round(color._r), f)}${separator}${formatValue(
+				Math.round(color._g),
 				format,
-			)}${separator}${formatValue(color._b, f)}${separator}${formatValue(
+			)}${separator}${formatValue(Math.round(color._b), f)}${separator}${formatValue(
 				color._A,
 				format,
 			)})`;
 		default:
-			return `${m}(${formatValue(color._r, f)}${separator}${formatValue(
-				color._g,
+			if (color._A !== 1) {
+				return `rgba(${formatValue(Math.round(color._r), f)}${separator}${formatValue(
+					Math.round(color._g),
+					format,
+				)}${separator}${formatValue(Math.round(color._b), f)}${separator}${formatValue(
+					color._A,
+					format,
+				)})`;
+			}
+			return `${m}(${formatValue(Math.round(color._r), f)}${separator}${formatValue(
+				Math.round(color._g),
 				format,
-			)}${separator}${formatValue(color._b, f)})`;
+			)}${separator}${formatValue(Math.round(color._b), f)})`;
 	}
 }
 
