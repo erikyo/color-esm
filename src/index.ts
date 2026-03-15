@@ -5,20 +5,48 @@ import models from "./models.js";
 import modifiers from "./modifiers.js";
 import parsers from "./parsers.js";
 import { hslToRgb } from "./color-utils/hsl.js";
+import { hwbToRgb } from "./color-utils/hwb.js";
+import { hsvToRgb } from "./color-utils/color.js";
+import namedColors from "./named-colors.js";
 import type { CHANNEL, COLORS, MODEL } from "./types.js";
 
-class Color {
+export class Color {
 	_r = 0;
 	_g = 0;
 	_b = 0;
 	_A = 1;
-	_h?: number;
-	_s?: number;
-	_l?: number;
-	_x?: number;
-	_y?: number;
-	_z?: number;
+	_h_hsl?: number;
+	_s_hsl?: number;
+	_l_hsl?: number;
+	_h_hsv?: number;
+	_s_hsv?: number;
+	_v_hsv?: number;
+	_h_hwb?: number;
+	_w_hwb?: number;
+	_b_hwb?: number;
+	_c_cmyk?: number;
+	_m_cmyk?: number;
+	_y_cmyk?: number;
+	_k_cmyk?: number;
 	model: MODEL = "rgba" as MODEL;
+
+	// Dynamic methods declared for TypeScript
+	declare red: any; declare green: any; declare blue: any; declare alpha: any;
+	declare hue: any; declare saturationl: any; declare lightness: any;
+	declare saturationv: any; declare value: any;
+	declare white: any; declare wblack: any;
+	declare cyan: any; declare magenta: any; declare yellow: any; declare black: any;
+	declare hex: any; declare hexa: any;
+	declare rgb: any; declare hsl: any; declare hwb: any; declare hsv: any; declare cmyk: any;
+	declare ansi256: any; declare ansi16: any;
+	declare luminosity: any; declare contrast: any; declare level: any; declare isDark: any; declare isLight: any;
+	declare mix: any; declare fade: any; declare opaquer: any; declare clearer: any; declare grayscale: any;
+	declare whiten: any; declare blacken: any; declare rotate: any;
+	declare unitArray: any; declare percentString: any; declare rgbNumber: any;
+
+	// Static declarations
+	static rgb: any; static hsl: any; static hwb: any; static hsv: any; static cmyk: any;
+	static hex: any; static random: any;
 
 	/**
 	 * Color constructor function for the Color class that initializes the color object based on the provided arguments.
@@ -76,24 +104,98 @@ class Color {
 			this._g = color._g;
 			this._b = color._b;
 			this._A = color._A;
-			if (color._h !== undefined) this._h = color._h;
-			if (color._s !== undefined) this._s = color._s;
-			if (color._l !== undefined) this._l = color._l;
+			if (color._h_hsl !== undefined) this._h_hsl = color._h_hsl;
+			if (color._s_hsl !== undefined) this._s_hsl = color._s_hsl;
+			if (color._l_hsl !== undefined) this._l_hsl = color._l_hsl;
+			if (color._h_hsv !== undefined) this._h_hsv = color._h_hsv;
+			if (color._s_hsv !== undefined) this._s_hsv = color._s_hsv;
+			if (color._v_hsv !== undefined) this._v_hsv = color._v_hsv;
+			if (color._h_hwb !== undefined) this._h_hwb = color._h_hwb;
+			if (color._w_hwb !== undefined) this._w_hwb = color._w_hwb;
+			if (color._b_hwb !== undefined) this._b_hwb = color._b_hwb;
+			if (color._c_cmyk !== undefined) this._c_cmyk = color._c_cmyk;
+			if (color._m_cmyk !== undefined) this._m_cmyk = color._m_cmyk;
+			if (color._y_cmyk !== undefined) this._y_cmyk = color._y_cmyk;
+			if (color._k_cmyk !== undefined) this._k_cmyk = color._k_cmyk;
 			return this;
+		}
+
+		// Check if this is an empty object
+		const keys = Object.keys(color);
+		if (keys.length === 0) {
+			throw new Error("Unable to parse color from object");
 		}
 
 		// Check if this is an HSL object
 		if ('h' in color && 's' in color && 'l' in color) {
 			// Convert HSL to RGB
-			const rgb = hslToRgb({ 
-				h: Number(color.h), 
-				s: Number(color.s), 
-				l: Number(color.l) 
-			});
+			const h = Number((color as any).h);
+			const s = Number((color as any).s);
+			const l = Number((color as any).l);
+			const rgb = hslToRgb({ h, s, l });
 			this._r = rgb.r;
 			this._g = rgb.g;
 			this._b = rgb.b;
-			this._A = ('a' in color || 'A' in color) ? Number(color.a || color.A) : 1;
+			this._A = Math.max(0, Math.min(1, ('a' in color || 'A' in color || 'alpha' in color) ? Number((color as any).a || (color as any).A || (color as any).alpha) : 1));
+			this._h_hsl = h;
+			this._s_hsl = s;
+			this._l_hsl = l;
+			return this;
+		}
+
+
+		// Handle HWB object
+		if ('h' in color && 'w' in color && 'b' in color) {
+			const h = Number((color as any).h);
+			const w = Number((color as any).w);
+			const b = Number((color as any).b);
+			const rgb = hwbToRgb({ h, w, b });
+			this._r = rgb.r;
+			this._g = rgb.g;
+			this._b = rgb.b;
+			this._A = Math.max(0, Math.min(1, ('a' in color || 'A' in color || 'alpha' in color) ? Number((color as any).a || (color as any).A || (color as any).alpha) : 1));
+			this._h_hwb = h;
+			this._w_hwb = w;
+			this._b_hwb = b;
+			return this;
+		}
+
+		// Handle HSV object
+		if ('h' in color && 's' in color && 'v' in color) {
+			const h = Number((color as any).h);
+			const s = Number((color as any).s);
+			const v = Number((color as any).v);
+			const rgb = hsvToRgb({ h, s, v });
+			this._r = rgb.r;
+			this._g = rgb.g;
+			this._b = rgb.b;
+			this._A = Math.max(0, Math.min(1, ('a' in color || 'A' in color || 'alpha' in color) ? Number((color as any).a || (color as any).A || (color as any).alpha) : 1));
+			this._h_hsv = h;
+			this._s_hsv = s;
+			this._v_hsv = v;
+			return this;
+		}
+
+		// Handle CMYK object
+		if ('c' in color && 'm' in color && 'y' in color && 'k' in color) {
+			const c_orig = Number((color as any).c);
+			const m_orig = Number((color as any).m);
+			const y_orig = Number((color as any).y);
+			const k_orig = Number((color as any).k);
+			
+			const c = Math.max(0, Math.min(100, c_orig)) / 100;
+			const m = Math.max(0, Math.min(100, m_orig)) / 100;
+			const y = Math.max(0, Math.min(100, y_orig)) / 100;
+			const k = Math.max(0, Math.min(100, k_orig)) / 100;
+
+			this._r = Math.round((1 - c) * (1 - k) * 255);
+			this._g = Math.round((1 - m) * (1 - k) * 255);
+			this._b = Math.round((1 - y) * (1 - k) * 255);
+			this._A = Math.max(0, Math.min(1, ('a' in color || 'A' in color || 'alpha' in color) ? Number((color as any).a || (color as any).A || (color as any).alpha) : 1));
+			this._c_cmyk = c_orig;
+			this._m_cmyk = m_orig;
+			this._y_cmyk = y_orig;
+			this._k_cmyk = k_orig;
 			return this;
 		}
 
@@ -104,24 +206,42 @@ class Color {
 			b: "_b",
 			a: "_A",
 			A: "_A",
+			alpha: "_A",
+			h: "_h_hsl",
+			s: "_s_hsl",
+			l: "_l_hsl",
+			w: "_w_hwb",
+			v: "_v_hsv",
+			c: "_c_cmyk",
+			m: "_m_cmyk",
+			y: "_y_cmyk",
+			k: "_k_cmyk",
 		};
 
-		for (const key of Object.keys(color)) {
+		let hasValidKey = false;
+		for (const key of keys) {
 			const internalKey = keyMap[key];
 			if (internalKey) {
+				hasValidKey = true;
 				const value = (color as unknown as Record<string, string | number>)[
 					key
 				];
 				// Alpha is 0-1, other channels are 0-255
 				if (internalKey === "_A") {
+					const rawAlpha = typeof value === "number" ? value : Number(value);
 					(this as unknown as Record<string, number>)[internalKey] =
-						typeof value === "number" ? value : Number(value);
+						Math.max(0, Math.min(1, rawAlpha));
 				} else {
 					(this as unknown as Record<string, number>)[internalKey] =
 						safeInt(value);
 				}
 			}
 		}
+		
+		if (!hasValidKey) {
+			throw new Error("Unable to parse color from object");
+		}
+		
 		return this;
 	}
 
@@ -159,12 +279,13 @@ class Color {
 				const value = rgbArray[i];
 				// Alpha is 0-1, other channels are 0-255
 				if (internalKey === "_A") {
+					const rawAlpha = value !== undefined
+						? typeof value === "number"
+							? value
+							: Number(value)
+						: 1;
 					(this as unknown as Record<string, number>)[internalKey] =
-						value !== undefined
-							? typeof value === "number"
-								? value
-								: Number(value)
-							: 1;
+						Math.max(0, Math.min(1, rawAlpha));
 				} else {
 					(this as unknown as Record<string, number>)[internalKey] =
 						value !== undefined ? (parse ? safeInt(value) : Int(value)) : 0;
@@ -185,6 +306,13 @@ class Color {
 	 * @return {Object|Error} the object with rgbString values of that color
 	 */
 	fromString(colorString: string, model?: string | number): COLORS {
+		// Check for named colors first
+		const lowerColorString = colorString.toLowerCase();
+		if (namedColors[lowerColorString]) {
+			const [r, g, b] = namedColors[lowerColorString];
+			return { r, g, b, A: 1 } as COLORS;
+		}
+
 		// the model of the color string (e.g. "rgb", "rgba", "hsl", "hsla"...) is defined in the model
 		if (typeof model === "string") {
 			if (isModel(model)) {
@@ -193,13 +321,13 @@ class Color {
 				// find the converter function based on the model
 				const mode = parsers.find((p) => p.model === model);
 				if (!mode) {
-					throw new Error(`Parser not found for model: ${model}`);
+					throw new Error(`Unable to parse color from string: ${colorString}`);
 				}
 				// convert the color string to rgbString values
 				return mode.converter(mode.parser(colorString), model as MODEL);
 			}
 			throw new Error(
-				`Invalid model: ${model} should be one of ${COLOR_MODEL.join(", ")}`,
+				`Unable to parse color from string: ${colorString}`,
 			);
 		}
 
@@ -212,7 +340,7 @@ class Color {
 		}
 
 		// If the color string does not match any of the regular expressions, return an error
-		throw new Error(`Invalid color: ${colorString}`);
+		throw new Error(`Unable to parse color from string: ${colorString}`);
 	}
 
 	/**
@@ -271,8 +399,8 @@ class Color {
 		return current;
 	}
 
-	toJson() {
-		return JSON.stringify(this.toObject(), null, 2);
+	toJSON() {
+		return this.rgb().toJSON();
 	}
 
 	toString(model = "rgba") {
@@ -280,8 +408,13 @@ class Color {
 	}
 
 	// Alias for toString() to match original color package API
-	string(model = "rgba") {
-		return this.toString(model);
+	string(precision?: number | string) {
+		if (typeof precision === 'number') {
+			// If precision is provided, we should probably round or handle it
+			// For now, let's just use it as a flag to round values in formatColor or similar
+			return this.round().toString();
+		}
+		return this.toString(precision as string);
 	}
 
 	// Alias for toObject() to match original color package API
@@ -317,15 +450,34 @@ Object.assign(Color.prototype, models.setters);
 Object.assign(Color.prototype, modifiers);
 
 // Static factory methods
-Color.rgb = function(r: number, g: number, b: number, a?: number): Color {
-	return new Color({ r, g, b, a: a ?? 1 });
+Color.rgb = function(r: number | number[] | { r: number; g: number; b: number; alpha?: number; a?: number }, g?: number, b?: number, a?: number): Color {
+	if (Array.isArray(r)) {
+		[r, g, b, a] = r as [number, number, number, number?];
+	} else if (typeof r === 'object' && r !== null) {
+		const obj = r as { r: number; g: number; b: number; alpha?: number; a?: number };
+		return new Color({ r: obj.r, g: obj.g, b: obj.b, alpha: obj.alpha ?? obj.a ?? 1 });
+	}
+	return new Color({ r: r as number, g: g!, b: b!, alpha: a ?? 1 });
 };
 
-Color.hsl = function(h: number, s: number, l: number, a?: number): Color {
-	const color = new Color();
-	color.hsl(h, s, l);
-	if (a !== undefined) color.alpha(a);
-	return color;
+Color.hsl = function(h: number | number[], s?: number, l?: number, a?: number): Color {
+	if (Array.isArray(h)) { [h, s, l, a] = h as [number, number, number, number?]; }
+	return new Color({ h: h as number, s: s!, l: l!, alpha: a ?? 1 });
+};
+
+Color.hsv = function(h: number | number[], s?: number, v?: number, a?: number): Color {
+	if (Array.isArray(h)) { [h, s, v, a] = h as [number, number, number, number?]; }
+	return new Color({ h: h as number, s: s!, v: v!, alpha: a ?? 1 });
+};
+
+Color.hwb = function(h: number | number[], w?: number, b?: number, a?: number): Color {
+	if (Array.isArray(h)) { [h, w, b, a] = h as [number, number, number, number?]; }
+	return new Color({ h: h as number, w: w!, b: b!, alpha: a ?? 1 });
+};
+
+Color.cmyk = function(c: number | number[], m?: number, y?: number, k?: number, a?: number): Color {
+	if (Array.isArray(c)) { [c, m, y, k, a] = c as [number, number, number, number, number?]; }
+	return new Color({ c: c as number, m: m!, y: y!, k: k!, alpha: a ?? 1 });
 };
 
 Color.hex = function(hex: string): Color {
@@ -340,4 +492,36 @@ Color.random = function(): Color {
 	});
 };
 
-export default Color;
+// Factory function to support calling Color() without 'new'
+function ColorFactory(
+	x?:
+		| number
+		| string
+		| unknown
+		| (string | number)[]
+		| { [key: string]: number | string },
+	y?: number | string,
+	z?: number | string,
+	a: number | string = 1,
+): Color {
+	return new (Color as any)(x, y, z, a);
+}
+
+// Ensure instanceof Color works when using the factory
+ColorFactory.prototype = Color.prototype;
+
+// Copy static methods from Color class to ColorFactory
+Object.assign(ColorFactory, Color);
+
+export default ColorFactory as unknown as typeof Color &
+	((
+		x?:
+			| number
+			| string
+			| unknown
+			| (string | number)[]
+			| { [key: string]: number | string },
+		y?: number | string,
+		z?: number | string,
+		a?: number | string,
+	) => Color);
