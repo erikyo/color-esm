@@ -40,7 +40,7 @@ const parsers: COLOR_PARSERS[] = [
 		converter: fromOklch,
 	},
 	{
-		model: "oklch",
+		model: "cmyk",
 		regex: validators.cmyk,
 		parser: extract,
 		converter: fromCmyk,
