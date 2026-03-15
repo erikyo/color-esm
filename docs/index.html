@@ -4,271 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Color-ESM Documentation & Interactive Examples</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 40px;
-            text-align: center;
-            margin-bottom: 40px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-        }
-
-        h1 {
-            font-size: 3em;
-            margin-bottom: 10px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .subtitle {
-            font-size: 1.2em;
-            color: #666;
-            margin-bottom: 20px;
-        }
-
-        .install-code {
-            background: #f4f4f4;
-            padding: 15px;
-            border-radius: 8px;
-            font-family: 'Courier New', monospace;
-            margin: 20px 0;
-            border-left: 4px solid #667eea;
-        }
-
-        .section {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        h2 {
-            color: #333;
-            margin-bottom: 20px;
-            font-size: 2em;
-            border-bottom: 3px solid #667eea;
-            padding-bottom: 10px;
-        }
-
-        h3 {
-            color: #555;
-            margin: 20px 0 10px 0;
-            font-size: 1.4em;
-        }
-
-        .example-group {
-            margin: 20px 0;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            border-left: 4px solid #764ba2;
-        }
-
-        .color-display {
-            display: inline-flex;
-            align-items: center;
-            gap: 15px;
-            margin: 10px 0;
-            padding: 10px;
-            background: white;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-        }
-
-        .color-box {
-            width: 60px;
-            height: 60px;
-            border-radius: 10px;
-            border: 2px solid #333;
-            transition: all 0.3s ease;
-        }
-
-        .color-box:hover {
-            transform: scale(1.1);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .color-info {
-            font-family: 'Courier New', monospace;
-            font-size: 0.9em;
-        }
-
-        .interactive-demo {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 15px 0;
-            border: 2px solid #e0e0e0;
-        }
-
-        .controls {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-        }
-
-        .control-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        label {
-            font-weight: 600;
-            color: #555;
-            font-size: 0.9em;
-        }
-
-        input[type="range"], input[type="text"], input[type="number"] {
-            padding: 8px;
-            border: 2px solid #ddd;
-            border-radius: 6px;
-            font-size: 14px;
-        }
-
-        input[type="range"] {
-            cursor: pointer;
-        }
-
-        button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            margin: 5px;
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin: 20px 0;
-        }
-
-        .card {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            border: 1px solid #e0e0e0;
-            transition: all 0.3s ease;
-        }
-
-        .card:hover {
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            transform: translateY(-2px);
-        }
-
-        .code-block {
-            background: #2d2d2d;
-            color: #f8f8f2;
-            padding: 15px;
-            border-radius: 8px;
-            font-family: 'Courier New', monospace;
-            overflow-x: auto;
-            margin: 10px 0;
-        }
-
-        .output {
-            background: #f0f8ff;
-            border-left: 4px solid #4CAF50;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 4px;
-        }
-
-        .warning {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 4px;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-            }
-
-            h1 {
-                font-size: 2em;
-            }
-
-            .controls {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .method-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-        }
-
-        .method-card {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 4px solid #667eea;
-        }
-
-        .method-card h4 {
-            color: #667eea;
-            margin-bottom: 8px;
-        }
-
-        .method-card p {
-            font-size: 0.9em;
-            color: #666;
-            margin-bottom: 8px;
-        }
-
-        .method-card .code {
-            background: #2d2d2d;
-            color: #f8f8f2;
-            padding: 8px;
-            border-radius: 4px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.8em;
-        }
-    </style>
+    <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
     <div class="container">
@@ -311,7 +47,7 @@
                 <div class="controls">
                     <div class="control-group">
                         <label for="model-base-color">Base Color:</label>
-                        <input type="text" id="model-base-color" value="#ff6b6b" placeholder="#ff6b6b">
+                        <input type="color" id="model-base-color" value="#ff6b6b">
                     </div>
                     <div class="control-group">
                         <label>&nbsp;</label>
@@ -361,6 +97,16 @@
             <p>Read individual color channel values:</p>
 
             <div class="interactive-demo">
+                <div class="controls">
+                    <div class="control-group">
+                        <label for="channel-color">Test Color:</label>
+                        <input type="color" id="channel-color" value="#4287f5">
+                    </div>
+                    <div class="control-group">
+                        <label>&nbsp;</label>
+                        <button onclick="updateChannelGetters()">Update Values</button>
+                    </div>
+                </div>
                 <div id="channel-getters-display"></div>
             </div>
 
@@ -407,7 +153,7 @@
                 <div class="controls">
                     <div class="control-group">
                         <label for="chain-base">Base Color:</label>
-                        <input type="text" id="chain-base" value="#4287f5" placeholder="#4287f5">
+                        <input type="color" id="chain-base" value="#4287f5">
                     </div>
                     <div class="control-group">
                         <label>&nbsp;</label>
@@ -526,11 +272,11 @@
                 <div class="controls">
                     <div class="control-group">
                         <label for="mix-color1">Color 1:</label>
-                        <input type="text" id="mix-color1" value="#ff6b6b" placeholder="#ff6b6b">
+                        <input type="color" id="mix-color1" value="#ff6b6b">
                     </div>
                     <div class="control-group">
                         <label for="mix-color2">Color 2:</label>
-                        <input type="text" id="mix-color2" value="#4CAF50" placeholder="#4CAF50">
+                        <input type="color" id="mix-color2" value="#4CAF50">
                     </div>
                     <div class="control-group">
                         <label for="mix-weight">Weight (0-1):</label>
@@ -561,11 +307,11 @@
                 <div class="controls">
                     <div class="control-group">
                         <label for="wcag-fg">Foreground:</label>
-                        <input type="text" id="wcag-fg" value="#333333" placeholder="#333333">
+                        <input type="color" id="wcag-fg" value="#333333">
                     </div>
                     <div class="control-group">
                         <label for="wcag-bg">Background:</label>
-                        <input type="text" id="wcag-bg" value="#ffffff" placeholder="#ffffff">
+                        <input type="color" id="wcag-bg" value="#ffffff">
                     </div>
                     <div class="control-group">
                         <label>&nbsp;</label>
@@ -608,7 +354,7 @@
                 <div class="controls">
                     <div class="control-group">
                         <label for="output-color">Color:</label>
-                        <input type="text" id="output-color" value="#4287f5" placeholder="#4287f5">
+                        <input type="color" id="output-color" value="#4287f5">
                     </div>
                     <div class="control-group">
                         <label>&nbsp;</label>
@@ -685,7 +431,7 @@ console.log(color.hex());  // Output: #5fa8ffcc
                 <div class="controls">
                     <div class="control-group">
                         <label for="chain-input">Start Color:</label>
-                        <input type="text" id="chain-input" value="#4287f5">
+                        <input type="color" id="chain-input" value="#4287f5">
                     </div>
                 </div>
                 <div class="controls">
@@ -716,7 +462,14 @@ console.log(color.hex());  // Output: #5fa8ffcc
         <section class="section">
             <h2>📋 Supported Color Models</h2>
             <p>Complete list of supported color string formats:</p>
-
+            
+            <div class="controls">
+                <div class="control-group">
+                    <label for="color-model-input">Test Color:</label>
+                    <input type="color" id="color-model-input" value="#4287f5">
+                </div>
+            </div>
+            
             <div class="grid" id="color-models"></div>
         </section>
 
@@ -728,583 +481,9 @@ console.log(color.hex());  // Output: #5fa8ffcc
     </div>
 
     <!-- Load the Color-ESM IIFE bundle -->
-    <script src="../lib/browser/color-esm.js"></script>
-    <script>
-        // The IIFE creates window.Color as { default: ColorClass }
-        // Reassign to the actual class for direct usage
-        window.Color = window.Color.default;
+    <script src="./lib/color-esm.js"></script>
 
-        // Global chain state for the chain builder
-        var chainState = {
-            color: null,
-            steps: []
-        };
-
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            initializeConstructorExamples();
-            initializeColorModels();
-            initializeChannelGetters();
-            updateModelExamples();
-            updateChainExamples();
-            updateLightnessExamples();
-            updateSaturationExamples();
-            updateRotateExamples();
-            updateMixing();
-            updateAccessibility();
-            updateOutput();
-            updateChainDemo();
-            resetChain();
-            setupEventListeners();
-        });
-
-        function setupEventListeners() {
-            // Input changes
-            document.getElementById('model-base-color').addEventListener('input', updateModelExamples);
-            document.getElementById('chain-base').addEventListener('input', updateChainExamples);
-            document.getElementById('output-color').addEventListener('input', updateOutput);
-            document.getElementById('chain-input').addEventListener('input', resetChain);
-
-            // WCAG inputs
-            document.getElementById('wcag-fg').addEventListener('input', updateAccessibility);
-            document.getElementById('wcag-bg').addEventListener('input', updateAccessibility);
-
-            // Mixing inputs
-            document.getElementById('mix-color1').addEventListener('input', updateMixing);
-            document.getElementById('mix-color2').addEventListener('input', updateMixing);
-            document.getElementById('mix-weight').addEventListener('input', function() {
-                document.getElementById('mix-weight-value').textContent = this.value;
-                updateMixing();
-            });
-
-            // Sliders
-            document.getElementById('lighten-amount').addEventListener('input', function() {
-                document.getElementById('lighten-value').textContent = this.value;
-                updateLightnessExamples();
-            });
-
-            document.getElementById('saturate-amount').addEventListener('input', function() {
-                document.getElementById('saturate-value').textContent = this.value;
-                updateSaturationExamples();
-            });
-
-            document.getElementById('rotate-amount').addEventListener('input', function() {
-                document.getElementById('rotate-value').textContent = this.value + '°';
-                updateRotateExamples();
-            });
-        }
-
-        // ==================== CONSTRUCTOR EXAMPLES ====================
-
-        function initializeConstructorExamples() {
-            // String examples
-            const stringExamples = [
-                { input: '"#ff6b6b"', color: new Color("#ff6b6b") },
-                { input: '"#4CAF50"', color: new Color("#4CAF50") },
-                { input: '"rgb(255, 99, 71)"', color: new Color("rgb(255, 99, 71)") },
-                { input: '"rgba(255, 99, 71, 0.8)"', color: new Color("rgba(255, 99, 71, 0.8)") },
-                { input: '"hsl(280, 100%, 50%)"', color: new Color("hsl(280, 100%, 50%)") },
-                { input: '"hsla(280, 100%, 50%, 0.6)"', color: new Color("hsla(280, 100%, 50%, 0.6)") }
-            ];
-
-            const stringContainer = document.getElementById('string-examples');
-            stringExamples.forEach(({ input, color }) => {
-                try {
-                    stringContainer.appendChild(createColorDisplay(input, color.hex()));
-                } catch (e) {
-                    stringContainer.appendChild(createColorDisplay(input, `Error: ${e.message}`));
-                }
-            });
-
-            // Hex examples
-            const hexContainer = document.getElementById('hex-examples');
-            const hexExamples = [
-                { input: '0xFF6B6B', color: new Color(0xFF6B6B) },
-                { input: '0x4CAF50', color: new Color(0x4CAF50) },
-                { input: '"#4287f5"', color: new Color("#4287f5") }
-            ];
-            hexExamples.forEach(({ input, color }) => {
-                try {
-                    hexContainer.appendChild(createColorDisplay(input, color.hex()));
-                } catch (e) {
-                    hexContainer.appendChild(createColorDisplay(input, `Error: ${e.message}`));
-                }
-            });
-
-            // Array examples
-            const arrayContainer = document.getElementById('array-examples');
-            const arrayExamples = [
-                { input: '[255, 107, 107]', color: new Color([255, 107, 107]) },
-                { input: '[255, 107, 107, 0.8]', color: new Color([255, 107, 107, 0.8]) },
-                { input: '{ r: 255, g: 107, b: 107 }', color: new Color({ r: 255, g: 107, b: 107 }) }
-            ];
-            arrayExamples.forEach(({ input, color }) => {
-                try {
-                    arrayContainer.appendChild(createColorDisplay(input, color.hex()));
-                } catch (e) {
-                    arrayContainer.appendChild(createColorDisplay(input, `Error: ${e.message}`));
-                }
-            });
-        }
-
-        // ==================== MODEL EXAMPLES ====================
-
-        function updateModelExamples() {
-            const baseColorInput = document.getElementById('model-base-color').value;
-            const container = document.getElementById('model-examples');
-
-            try {
-                const color = new Color(baseColorInput);
-
-                container.innerHTML = `
-                    <div class="grid">
-                        <div class="card">
-                            <h4>rgb()</h4>
-                            <div class="code-block">${JSON.stringify(color.rgb())}</div>
-                        </div>
-                        <div class="card">
-                            <h4>hsl()</h4>
-                            <div class="code-block">${JSON.stringify(color.hsl())}</div>
-                        </div>
-                        <div class="card">
-                            <h4>hex()</h4>
-                            <div class="code-block">"${color.hex()}"</div>
-                        </div>
-                        <div class="card">
-                            <h4>hexa()</h4>
-                            <div class="code-block">"${color.hexa()}"</div>
-                        </div>
-                        <div class="card">
-                            <h4>Channels</h4>
-                            <div class="code-block">
-                                red: ${color.red()}<br>
-                                green: ${color.green()}<br>
-                                blue: ${color.blue()}<br>
-                                alpha: ${color.alpha()}
-                            </div>
-                        </div>
-                        <div class="card">
-                            <h4>Preview</h4>
-                            <div style="width: 100%; height: 60px; background: ${color.hex()}; border-radius: 8px; border: 2px solid #333;"></div>
-                        </div>
-                    </div>
-                `;
-            } catch (e) {
-                container.innerHTML = `<div class="warning">Error: ${e.message}</div>`;
-            }
-        }
-
-        // ==================== CHANNEL GETTERS ====================
-
-        function initializeChannelGetters() {
-            const container = document.getElementById('channel-getters-display');
-            const color = new Color("#4287f5");
-
-            container.innerHTML = `
-                <div class="grid">
-                    <div class="card">
-                        <h4>RGB Getters</h4>
-                        <div class="code-block">
-                            red(): ${color.red()}<br>
-                            green(): ${color.green()}<br>
-                            blue(): ${color.blue()}<br>
-                            alpha(): ${color.alpha()}
-                        </div>
-                    </div>
-                    <div class="card">
-                        <h4>HSL Getters</h4>
-                        <div class="code-block">
-                            hue(): ${color.hue()}<br>
-                            saturationl(): ${color.saturationl()}<br>
-                            lightness(): ${color.lightness()}
-                        </div>
-                    </div>
-                    <div class="card">
-                        <h4>State Checks</h4>
-                        <div class="code-block">
-                            isDark(): ${color.isDark()}<br>
-                            isLight(): ${color.isLight()}<br>
-                            luminosity(): ${color.luminosity().toFixed(4)}
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        // ==================== CHAIN EXAMPLES ====================
-
-        function updateChainExamples() {
-            const baseColorInput = document.getElementById('chain-base').value;
-            const container = document.getElementById('chain-examples');
-
-            try {
-                const base = new Color(baseColorInput);
-
-                container.innerHTML = `
-                    <div class="grid">
-                        <div class="card">
-                            <h4>Original</h4>
-                            ${createColorCardContent(base.hex())}
-                        </div>
-                        <div class="card">
-                            <h4>.lighten(0.3)</h4>
-                            ${createColorCardContent(base.lighten(0.3).hex())}
-                        </div>
-                        <div class="card">
-                            <h4>.darken(0.3)</h4>
-                            ${createColorCardContent(new Color(baseColorInput).darken(0.3).hex())}
-                        </div>
-                        <div class="card">
-                            <h4>.saturate(0.5)</h4>
-                            ${createColorCardContent(new Color(baseColorInput).saturate(0.5).hex())}
-                        </div>
-                        <div class="card">
-                            <h4>.desaturate(0.5)</h4>
-                            ${createColorCardContent(new Color(baseColorInput).desaturate(0.5).hex())}
-                        </div>
-                        <div class="card">
-                            <h4>.grayscale()</h4>
-                            ${createColorCardContent(new Color(baseColorInput).grayscale().hex())}
-                        </div>
-                        <div class="card">
-                            <h4>.rotate(90)</h4>
-                            ${createColorCardContent(new Color(baseColorInput).rotate(90).hex())}
-                        </div>
-                        <div class="card">
-                            <h4>.invert()</h4>
-                            ${createColorCardContent(new Color(baseColorInput).invert().hex())}
-                        </div>
-                    </div>
-                `;
-            } catch (e) {
-                container.innerHTML = `<div class="warning">Error: ${e.message}</div>`;
-            }
-        }
-
-        function updateLightnessExamples() {
-            const amount = parseFloat(document.getElementById('lighten-amount').value);
-            const container = document.getElementById('lightness-examples');
-            const base = new Color('#4287f5');
-
-            container.innerHTML = `
-                <div class="grid">
-                    <div class="card">
-                        <h4>Original</h4>
-                        ${createColorCardContent(base.hex())}
-                    </div>
-                    <div class="card">
-                        <h4>lighten(${amount})</h4>
-                        ${createColorCardContent(base.lighten(amount).hex())}
-                    </div>
-                    <div class="card">
-                        <h4>darken(${amount})</h4>
-                        ${createColorCardContent(new Color('#4287f5').darken(amount).hex())}
-                    </div>
-                </div>
-            `;
-        }
-
-        function updateSaturationExamples() {
-            const amount = parseFloat(document.getElementById('saturate-amount').value);
-            const container = document.getElementById('saturation-examples');
-            const base = new Color('#4287f5');
-
-            container.innerHTML = `
-                <div class="grid">
-                    <div class="card">
-                        <h4>Original</h4>
-                        ${createColorCardContent(base.hex())}
-                    </div>
-                    <div class="card">
-                        <h4>saturate(${amount})</h4>
-                        ${createColorCardContent(base.saturate(amount).hex())}
-                    </div>
-                    <div class="card">
-                        <h4>desaturate(${amount})</h4>
-                        ${createColorCardContent(new Color('#4287f5').desaturate(amount).hex())}
-                    </div>
-                </div>
-            `;
-        }
-
-        function updateRotateExamples() {
-            const degrees = parseInt(document.getElementById('rotate-amount').value);
-            const container = document.getElementById('rotate-examples');
-            const base = new Color('#ff6b6b');
-
-            container.innerHTML = `
-                <div class="grid">
-                    <div class="card">
-                        <h4>Original</h4>
-                        ${createColorCardContent(base.hex())}
-                    </div>
-                    <div class="card">
-                        <h4>rotate(${degrees})</h4>
-                        ${createColorCardContent(base.rotate(degrees).hex())}
-                    </div>
-                    <div class="card">
-                        <h4>rotate(${degrees * 2})</h4>
-                        ${createColorCardContent(new Color('#ff6b6b').rotate(degrees * 2).hex())}
-                    </div>
-                </div>
-            `;
-        }
-
-        // ==================== MIXING ====================
-
-        function updateMixing() {
-            const color1Input = document.getElementById('mix-color1').value;
-            const color2Input = document.getElementById('mix-color2').value;
-            const weight = parseFloat(document.getElementById('mix-weight').value);
-            const container = document.getElementById('mixing-display');
-
-            try {
-                const color1 = new Color(color1Input);
-                const color2 = new Color(color2Input);
-                const mixed = new Color(color1Input).mix(color2, weight);
-
-                container.innerHTML = `
-                    <div class="grid">
-                        <div class="card">
-                            <h4>Color 1 (100%)</h4>
-                            ${createColorCardContent(color1.hex())}
-                        </div>
-                        <div class="card">
-                            <h4>Mixed (${Math.round((1-weight)*100)}% / ${Math.round(weight*100)}%)</h4>
-                            ${createColorCardContent(mixed.hex())}
-                        </div>
-                        <div class="card">
-                            <h4>Color 2 (100%)</h4>
-                            ${createColorCardContent(color2.hex())}
-                        </div>
-                    </div>
-                    <div class="code-block">
-const color1 = new Color("${color1Input}");
-const color2 = new Color("${color2Input}");
-const mixed = color1.mix(color2, ${weight});
-// Result: ${mixed.hex()}
-                    </div>
-                `;
-            } catch (e) {
-                container.innerHTML = `<div class="warning">Error: ${e.message}</div>`;
-            }
-        }
-
-        // ==================== ACCESSIBILITY ====================
-
-        function updateAccessibility() {
-            const fgInput = document.getElementById('wcag-fg').value;
-            const bgInput = document.getElementById('wcag-bg').value;
-            const container = document.getElementById('wcag-display');
-
-            try {
-                const fg = new Color(fgInput);
-                const bg = new Color(bgInput);
-                const contrast = fg.contrast(bg);
-                const level = fg.level(bg);
-
-                container.innerHTML = `
-                    <div class="grid">
-                        <div class="card">
-                            <h4>Text Preview</h4>
-                            <div style="background: ${bg.hex()}; color: ${fg.hex()}; padding: 20px; border-radius: 8px; font-size: 18px;">
-                                The quick brown fox jumps over the lazy dog.
-                            </div>
-                        </div>
-                        <div class="card">
-                            <h4>WCAG Metrics</h4>
-                            <div class="code-block">
-Contrast Ratio: ${contrast.toFixed(2)}:1<br>
-WCAG Level: ${level || 'Fail'}<br>
-<br>
-Foreground:<br>
-  hex: ${fg.hex()}<br>
-  luminosity: ${fg.luminosity().toFixed(4)}<br>
-  isDark: ${fg.isDark()}<br>
-<br>
-Background:<br>
-  hex: ${bg.hex()}<br>
-  luminosity: ${bg.luminosity().toFixed(4)}<br>
-  isDark: ${bg.isDark()}
-                            </div>
-                        </div>
-                    </div>
-                `;
-            } catch (e) {
-                container.innerHTML = `<div class="warning">Error: ${e.message}</div>`;
-            }
-        }
-
-        // ==================== OUTPUT METHODS ====================
-
-        function updateOutput() {
-            const colorInput = document.getElementById('output-color').value;
-            const container = document.getElementById('output-display');
-
-            try {
-                const color = new Color(colorInput);
-
-                container.innerHTML = `
-                    <div class="grid">
-                        <div class="card">
-                            <h4>toString()</h4>
-                            <div class="code-block">${color.toString()}</div>
-                        </div>
-                        <div class="card">
-                            <h4>hex() / hexa()</h4>
-                            <div class="code-block">
-hex(): "${color.hex()}"<br>
-hexa(): "${color.hexa()}"
-                            </div>
-                        </div>
-                        <div class="card">
-                            <h4>rgb() / hsl()</h4>
-                            <div class="code-block">
-rgb(): ${JSON.stringify(color.rgb())}<br>
-hsl(): ${JSON.stringify(color.hsl())}
-                            </div>
-                        </div>
-                        <div class="card">
-                            <h4>toArray() / toObject()</h4>
-                            <div class="code-block">
-toArray(): ${JSON.stringify(color.toArray())}<br>
-toObject(): ${JSON.stringify(color.toObject())}
-                            </div>
-                        </div>
-                        <div class="card">
-                            <h4>toJson() / toValue()</h4>
-                            <div class="code-block">
-toValue(): ${color.toValue()}<br>
-toJson(): ${color.toJson().substring(0, 50)}...
-                            </div>
-                        </div>
-                        <div class="card">
-                            <h4>Preview</h4>
-                            <div style="width: 100%; height: 80px; background: ${color.hex()}; border-radius: 8px; border: 2px solid #333;"></div>
-                        </div>
-                    </div>
-                `;
-            } catch (e) {
-                container.innerHTML = `<div class="warning">Error: ${e.message}</div>`;
-            }
-        }
-
-        // ==================== CHAIN BUILDER ====================
-
-        function updateChainDemo() {
-            const output = document.getElementById('chain-demo-output');
-            const color = new Color("#4287f5")
-                .lighten(0.2)
-                .saturate(0.3)
-                .rotate(30)
-                .fade(0.2);
-
-            output.innerHTML = `
-                Result: <strong>${color.hex()}</strong><br>
-                rgba: ${color.toString()}<br>
-                <div style="width: 100%; height: 40px; background: ${color.hex()}; border-radius: 4px; margin-top: 10px; border: 2px solid #333;"></div>
-            `;
-        }
-
-        function resetChain() {
-            const input = document.getElementById('chain-input').value;
-            chainState = {
-                color: new Color(input),
-                steps: [`new Color("${input}")`]
-            };
-            updateChainBuilder();
-        }
-
-        function addToChain(method, value) {
-            const step = value !== undefined ? `.${method}(${value})` : `.${method}()`;
-            chainState.steps.push(step);
-
-            if (value !== undefined) {
-                chainState.color = chainState.color[method](value);
-            } else {
-                chainState.color = chainState.color[method]();
-            }
-
-            updateChainBuilder();
-        }
-
-        function updateChainBuilder() {
-            const output = document.getElementById('chain-builder-output');
-            const preview = document.getElementById('chain-builder-preview');
-
-            output.textContent = `Chain: ${chainState.steps.join('')}`;
-            preview.innerHTML = `
-                <div class="color-display" style="margin-top: 15px;">
-                    <div class="color-box" style="background-color: ${chainState.color.hex()}"></div>
-                    <div class="color-info">
-                        <strong>Result:</strong> ${chainState.color.hex()}<br>
-                        <strong>String:</strong> ${chainState.color.toString()}
-                    </div>
-                </div>
-            `;
-        }
-
-        // ==================== COLOR MODELS ====================
-
-        function initializeColorModels() {
-            const models = [
-                { name: 'Hex', example: '#ff6b6b', description: '3, 4, 6, or 8 digit hex values' },
-                { name: 'RGB', example: 'rgb(255, 107, 107)', description: 'Red, Green, Blue channels' },
-                { name: 'RGBA', example: 'rgba(255, 107, 107, 0.8)', description: 'RGB with alpha channel' },
-                { name: 'HSL', example: 'hsl(0, 100%, 71%)', description: 'Hue, Saturation, Lightness' },
-                { name: 'HSLA', example: 'hsla(0, 100%, 71%, 0.8)', description: 'HSL with alpha channel' },
-                { name: 'HWB', example: 'hwb(0, 0%, 29%)', description: 'Hue, Whiteness, Blackness' },
-                { name: 'LAB', example: 'lab(50, 80, 60)', description: 'CIELAB color space' },
-                { name: 'LCH', example: 'lch(50, 100, 40)', description: 'CIELCH color space' },
-                { name: 'OKLAB', example: 'oklab(0.7, 0.1, 0.1)', description: 'Oklab color space' },
-                { name: 'OKLCH', example: 'oklch(0.7, 0.1, 40)', description: 'Oklch color space' },
-                { name: 'XYZ', example: 'xyz(41, 21, 2)', description: 'CIE XYZ color space' },
-                { name: 'CMYK', example: 'cmyk(0, 58, 58, 0)', description: 'Cyan, Magenta, Yellow, Key' }
-            ];
-
-            const container = document.getElementById('color-models');
-            models.forEach(model => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `
-                    <h3>${model.name}</h3>
-                    <div class="code-block">${model.example}</div>
-                    <p>${model.description}</p>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        // ==================== UTILITIES ====================
-
-        function createColorDisplay(label, colorString) {
-            const div = document.createElement('div');
-            div.className = 'color-display';
-
-            const colorBox = document.createElement('div');
-            colorBox.className = 'color-box';
-
-            try {
-                colorBox.style.backgroundColor = colorString;
-            } catch (e) {
-                colorBox.style.backgroundColor = '#ccc';
-            }
-
-            const info = document.createElement('div');
-            info.className = 'color-info';
-            info.innerHTML = `<strong>${label}:</strong> ${colorString}`;
-
-            div.appendChild(colorBox);
-            div.appendChild(info);
-            return div;
-        }
-
-        function createColorCardContent(hex) {
-            return `
-                <div style="width: 100%; height: 60px; background: ${hex}; border-radius: 8px; border: 2px solid #333; margin-bottom: 10px;"></div>
-                <div class="code" style="font-family: monospace; font-size: 0.9em;">${hex}</div>
-            `;
-        }
-    </script>
+    <!-- Load the Color-ESM example scripts -->
+    <script src="./assets/script.js"></script>
 </body>
 </html>
