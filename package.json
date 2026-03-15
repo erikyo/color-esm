@@ -1,7 +1,7 @@
 {
 	"name": "color-esm",
-	"version": "0.0.1",
-	"description": "Chainable color library es module (inspired to color)",
+	"version": "0.1.0",
+	"description": "Chainable color library es module",
 	"type": "module",
 	"main": "./lib/index.cjs",
 	"module": "./lib/index.js",
@@ -25,6 +25,7 @@
 	},
 	"files": [
 		"lib/",
+		"test/",
 		"README.md",
 		"LICENSE",
 		"package.json"
