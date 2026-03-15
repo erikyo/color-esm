@@ -47,10 +47,11 @@
 		"esm"
 	],
 	"scripts": {
-		"build": "rimraf lib && npm run build-module && npm run build-browser && npm run build-browser-min",
+		"build": "rimraf lib && npm run build-module && npm run build-browser && npm run build-browser-min && npm run postbuild",
 		"build-module": "tsdown",
 		"build-browser": "esbuild src/index.ts --outfile=lib/browser/color-esm.js --global-name=Color --allow-overwrite --bundle --sourcemap",
 		"build-browser-min": "esbuild src/index.ts --outfile=lib/browser/color-esm.min.js --global-name=Color --allow-overwrite --bundle --minify",
+		"postbuild": "node build.mjs",
 		"start": "npx esbuild src/index.ts --bundle --outdir=lib/esm --format=esm --global-name=Color --watch",
 		"tsc:watch": "npx tsc --watch",
 		"tsc:types": "npx tsc --emitDeclarationOnly",
