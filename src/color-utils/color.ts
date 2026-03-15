@@ -26,11 +26,11 @@ export function rgbToHsv({ r, g, b }: RGB): HSV {
 			h = (r - g) / delta + 4;
 		}
 	}
-	h = Math.round(h * 60);
+	h = h * 60;
 	if (h < 0) h += 360;
 
-	const s = max === 0 ? 0 : Math.round((delta / max) * 100);
-	const v = Math.round(max * 100);
+	const s = max === 0 ? 0 : (delta / max) * 100;
+	const v = max * 100;
 
 	return { h, s, v };
 }
