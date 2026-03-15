@@ -1,3 +1,4 @@
+import { normalizeAlpha, safeInt } from "../common.js";
 import type { COLORS, RGB } from "../types.js";
 
 /**
@@ -13,10 +14,10 @@ export function fromRgb([r = 0, g = 0, b = 0, alpha = 1]: (
 )[]): COLORS {
 	// use the channel key as the new array key
 	return {
-		r: Number(r),
-		g: Number(g),
-		b: Number(b),
-		A: Number(alpha),
+		r: safeInt(r),
+		g: safeInt(g),
+		b: safeInt(b),
+		A: normalizeAlpha(alpha),
 	};
 }
 
