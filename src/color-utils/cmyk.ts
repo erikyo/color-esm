@@ -1,12 +1,12 @@
-import { Int } from "../common.js";
+import { safeInt } from "../common.js";
 import type { CMYK, RGB, RGBA } from "../types.js";
 
-export function fromCmyk([c, m, y, k]: (string | number)[]): CMYK {
+export function fromCmyk([c = 0, m = 0, y = 0, k = 0]: (string | number)[]): CMYK {
 	return {
-		c: Int(c),
-		m: Int(m),
-		y: Int(y),
-		k: Int(k),
+		c: safeInt(c, 100),
+		m: safeInt(m, 100),
+		y: safeInt(y, 100),
+		k: safeInt(k, 100),
 	};
 }
 
@@ -18,9 +18,9 @@ export function fromCmyk([c, m, y, k]: (string | number)[]): CMYK {
 export function cmykToRgb(cmyk: string[]): RGBA {
 	const [c, m, y, k] = cmyk.map((v: string) => Number(v) / 100);
 	const rgb = {
-		r: 1 - Math.min(1, c * (1 - k) + k) * 255,
-		g: 1 - Math.min(1, m * (1 - k) + k) * 255,
-		b: 1 - Math.min(1, y * (1 - k) + k) * 255,
+		r: Math.round((1 - Math.min(1, c * (1 - k) + k)) * 255),
+		g: Math.round((1 - Math.min(1, m * (1 - k) + k)) * 255),
+		b: Math.round((1 - Math.min(1, y * (1 - k) + k)) * 255),
 	};
 	return { ...rgb, A: 1 };
 }
@@ -39,9 +39,9 @@ export function rgbToCmyk(rgb: RGB): CMYK {
 	const y = (1 - blue - k) / (1 - k);
 
 	return {
-		c: Math.round(c * 100),
-		m: Math.round(m * 100),
-		y: Math.round(y * 100),
-		k: Math.round(k * 100),
+		c: c * 100,
+		m: m * 100,
+		y: y * 100,
+		k: k * 100,
 	};
 }
