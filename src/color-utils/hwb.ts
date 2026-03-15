@@ -1,3 +1,4 @@
+import { normalizeAlpha, safeInt } from "../common.js";
 import type { HWB, RGB, RGBA } from "../types.js";
 
 /**
@@ -25,12 +26,12 @@ export function toHwb({ r, g, b }: RGB): HWB {
 			h = (r - g) / delta + 4;
 		}
 	}
-	h = Math.round(h * 60);
+	h = h * 60;
 	if (h < 0) h += 360;
 
 	// Calculate whiteness and blackness
-	const w = Math.round(min * 100);
-	const bl = Math.round((1 - max) * 100);
+	const w = min * 100;
+	const bl = (1 - max) * 100;
 
 	return { h, w, b: bl };
 }
@@ -43,18 +44,11 @@ export function hwbToRgb({ h, w, b }: HWB): RGB {
 	w /= 100;
 	b /= 100;
 
-	// If whiteness + blackness > 1, scale them down
-	if (w + b > 1) {
-		const scale = w + b;
-		w /= scale;
-		b /= scale;
-	}
-
 	// Calculate the chroma (color intensity)
-	const c = 1 - w - b;
+	const c = Math.max(0, 1 - w - b);
 
 	// Calculate RGB from hue and chroma (similar to HSL)
-	const hRad = (h / 60) % 6;
+	const hRad = ((h % 360 + 360) % 360 / 60);
 	const x = c * (1 - Math.abs((hRad % 2) - 1));
 
 	let r = 0,
@@ -87,14 +81,11 @@ export function hwbToRgb({ h, w, b }: HWB): RGB {
 	};
 }
 
-export function fromHwb([h, w, b, alpha = "1"]: string[]): RGBA {
-	const rgb = hwbToRgb({
-		h: Number(h),
-		w: Number(w.replace("%", "")),
-		b: Number(b.replace("%", "")),
-	});
+export function fromHwb([h, w, b, alpha = 1]: (string | number)[]): { h: number; w: number; b: number; A: number } {
 	return {
-		...rgb,
-		A: Number(alpha),
+		h: safeInt(h, 360),
+		w: safeInt(w, 100),
+		b: safeInt(b, 100),
+		A: typeof alpha === 'number' ? Math.max(0, Math.min(1, alpha)) : Number(alpha),
 	};
 }
